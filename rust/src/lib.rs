@@ -101,10 +101,10 @@ where
 
 #[macro_export]
 macro_rules! mat {
-        ($([$($x:expr),* $(,)*]),+ $(,)*) => {{
-            crate::Matrix::from(vec![$([$($x,)*].to_vec(),)*])
-        }}
-    }
+    ($([$($x:expr),* $(,)*]),+ $(,)*) => {{
+        crate::Matrix::from(vec![$([$($x,)*].to_vec(),)*])
+    }}
+}
 
 #[cfg(test)]
 mod tests {
