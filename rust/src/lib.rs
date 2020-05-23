@@ -63,7 +63,7 @@ where
     }
 }
 
-impl<T> Mul for Matrix<T>
+impl<T> Mul<Matrix<T>> for Matrix<T>
 where
     T: Num + Copy,
 {
@@ -80,6 +80,22 @@ where
             }
         }
         result
+    }
+}
+
+impl<T> Mul<T> for Matrix<T>
+where
+    T: Num + Copy,
+{
+    type Output = Self;
+    fn mul(self, rhs: T) -> Self {
+        let mut b = self.clone();
+        for i in 0..b.rows {
+            for j in 0..b.cols {
+                b[i][j] = b[i][j] * rhs;
+            }
+        }
+        b
     }
 }
 
@@ -173,5 +189,17 @@ mod tests {
     #[should_panic]
     fn test_matrix_multiply_panic_missize() {
         let _c = mat![[1, 2, 3], [4, 5, 6]] * mat![[1, 2], [3, 4]];
+    }
+
+    #[test]
+    fn test_matrix_scalar_multiplication() {
+        let sut = mat![[2, 4], [6, 8]];
+        assert_eq!(sut * 2, mat![[4, 8], [12, 16]]);
+    }
+
+    #[test]
+    fn test_matrix_scalar_multiplication_float() {
+        let sut = mat![[2.0, 4.0], [6.0, 8.0]];
+        assert_eq!(sut * 1.5, mat![[3.0, 6.0], [9.0, 12.0]]);
     }
 }
