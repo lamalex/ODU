@@ -103,13 +103,11 @@ where
 {
     type Output = Self;
     fn mul(self, rhs: T) -> Self {
-        let mut result = self;
-        for i in 0..result.rows {
-            for j in 0..result.cols {
-                result[i][j] = result[i][j] * rhs;
-            }
+        Matrix {
+            rows: self.rows,
+            cols: self.cols,
+            data: self.data.iter().map(|x| *x * rhs).collect(),
         }
-        result
     }
 }
 
