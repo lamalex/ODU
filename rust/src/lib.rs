@@ -89,13 +89,13 @@ where
 {
     type Output = Self;
     fn mul(self, rhs: T) -> Self {
-        let mut b = self.clone();
-        for i in 0..b.rows {
-            for j in 0..b.cols {
-                b[i][j] = b[i][j] * rhs;
+        let mut result = self;
+        for i in 0..result.rows {
+            for j in 0..result.cols {
+                result[i][j] = result[i][j] * rhs;
             }
         }
-        b
+        result
     }
 }
 
@@ -118,18 +118,13 @@ mod tests {
     }
 
     #[test]
-    fn test_create_matrix_macro() {
-        let sut = mat![[1, 2], [3, 4]];
-        assert_eq!(sut.data, [1, 2, 3, 4]);
-    }
-
-    #[test]
     fn test_index_matrix() {
         let sut = mat![[1, 2], [3, 4]];
         assert_eq!(sut[0][0], 1);
         assert_eq!(sut[0][1], 2);
         assert_eq!(sut[1][0], 3);
         assert_eq!(sut[1][1], 4);
+        assert_eq!(sut[0], [1, 2]);
     }
 
     #[test]
@@ -180,9 +175,9 @@ mod tests {
             [1, 10],
         ];
 
-        let sutT = sut.transpose();
+        let sut_t = sut.transpose();
 
-        assert_eq!(sutT * sut, mat![[11, 55], [55, 385]]);
+        assert_eq!(sut_t * sut, mat![[11, 55], [55, 385]]);
     }
 
     #[test]

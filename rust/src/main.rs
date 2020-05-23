@@ -1,9 +1,8 @@
-#[macro_use]
 use matrixsolver::{mat, Matrix};
 
 fn main() {
     println!("oh brother");
-    let a = mat![
+    let _a = mat![
         [1, 0],
         [1, 1],
         [1, 2],
@@ -16,9 +15,4 @@ fn main() {
         [1, 9],
         [1, 10]
     ];
-    println!("{} {}", a.rows, a.cols);
-    let b = a.transpose();
-    println!("{} {}", b.rows, b.cols);
-    let c = b * a;
-    println!("{} {}, {:?}", c.rows, c.cols, c);
 }
