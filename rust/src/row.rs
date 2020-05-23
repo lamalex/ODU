@@ -26,6 +26,15 @@ where
     }
 }
 
+impl<T> From<&[T]> for Row<T>
+where
+    T: Copy,
+{
+    fn from(s: &[T]) -> Self {
+        Row { data: s.to_vec() }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
