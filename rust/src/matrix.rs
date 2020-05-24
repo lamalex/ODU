@@ -45,19 +45,6 @@ where
     }
 }
 
-/*
-impl<T> Index<std::ops::RangeFull> for Matrix<T>
-where
-    T: Num + Copy,
-{
-    type Output = Self;
-    fn index(&self, _index: std::ops::RangeFull) -> &Self::Output {
-        let result = self.transpose();
-        &result
-    }
-}
-*/
-
 impl<T> Index<usize> for Matrix<T>
 where
     T: Num + Copy,
@@ -77,13 +64,12 @@ where
     }
 }
 
-impl<T> Mul<Matrix<T>> for Matrix<T>
+impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
     T: Num + Copy,
 {
-    type Output = Self;
-
-    fn mul(self, rhs: Self) -> Self {
+    type Output = Matrix<T>;
+    fn mul(self, rhs: &Matrix<T>) -> Matrix<T> {
         let mut result = Matrix::new(self.rows, rhs.cols);
 
         for i in 0..result.rows {
@@ -97,12 +83,12 @@ where
     }
 }
 
-impl<T> Mul<T> for Matrix<T>
+impl<T> Mul<T> for &Matrix<T>
 where
     T: Num + Copy,
 {
-    type Output = Self;
-    fn mul(self, rhs: T) -> Self {
+    type Output = Matrix<T>;
+    fn mul(self, rhs: T) -> Matrix<T> {
         Matrix {
             rows: self.rows,
             cols: self.cols,
@@ -189,24 +175,31 @@ mod tests {
 
         let sut_t = sut.transpose();
 
-        assert_eq!(sut_t * sut, mat![[11, 55], [55, 385]]);
+        assert_eq!(&sut_t * &sut, mat![[11, 55], [55, 385]]);
     }
 
     #[test]
     #[should_panic]
     fn test_matrix_multiply_panic_missize() {
-        let _c = mat![[1, 2, 3], [4, 5, 6]] * mat![[1, 2], [3, 4]];
+        let _c = &mat![[1, 2, 3], [4, 5, 6]] * &mat![[1, 2], [3, 4]];
     }
 
     #[test]
     fn test_matrix_scalar_multiplication() {
         let sut = mat![[2, 4], [6, 8]];
-        assert_eq!(sut * 2, mat![[4, 8], [12, 16]]);
+        assert_eq!(&sut * 2, mat![[4, 8], [12, 16]]);
     }
 
     #[test]
     fn test_matrix_scalar_multiplication_float() {
         let sut = mat![[2.0, 4.0], [6.0, 8.0]];
-        assert_eq!(sut * 1.5, mat![[3.0, 6.0], [9.0, 12.0]]);
+        assert_eq!(&sut * 1.5, mat![[3.0, 6.0], [9.0, 12.0]]);
+    }
+
+    #[test]
+    fn test_matrix_accessible_after_use() {
+        let sut = mat![[2.0, 4.0], [6.0, 8.0]];
+        assert_eq!(&sut * 1.5, mat![[3.0, 6.0], [9.0, 12.0]]);
+        let _can_i_use_you = sut;
     }
 }
