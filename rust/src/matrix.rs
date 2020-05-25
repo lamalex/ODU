@@ -1,11 +1,14 @@
 use num_traits::Num;
 use std::ops::{Index, IndexMut, Mul};
 
+use crate::row;
+use crate::row::Row;
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct Matrix<T> {
     pub rows: usize,
     pub cols: usize,
-    data: Vec<T>,
+    data: Vec<Row<T>>,
 }
 
 impl<T> Matrix<T>
@@ -17,7 +20,7 @@ where
         Matrix {
             rows,
             cols,
-            data: vec![T::zero(); rows * cols],
+            data: vec![row![T::zero(); cols]; rows],
         }
     }
 
@@ -38,8 +41,8 @@ where
 {
     fn from(v: Vec<Vec<T>>) -> Self {
         let mut a = Matrix::<T>::new(v.len(), v[0].len());
-        for (i, e) in v.iter().flatten().enumerate() {
-            a.data[i] = *e;
+        for (i, e) in v.iter().enumerate() {
+            a.data[i] = crate::row::Row::from(e);
         }
         a
     }
@@ -49,9 +52,9 @@ impl<T> Index<usize> for Matrix<T>
 where
     T: Num + Copy,
 {
-    type Output = [T];
+    type Output = Row<T>;
     fn index(&self, index: usize) -> &Self::Output {
-        &self.data[index * self.cols..(index + 1) * self.cols]
+        &self.data[index]
     }
 }
 
@@ -60,7 +63,7 @@ where
     T: Num + Copy,
 {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.data[index * self.cols..(index + 1) * self.cols]
+        &mut self.data[index]
     }
 }
 
@@ -92,17 +95,17 @@ where
         Matrix {
             rows: self.rows,
             cols: self.cols,
-            data: self.data.iter().map(|x| *x * rhs).collect(),
+            data: self.data.iter().map(|x| x * rhs).collect(),
         }
     }
 }
 
 #[macro_export]
 macro_rules! mat {
-        ($([$($x:expr),* $(,)*]),+ $(,)*) => {{
-            Matrix::from(vec![$([$($x,)*].to_vec(),)*])
-        }}
-    }
+    ($([$($x:expr),* $(,)*]),+ $(,)*) => {{
+        Matrix::from(vec![$([$($x,)*].to_vec(),)*])
+    }}
+}
 
 #[cfg(test)]
 mod tests {
@@ -122,7 +125,7 @@ mod tests {
         assert_eq!(sut[0][1], 2);
         assert_eq!(sut[1][0], 3);
         assert_eq!(sut[1][1], 4);
-        assert_eq!(sut[0], [1, 2]);
+        assert_eq!(sut[0], row![1, 2]);
     }
 
     #[test]
@@ -194,12 +197,5 @@ mod tests {
     fn test_matrix_scalar_multiplication_float() {
         let sut = mat![[2.0, 4.0], [6.0, 8.0]];
         assert_eq!(&sut * 1.5, mat![[3.0, 6.0], [9.0, 12.0]]);
-    }
-
-    #[test]
-    fn test_matrix_accessible_after_use() {
-        let sut = mat![[2.0, 4.0], [6.0, 8.0]];
-        assert_eq!(&sut * 1.5, mat![[3.0, 6.0], [9.0, 12.0]]);
-        let _can_i_use_you = sut;
     }
 }

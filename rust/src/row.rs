@@ -1,9 +1,21 @@
 use num_traits::Num;
-use std::ops::{Add, Deref, Mul};
+use std::ops::{Add, Deref, DerefMut, Mul};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Row<T> {
     data: Vec<T>,
+}
+
+impl<T> Row<T>
+where
+    T: Num + Copy,
+{
+    pub fn new(len: usize) -> Self {
+        assert!(len > 0);
+        Row {
+            data: vec![T::zero(); len],
+        }
+    }
 }
 
 impl<T> Mul<T> for &Row<T>
@@ -36,12 +48,25 @@ where
     }
 }
 
-impl<T> From<&[T]> for Row<T>
+impl<T> From<Vec<T>> for Row<T>
 where
-    T: Copy,
+    T: Num + Copy,
 {
-    fn from(s: &[T]) -> Self {
-        Row { data: s.to_vec() }
+    fn from(v: Vec<T>) -> Self {
+        let mut a = Row::<T>::new(v.len());
+        a.data = v;
+        a
+    }
+}
+
+impl<T> From<&Vec<T>> for Row<T>
+where
+    T: Num + Copy,
+{
+    fn from(v: &Vec<T>) -> Self {
+        let mut a = Row::<T>::new(v.len());
+        a.data = v.clone();
+        a
     }
 }
 
@@ -51,6 +76,22 @@ impl<T> Deref for Row<T> {
     fn deref(&self) -> &Self::Target {
         &self.data
     }
+}
+
+impl<T> DerefMut for Row<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.data
+    }
+}
+
+#[macro_export]
+macro_rules! row {
+    ($($x:expr),* $(,)*) => {{
+        Row::from(vec![$($x,)*])
+    }};
+    ($x:expr; $y:expr) => {{
+        Row::from(vec![$x; $y])
+    }};
 }
 
 #[cfg(test)]
