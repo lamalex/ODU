@@ -40,11 +40,11 @@ where
     T: Num + Copy,
 {
     fn from(v: Vec<Vec<T>>) -> Self {
-        let mut a = Matrix::<T>::new(v.len(), v[0].len());
-        for (i, e) in v.iter().enumerate() {
-            a.data[i] = crate::row::Row::from(e);
+        Matrix {
+            rows: v.len(),
+            cols: v[0].len(),
+            data: v.iter().map(|r| Row::from(r)).collect(),
         }
-        a
     }
 }
 
