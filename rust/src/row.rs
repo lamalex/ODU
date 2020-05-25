@@ -1,5 +1,5 @@
 use num_traits::Num;
-use std::ops::{Add, Deref, DerefMut, Mul};
+use std::ops::{Add, Div, Index, IndexMut, Mul};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Row<T> {
@@ -16,6 +16,15 @@ where
             data: vec![T::zero(); len],
         }
     }
+
+    fn apply_operation<F>(&self, rhs: T, mut op: F) -> Row<T>
+    where
+        F: FnMut(T, T) -> T,
+    {
+        Row {
+            data: self.data.iter().map(|e| op(*e, rhs)).collect(),
+        }
+    }
 }
 
 impl<T> Mul<T> for &Row<T>
@@ -24,9 +33,17 @@ where
 {
     type Output = Row<T>;
     fn mul(self, rhs: T) -> Row<T> {
-        Row {
-            data: self.data.iter().map(|x| *x * rhs).collect(),
-        }
+        self.apply_operation(rhs, Mul::mul)
+    }
+}
+
+impl<T> Div<T> for &Row<T>
+where
+    T: Num + Copy,
+{
+    type Output = Row<T>;
+    fn div(self, rhs: T) -> Row<T> {
+        self.apply_operation(rhs, Div::div)
     }
 }
 
@@ -59,6 +76,25 @@ where
     }
 }
 
+impl<T> Index<usize> for Row<T>
+where
+    T: Num + Copy,
+{
+    type Output = T;
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.data[index]
+    }
+}
+
+impl<T> IndexMut<usize> for Row<T>
+where
+    T: Num + Copy,
+{
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.data[index]
+    }
+}
+
 impl<T> From<&Vec<T>> for Row<T>
 where
     T: Num + Copy,
@@ -67,20 +103,6 @@ where
         let mut a = Row::<T>::new(v.len());
         a.data = v.clone();
         a
-    }
-}
-
-impl<T> Deref for Row<T> {
-    type Target = Vec<T>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.data
-    }
-}
-
-impl<T> DerefMut for Row<T> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.data
     }
 }
 
@@ -103,6 +125,6 @@ mod tests {
             data: vec![1, 2, 3],
         };
 
-        assert_eq!(vec![2, 4, 6], *(&sut * 2));
+        assert_eq!(row![2, 4, 6], (&sut * 2));
     }
 }
