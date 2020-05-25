@@ -1,5 +1,5 @@
 use num_traits::Num;
-use std::ops::{Add, Div, Index, IndexMut, Mul};
+use std::ops::{Add, Div, Index, IndexMut, Mul, Sub};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Row<T> {
@@ -25,6 +25,21 @@ where
             data: self.data.iter().map(|e| op(*e, rhs)).collect(),
         }
     }
+
+    fn apply_operation_for_each<F>(&self, rhs: &Row<T>, mut op: F) -> Row<T>
+    where
+        F: FnMut(T, T) -> T,
+    {
+        assert_eq!(self.data.len(), rhs.data.len());
+        Row {
+            data: self
+                .data
+                .iter()
+                .enumerate()
+                .map(|(i, x)| op(*x, rhs[i]))
+                .collect(),
+        }
+    }
 }
 
 impl<T> Mul<T> for &Row<T>
@@ -32,7 +47,7 @@ where
     T: Num + Copy,
 {
     type Output = Row<T>;
-    fn mul(self, rhs: T) -> Row<T> {
+    fn mul(self, rhs: T) -> Self::Output {
         self.apply_operation(rhs, Mul::mul)
     }
 }
@@ -42,7 +57,7 @@ where
     T: Num + Copy,
 {
     type Output = Row<T>;
-    fn div(self, rhs: T) -> Row<T> {
+    fn div(self, rhs: T) -> Self::Output {
         self.apply_operation(rhs, Div::div)
     }
 }
@@ -52,16 +67,18 @@ where
     T: Num + Copy,
 {
     type Output = Row<T>;
-    fn add(self, rhs: &Row<T>) -> Row<T> {
-        assert_eq!(self.data.len(), rhs.data.len());
-        Row {
-            data: self
-                .data
-                .iter()
-                .enumerate()
-                .map(|(i, x)| *x + rhs[i])
-                .collect(),
-        }
+    fn add(self, rhs: &Row<T>) -> Self::Output {
+        self.apply_operation_for_each(rhs, Add::add)
+    }
+}
+
+impl<T> Sub<&Row<T>> for &Row<T>
+where
+    T: Num + Copy,
+{
+    type Output = Row<T>;
+    fn sub(self, rhs: &Row<T>) -> Self::Output {
+        self.apply_operation_for_each(rhs, Sub::sub)
     }
 }
 
