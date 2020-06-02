@@ -1,7 +1,7 @@
 use num_traits::Num;
 use std::ops::{Add, Div, Index, IndexMut, Mul, Sub};
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(PartialEq, PartialOrd, Clone, Debug)]
 pub struct Row<T> {
     data: Vec<T>,
 }

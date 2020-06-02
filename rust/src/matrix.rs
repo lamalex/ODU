@@ -43,7 +43,7 @@ where
         Matrix {
             rows: v.len(),
             cols: v[0].len(),
-            data: v.iter().map(|r| Row::from(r)).collect(),
+            data: v.iter().map(Row::from).collect(),
         }
     }
 }

@@ -1,14 +1,38 @@
-use matrixsolver::matrix::Matrix;
-use matrixsolver::row::Row;
-use matrixsolver::{mat, row};
+use matrixsolver::{mat, matrix::Matrix};
 
 fn main() {
-    let mut a = mat![
-        [1.0, 2.0, 3.0, 4.0, 5.0],
-        [10.0, 10.0, 10.0, 10.0, 10.0],
-        [5.0, 5.0, 5.0, 5.0, 5.0]
+    let x = mat![
+        [1, 0],
+        [1, 1],
+        [1, 2],
+        [1, 3],
+        [1, 4],
+        [1, 5],
+        [1, 6],
+        [1, 7],
+        [1, 8],
+        [1, 9],
+        [1, 10]
     ];
-    println!("{:?}", a);
-    a[1] = &a[1] - &(&a[0] * (a[1][0] / a[0][0]));
-    println!("{:?}", a);
+
+    let y = mat![
+        [0],
+        [1],
+        [4],
+        [9],
+        [16],
+        [25],
+        [36],
+        [49],
+        [64],
+        [81],
+        [100]
+    ];
+
+    let x_t = x.transpose();
+    let xtx = &x_t * &x;
+    let xty = &x_t * &y;
+
+    println!("xtx: {:?}", xtx);
+    println!("xty: {:?}", xty);
 }
