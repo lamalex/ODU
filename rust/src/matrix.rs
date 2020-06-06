@@ -5,33 +5,52 @@ use crate::row;
 use crate::row::Row;
 
 #[derive(Debug, PartialEq, Clone)]
+/// High level struct describing a 2D matrix
 pub struct Matrix<T> {
+    /// Number of rows for instance of Matrix
     pub rows: usize,
+    /// Number of columns for instance of Matrix
     pub cols: usize,
     data_rows: Vec<Row<T>>,
+    data_cols: Vec<Row<T>>,
 }
 
 impl<T> Matrix<T>
 where
     T: Num + Copy,
 {
+    /// Create a new zeroed `Matrix` of size rows x cols
+    ///
+    /// See also the [`From` impls](#impl-From<Vec<Vec<T>>>), or [`mat!`](../macro.mat.html) macro for creating
+    /// an initialized `Matrix`.
+    /// # Example
+    /// ```
+    /// use matrixsolver::matrix::Matrix;
+    ///
+    /// let a = Matrix::<u8>::new(10, 10);
+    /// ```
+    /// Creates a `Matrix` A with 10 rows by 10 columns
+    /// with all entries A[i][j] == 0.
     pub fn new(rows: usize, cols: usize) -> Self {
         assert!(rows > 0 && cols > 0);
         Matrix {
             rows,
             cols,
             data_rows: vec![row![T::zero(); cols]; rows],
+            data_cols: vec![row![T::zero(); rows]; cols],
         }
     }
 
+    /// Create a new `Matrix` B, which is the transpose of `Matrix` A,
+    /// that is to say `A[i][j] == B[j][i]`.
     pub fn transpose(&self) -> Self {
-        let mut a = Matrix::<T>::new(self.cols, self.rows);
+        let mut b = Matrix::<T>::new(self.cols, self.rows);
         for i in 0..self.rows {
             for j in 0..self.cols {
-                a[j][i] = self[i][j];
+                b[j][i] = self[i][j];
             }
         }
-        a
+        b
     }
 }
 
@@ -39,15 +58,35 @@ impl<T> From<Vec<Vec<T>>> for Matrix<T>
 where
     T: Num + Copy,
 {
+    /// Creates a new `Matrix` A from a `Vec<Vec<T>>` where each Vec<T> represents
+    /// a row of the young `Matrix`.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::matrix::Matrix;
+    ///
+    /// let a = Matrix::<u8>::from(vec![vec![1, 2, 3], vec![4, 5, 6]]);
+    /// ```
+    /// Creates a new `Matrix` with 2 rows, each with 3 columns.
     fn from(v: Vec<Vec<T>>) -> Self {
         Matrix {
             rows: v.len(),
             cols: v[0].len(),
             data_rows: v.iter().map(Row::from).collect(),
+            data_cols: vec![row![T::zero(); v.len()]; v[0].len()],
         }
     }
 }
 
+/// # Example
+/// ```
+/// use matrixsolver::{mat, matrix::Matrix};
+///
+/// let matrix = mat![[1,2],[3,4]];
+///
+/// // Accesses a single row of `matrix`
+/// let row = &matrix[0];
+/// ```
 impl<T> Index<usize> for Matrix<T>
 where
     T: Num + Copy,
@@ -58,6 +97,15 @@ where
     }
 }
 
+/// # Example
+/// ```
+/// use matrixsolver::{mat, matrix::Matrix};
+///
+/// let matrix = mat![[1,2],[3,4]];
+///
+/// // Accesses a mutable single row of `matrix`
+/// let mut row = &matrix[0];
+/// ```
 impl<T> IndexMut<usize> for Matrix<T>
 where
     T: Num + Copy,
@@ -67,6 +115,26 @@ where
     }
 }
 
+/// Perform matrix multiplication for `matrix` A x B = C
+/// where A is of size m x n, B is of size n x p, and C is of size m x p.
+///
+/// # Example
+/// ```
+/// use matrixsolver::{mat, matrix::Matrix};
+///
+/// let a = mat![
+///     [1, 2, 3],
+///     [1, 2, 3]
+/// ];
+/// let b = mat![
+///     [4, 5],
+///     [6, 7],
+///     [8, 9]
+/// ];
+///
+/// let c = &a * &b;
+/// assert_eq!(mat![[40, 46], [40, 46]], c);
+/// ```
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
     T: Num + Copy,
@@ -86,6 +154,23 @@ where
     }
 }
 
+/// Perform scalar multiplication for A * n
+/// where A a matrix of <T>, and n is a scalar <T>.
+/// Note: n must be the right-hand side of the equation.
+/// ``` n * A``` will result in a compiler error.
+///
+/// # Example
+/// ```
+/// use matrixsolver::{mat, matrix::Matrix};
+///
+/// let a = mat![
+///     [1, 2],
+///     [3, 4]
+/// ];
+///
+/// let b = &a * 5;
+/// assert_eq!(mat![[5, 10], [15, 20]], b);
+/// ```
 impl<T> Mul<T> for &Matrix<T>
 where
     T: Num + Copy,
@@ -96,10 +181,23 @@ where
             rows: self.rows,
             cols: self.cols,
             data_rows: self.data_rows.iter().map(|x| x * rhs).collect(),
+            data_cols: self.data_cols.iter().map(|x| x * rhs).collect(),
         }
     }
 }
 
+/// Create a new matrix with convenient C-like 2D array syntax.None
+///
+/// # Example
+/// ```
+/// use matrixsolver::{mat, matrix::Matrix};
+///
+/// let a = mat![
+///     [0.0, 0.1, 0.2],
+///     [0.3, 0.4, 0.5],
+///     [0.6, 0.7, 0.8]
+/// ];
+/// ```
 #[macro_export]
 macro_rules! mat {
     ($([$($x:expr),* $(,)*]),+ $(,)*) => {{
