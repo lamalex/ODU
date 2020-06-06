@@ -23,6 +23,10 @@ where
     ///
     /// See also the [`From` impls](#impl-From<Vec<Vec<T>>>), or [`mat!`](../macro.mat.html) macro for creating
     /// an initialized `Matrix`.
+    ///
+    /// # Panics
+    /// Panics if rows or cols ≦ 0
+    ///
     /// # Example
     /// ```
     /// use matrixsolver::matrix::Matrix;
@@ -117,6 +121,9 @@ where
 
 /// Perform matrix multiplication for `matrix` A x B = C
 /// where A is of size m x n, B is of size n x p, and C is of size m x p.
+///
+/// # Panics
+/// Panics when B is not of size n x p for A of size m x n.
 ///
 /// # Example
 /// ```
