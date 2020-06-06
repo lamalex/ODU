@@ -8,7 +8,7 @@ use crate::row::Row;
 pub struct Matrix<T> {
     pub rows: usize,
     pub cols: usize,
-    data: Vec<Row<T>>,
+    data_rows: Vec<Row<T>>,
 }
 
 impl<T> Matrix<T>
@@ -20,7 +20,7 @@ where
         Matrix {
             rows,
             cols,
-            data: vec![row![T::zero(); cols]; rows],
+            data_rows: vec![row![T::zero(); cols]; rows],
         }
     }
 
@@ -43,7 +43,7 @@ where
         Matrix {
             rows: v.len(),
             cols: v[0].len(),
-            data: v.iter().map(Row::from).collect(),
+            data_rows: v.iter().map(Row::from).collect(),
         }
     }
 }
@@ -54,7 +54,7 @@ where
 {
     type Output = Row<T>;
     fn index(&self, index: usize) -> &Self::Output {
-        &self.data[index]
+        &self.data_rows[index]
     }
 }
 
@@ -63,7 +63,7 @@ where
     T: Num + Copy,
 {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.data[index]
+        &mut self.data_rows[index]
     }
 }
 
@@ -95,7 +95,7 @@ where
         Matrix {
             rows: self.rows,
             cols: self.cols,
-            data: self.data.iter().map(|x| x * rhs).collect(),
+            data_rows: self.data_rows.iter().map(|x| x * rhs).collect(),
         }
     }
 }
