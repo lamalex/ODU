@@ -99,76 +99,76 @@ where
     }
 }
 
-/// # Example
-/// ```
-/// use matrixsolver::{mat, matrix::Matrix};
-///
-/// let matrix = mat![[1,2],[3,4]];
-///
-/// // Accesses a single row of `matrix`
-/// let row = &matrix[0];
-/// ```
 impl<T> Index<usize> for Matrix<T>
 where
     T: Num + Copy,
 {
     type Output = Vector<T>;
+    /// # Example
+    /// ```
+    /// use matrixsolver::{mat, matrix::Matrix};
+    ///
+    /// let matrix = mat![[1,2],[3,4]];
+    ///
+    /// // Accesses a single row of `matrix`
+    /// let row = &matrix[0];
+    /// ```
     fn index(&self, index: usize) -> &Self::Output {
         &self.data_rows[index]
     }
 }
 
-/// # Example
-/// ```
-/// use matrixsolver::{mat, row, matrix::Matrix, vector::Row};
-///
-/// let expected = vec![row![1, 3], row![2, 4]];
-///
-/// let matrix = mat![[1,2],[3,4]];
-///
-/// // Accesses columns of `matrix`
-/// let cols = &matrix[..];
-
-/// let first_col = &matrix[..][0];
-/// ```
 impl<T> Index<std::ops::RangeFull> for Matrix<T>
 where
     T: Num + Copy,
 {
     type Output = Vec<Col<T>>;
+    /// # Example
+    /// ```
+    /// use matrixsolver::{mat, row, matrix::Matrix, vector::Row};
+    ///
+    /// let expected = vec![row![1, 3], row![2, 4]];
+    ///
+    /// let matrix = mat![[1,2],[3,4]];
+    ///
+    /// // Accesses columns of `matrix`
+    /// let cols = &matrix[..];
+    ///
+    /// let first_col = &matrix[..][0];
+    /// ```
     fn index(&self, _index: std::ops::RangeFull) -> &Self::Output {
         &self.data_cols
     }
 }
 
-/// Perform matrix multiplication for `matrix` A x B = C
-/// where A is of size m x n, B is of size n x p, and C is of size m x p.
-///
-/// # Panics
-/// Panics when B is not of size n x p for A of size m x n.
-///
-/// # Example
-/// ```
-/// use matrixsolver::{mat, matrix::Matrix};
-///
-/// let a = mat![
-///     [1, 2, 3],
-///     [1, 2, 3]
-/// ];
-/// let b = mat![
-///     [4, 5],
-///     [6, 7],
-///     [8, 9]
-/// ];
-///
-/// let c = &a * &b;
-/// assert_eq!(mat![[40, 46], [40, 46]], c);
-/// ```
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
     T: Num + Copy,
 {
     type Output = Matrix<T>;
+    /// Perform matrix multiplication for `matrix` A x B = C
+    /// where A is of size m x n, B is of size n x p, and C is of size m x p.
+    ///
+    /// # Panics
+    /// Panics when B is not of size n x p for A of size m x n.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{mat, matrix::Matrix};
+    ///
+    /// let a = mat![
+    ///     [1, 2, 3],
+    ///     [1, 2, 3]
+    /// ];
+    /// let b = mat![
+    ///     [4, 5],
+    ///     [6, 7],
+    ///     [8, 9]
+    /// ];
+    ///
+    /// let c = &a * &b;
+    /// assert_eq!(mat![[40, 46], [40, 46]], c);
+    /// ```
     fn mul(self, rhs: &Matrix<T>) -> Matrix<T> {
         let mut result = Matrix::new(self.rows, rhs.cols);
 
@@ -185,28 +185,28 @@ where
     }
 }
 
-/// Perform scalar multiplication for A * n
-/// where A a matrix of <T>, and n is a scalar <T>.
-/// Note: n must be the right-hand side of the equation.
-/// ``` n * A``` will result in a compiler error.
-///
-/// # Example
-/// ```
-/// use matrixsolver::{mat, matrix::Matrix};
-///
-/// let a = mat![
-///     [1, 2],
-///     [3, 4]
-/// ];
-///
-/// let b = &a * 5;
-/// assert_eq!(mat![[5, 10], [15, 20]], b);
-/// ```
 impl<T> Mul<T> for &Matrix<T>
 where
     T: Num + Copy,
 {
     type Output = Matrix<T>;
+    /// Perform scalar multiplication for A * n
+    /// where A a matrix of <T>, and n is a scalar <T>.
+    /// Note: n must be the right-hand side of the equation.
+    /// ``` n * A``` will result in a compiler error.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{mat, matrix::Matrix};
+    ///
+    /// let a = mat![
+    ///     [1, 2],
+    ///     [3, 4]
+    /// ];
+    ///
+    /// let b = &a * 5;
+    /// assert_eq!(mat![[5, 10], [15, 20]], b);
+    /// ```
     fn mul(self, rhs: T) -> Matrix<T> {
         Matrix {
             rows: self.rows,
@@ -217,7 +217,7 @@ where
     }
 }
 
-/// Create a new matrix with convenient C-like 2D array syntax.None
+/// Create a new matrix with convenient C-like 2D array syntax
 ///
 /// # Example
 /// ```

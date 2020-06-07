@@ -7,6 +7,9 @@ pub type Col<T> = Vector<T>;
 pub type Row<T> = Vector<T>;
 
 #[derive(PartialEq, PartialOrd, Clone, Debug)]
+/// A 1 dimensional, ordered collection of values which can represent
+/// either a row or a column of a matrix. Not typically used by application
+/// code. In most cases prefer [`Col`](type.Col.html) or [`Row`](type.Row.html).
 pub struct Vector<T> {
     data: Vec<T>,
 }
@@ -15,6 +18,22 @@ impl<T> Vector<T>
 where
     T: Num + Copy,
 {
+    /// Create a new zeroed `Matrix` of size rows x cols
+    ///
+    /// See also the [`From` impls](#impl-From<Vec<Vec<T>>>), or [`mat!`](../macro.mat.html) macro for creating
+    /// an initialized `Matrix`.
+    ///
+    /// # Panics
+    /// Panics if rows or cols ≦ 0
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::vector::Vector;
+    ///
+    /// let a = Vector::<u8>::new(10);
+    /// ```
+    /// Creates an n `Vector` A where n = 10
+    /// with all entries A[i] == 0.
     pub fn new(len: usize) -> Self {
         assert!(len > 0);
         Vector {
@@ -22,6 +41,15 @@ where
         }
     }
 
+    /// Returns the number of elements in the vector, also referred to as its 'length'.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::vector::Vector;
+    ///
+    /// let a = Vector::<u8>::new(5);
+    /// assert_eq!(a.len(), 5);
+    /// ```
     pub fn len(&self) -> usize {
         self.data.len()
     }
@@ -56,6 +84,20 @@ where
     T: Num + Copy,
 {
     type Output = Vector<T>;
+    /// Perform scalar multiplication for A * n
+    /// where A is a Vector of <T>, and n is a scalar <T>.
+    /// Note: n must be the right-hand side of the equation.
+    /// ``` n * A``` will result in a compiler error.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{row, vector::Row};
+    ///
+    /// let a = row![1, 2, 3, 4];
+    ///
+    /// let b = &a * 5;
+    /// assert_eq!(row![5, 10, 15, 20], b);
+    /// ```
     fn mul(self, rhs: T) -> Self::Output {
         self.apply_operation(rhs, Mul::mul)
     }
@@ -66,6 +108,20 @@ where
     T: Num + Copy,
 {
     type Output = Vector<T>;
+    /// Perform scalar division for A / n
+    /// where A is a vector of <T>, and n is a scalar <T>.
+    /// Note: n must be the right-hand side of the equation.
+    /// ``` n / A``` will result in a compiler error.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{row, vector::Row};
+    ///
+    /// let a = row![10, 20, 30, 40];
+    ///
+    /// let b = &a / 10;
+    /// assert_eq!(row![1, 2, 3, 4], b);
+    /// ```
     fn div(self, rhs: T) -> Self::Output {
         self.apply_operation(rhs, Div::div)
     }
@@ -76,6 +132,19 @@ where
     T: Num + Copy,
 {
     type Output = Vector<T>;
+    /// Perform vector addition
+    /// where A and B are a vectors of <T>.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{row, vector::Row};
+    ///
+    /// let a = row![10, 20, 30, 40];
+    /// let b = row![10, 20, 30, 40];
+    ///
+    /// let c = &a + &b;
+    /// assert_eq!(row![20, 40, 60, 80], c);
+    /// ```
     fn add(self, rhs: &Vector<T>) -> Self::Output {
         self.apply_operation_for_each(rhs, Add::add)
     }
@@ -86,6 +155,19 @@ where
     T: Num + Copy,
 {
     type Output = Vector<T>;
+    /// Perform vector subtraction
+    /// where A and B are a vectors of <T>.
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{row, vector::Row};
+    ///
+    /// let a = row![10, 20, 30, 40];
+    /// let b = row![10, 20, 30, 40];
+    ///
+    /// let c = &a - &b;
+    /// assert_eq!(row![0, 0, 0, 0], c);
+    /// ```
     fn sub(self, rhs: &Vector<T>) -> Self::Output {
         self.apply_operation_for_each(rhs, Sub::sub)
     }
@@ -95,10 +177,34 @@ impl<T> From<Vec<T>> for Vector<T>
 where
     T: Num + Copy,
 {
+    /// Creates a new `Vector` A from a `Vec<T>`
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::vector::Vector;
+    ///
+    /// let a = Vector::<u8>::from(vec![1, 2, 3, 4, 5, 6]);
+    /// ```
     fn from(v: Vec<T>) -> Self {
-        let mut a = Vector::<T>::new(v.len());
-        a.data = v;
-        a
+        Vector::from(&v)
+    }
+}
+
+impl<T> From<&Vec<T>> for Vector<T>
+where
+    T: Num + Copy,
+{
+    /// Creates a new `Vector` A from a `&Vec<T>`
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::vector::Vector;
+    ///
+    /// let v = vec![1, 2, 3, 4, 5, 6];
+    /// let a = Vector::<u8>::from(&v);
+    /// ```
+    fn from(v: &Vec<T>) -> Self {
+        Vector { data: v.to_vec() }
     }
 }
 
@@ -107,6 +213,15 @@ where
     T: Num + Copy,
 {
     type Output = T;
+    /// # Example
+    /// ```
+    /// use matrixsolver::{row, vector::Row};
+    ///
+    /// let row = row![1,2,3,4];
+    ///
+    /// // Accesses an element of `row`
+    /// let el = row[0];
+    /// ```
     fn index(&self, index: usize) -> &Self::Output {
         &self.data[index]
     }
@@ -116,22 +231,29 @@ impl<T> IndexMut<usize> for Vector<T>
 where
     T: Num + Copy,
 {
+    /// # Example
+    /// ```
+    /// use matrixsolver::{row, vector::Row};
+    ///
+    /// let mut row = row![1,2,3,4];
+    ///
+    /// // Accesses amutable element of `row`
+    /// row[0] = 100;
+    /// ```
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.data[index]
     }
 }
 
-impl<T> From<&Vec<T>> for Vector<T>
-where
-    T: Num + Copy,
-{
-    fn from(v: &Vec<T>) -> Self {
-        let mut a = Vector::<T>::new(v.len());
-        a.data = v.clone();
-        a
-    }
-}
-
+/// Create a new row with convenient C-like array syntax
+///
+/// # Example
+/// ```
+/// use matrixsolver::{row, vector::Row};
+///
+/// let a = row![0.0, 0.1, 0.2];
+/// let b = row![22.22; 100];
+/// ```
 #[macro_export]
 macro_rules! row {
     ($($x:expr),* $(,)*) => {{
