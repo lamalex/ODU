@@ -54,6 +54,32 @@ where
         self.data.len()
     }
 
+    /// Find position and value for maximum element of Vector
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{row, vector::Row};
+    ///
+    /// let r = row![10, 55, 100, -200];
+    /// let max = r.max_at();
+    /// assert_eq!((2, 100), max);
+    /// ```
+    pub fn max_at(&self) -> (usize, T)
+    where
+        T: Ord,
+    {
+        // 0 length rows are forbidden, and so unwrap() is used
+        // rather than handling the optional.
+        let max = self
+            .data
+            .iter()
+            .enumerate()
+            .max_by(|x, y| x.1.cmp(y.1))
+            .unwrap();
+
+        (max.0, *max.1)
+    }
+
     fn apply_operation<F>(&self, rhs: T, mut op: F) -> Vector<T>
     where
         F: FnMut(T, T) -> T,
@@ -204,6 +230,7 @@ where
     /// let a = Vector::<u8>::from(&v);
     /// ```
     fn from(v: &Vec<T>) -> Self {
+        assert!(v.len() > 0);
         Vector { data: v.to_vec() }
     }
 }
@@ -274,5 +301,17 @@ mod tests {
         };
 
         assert_eq!(row![2, 4, 6], (&sut * 2));
+    }
+
+    #[test]
+    fn test_max_at() {
+        let sut = row![10, 100, 55, 24];
+        assert_eq!((1, 100), sut.max_at());
+    }
+
+    #[test]
+    fn test_max_at_all_same() {
+        let sut = row![100, 100, 100, 100];
+        assert_eq!((3, 100), sut.max_at());
     }
 }
