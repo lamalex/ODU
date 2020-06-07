@@ -1,5 +1,5 @@
 use num_traits::Num;
-use std::ops::{Index, IndexMut, Mul};
+use std::ops::{Index, Mul};
 
 use crate::{row, vector::Col, vector::Row, vector::Vector};
 
@@ -120,24 +120,6 @@ where
 
 /// # Example
 /// ```
-/// use matrixsolver::{mat, matrix::Matrix};
-///
-/// let matrix = mat![[1,2],[3,4]];
-///
-/// // Accesses a mutable single row of `matrix`
-/// let mut row = &matrix[0];
-/// ```
-impl<T> IndexMut<usize> for Matrix<T>
-where
-    T: Num + Copy,
-{
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.data_rows[index]
-    }
-}
-
-/// # Example
-/// ```
 /// use matrixsolver::{mat, row, matrix::Matrix, vector::Row};
 ///
 /// let expected = vec![row![1, 3], row![2, 4]];
@@ -194,7 +176,7 @@ where
             for j in 0..result.cols {
                 for k in 0..self.cols {
                     let product = result[i][j] + self[i][k] * rhs[k][j];
-                    result[i][j] = product;
+                    result.data_rows[i][j] = product;
                     result.data_cols[j][i] = product;
                 }
             }
