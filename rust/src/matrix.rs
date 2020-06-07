@@ -1,8 +1,7 @@
 use num_traits::Num;
 use std::ops::{Index, IndexMut, Mul};
 
-use crate::row;
-use crate::row::Row;
+use crate::{row, row::Col, row::Row};
 
 #[derive(Debug, PartialEq, Clone)]
 /// High level struct describing a 2D matrix
@@ -12,7 +11,7 @@ pub struct Matrix<T> {
     /// Number of columns for instance of Matrix
     pub cols: usize,
     data_rows: Vec<Row<T>>,
-    data_cols: Vec<Row<T>>,
+    data_cols: Vec<Col<T>>,
 }
 
 impl<T> Matrix<T>
@@ -48,14 +47,25 @@ where
     /// Create a new `Matrix` B, which is the transpose of `Matrix` A,
     /// that is to say `A[i][j] == B[j][i]`.
     pub fn transpose(&self) -> Self {
-        let mut b = Matrix::<T>::new(self.cols, self.rows);
-        for i in 0..self.rows {
-            for j in 0..self.cols {
-                b[j][i] = self[i][j];
-            }
-        }
+        let a_t = vec_transpose(&self.data_rows);
+        let mut b = Matrix::from(a_t);
+        b.data_cols = self.data_rows.clone();
+
         b
     }
+}
+
+fn vec_transpose<T>(data: &Vec<Row<T>>) -> Vec<Vec<T>>
+where
+    T: Num + Copy,
+{
+    let mut b = vec![vec![T::zero(); data.len()]; data[0].len()];
+    for i in 0..data.len() {
+        for j in 0..data[0].len() {
+            b[j][i] = data[i][j];
+        }
+    }
+    b
 }
 
 impl<T> From<Vec<Vec<T>>> for Matrix<T>
@@ -73,12 +83,16 @@ where
     /// ```
     /// Creates a new `Matrix` with 2 rows, each with 3 columns.
     fn from(v: Vec<Vec<T>>) -> Self {
-        Matrix {
+        let mut b = Matrix {
             rows: v.len(),
             cols: v[0].len(),
             data_rows: v.iter().map(Row::from).collect(),
             data_cols: vec![row![T::zero(); v.len()]; v[0].len()],
-        }
+        };
+
+        b.data_cols = vec_transpose(&b.data_rows).iter().map(Row::from).collect();
+
+        b
     }
 }
 
@@ -119,6 +133,29 @@ where
     }
 }
 
+/// # Example
+/// ```
+/// use matrixsolver::{mat, row, matrix::Matrix, row::Row};
+///
+/// let expected = vec![row![1, 3], row![2, 4]];
+///
+/// let matrix = mat![[1,2],[3,4]];
+///
+/// // Accesses columns of `matrix`
+/// let cols = &matrix[..];
+
+/// let first_col = &matrix[..][0];
+/// ```
+impl<T> Index<std::ops::RangeFull> for Matrix<T>
+where
+    T: Num + Copy,
+{
+    type Output = Vec<Col<T>>;
+    fn index(&self, _index: std::ops::RangeFull) -> &Self::Output {
+        &self.data_cols
+    }
+}
+
 /// Perform matrix multiplication for `matrix` A x B = C
 /// where A is of size m x n, B is of size n x p, and C is of size m x p.
 ///
@@ -153,7 +190,9 @@ where
         for i in 0..result.rows {
             for j in 0..result.cols {
                 for k in 0..self.cols {
-                    result[i][j] = result[i][j] + self[i][k] * rhs[k][j];
+                    let product = result[i][j] + self[i][k] * rhs[k][j];
+                    result[i][j] = product;
+                    result.data_cols[j][i] = product;
                 }
             }
         }
@@ -231,6 +270,12 @@ mod tests {
         assert_eq!(sut[1][0], 3);
         assert_eq!(sut[1][1], 4);
         assert_eq!(sut[0], row![1, 2]);
+    }
+
+    #[test]
+    fn test_index_column() {
+        let sut = mat![[1, 2], [3, 4]];
+        assert_eq!(row![1, 3], sut[..][0]);
     }
 
     #[test]

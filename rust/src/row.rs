@@ -1,6 +1,8 @@
 use num_traits::Num;
 use std::ops::{Add, Div, Index, IndexMut, Mul, Sub};
 
+pub type Col<T> = Row<T>;
+
 #[derive(PartialEq, PartialOrd, Clone, Debug)]
 pub struct Row<T> {
     data: Vec<T>,
@@ -15,6 +17,10 @@ where
         Row {
             data: vec![T::zero(); len],
         }
+    }
+
+    pub fn len(&self) -> usize {
+        return self.data.len();
     }
 
     fn apply_operation<F>(&self, rhs: T, mut op: F) -> Row<T>
