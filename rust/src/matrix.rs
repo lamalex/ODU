@@ -1,7 +1,7 @@
 use num_traits::Num;
 use std::ops::{Index, IndexMut, Mul};
 
-use crate::{row, row::Col, row::Row};
+use crate::{row, vector::Col, vector::Row, vector::Vector};
 
 #[derive(Debug, PartialEq, Clone)]
 /// High level struct describing a 2D matrix
@@ -55,7 +55,7 @@ where
     }
 }
 
-fn vec_transpose<T>(data: &Vec<Row<T>>) -> Vec<Vec<T>>
+fn vec_transpose<T>(data: &Vec<Vector<T>>) -> Vec<Vec<T>>
 where
     T: Num + Copy,
 {
@@ -86,11 +86,14 @@ where
         let mut b = Matrix {
             rows: v.len(),
             cols: v[0].len(),
-            data_rows: v.iter().map(Row::from).collect(),
+            data_rows: v.iter().map(Vector::from).collect(),
             data_cols: vec![row![T::zero(); v.len()]; v[0].len()],
         };
 
-        b.data_cols = vec_transpose(&b.data_rows).iter().map(Row::from).collect();
+        b.data_cols = vec_transpose(&b.data_rows)
+            .iter()
+            .map(Vector::from)
+            .collect();
 
         b
     }
@@ -109,7 +112,7 @@ impl<T> Index<usize> for Matrix<T>
 where
     T: Num + Copy,
 {
-    type Output = Row<T>;
+    type Output = Vector<T>;
     fn index(&self, index: usize) -> &Self::Output {
         &self.data_rows[index]
     }
@@ -135,7 +138,7 @@ where
 
 /// # Example
 /// ```
-/// use matrixsolver::{mat, row, matrix::Matrix, row::Row};
+/// use matrixsolver::{mat, row, matrix::Matrix, vector::Row};
 ///
 /// let expected = vec![row![1, 3], row![2, 4]];
 ///

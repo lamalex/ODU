@@ -8,4 +8,4 @@
 //! highly ineffecient Vec<Vec<T>> internal representations in return for a clean, natural
 //! API (I hope).
 pub mod matrix;
-pub mod row;
+pub mod vector;
