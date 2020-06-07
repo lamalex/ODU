@@ -1,38 +1,11 @@
-use matrixsolver::{mat, matrix::Matrix};
+use matrixsolver::{mat, matrix::Matrix, Augment};
 
 fn main() {
-    let x = mat![
-        [1, 0],
-        [1, 1],
-        [1, 2],
-        [1, 3],
-        [1, 4],
-        [1, 5],
-        [1, 6],
-        [1, 7],
-        [1, 8],
-        [1, 9],
-        [1, 10]
-    ];
-
-    let y = mat![
-        [0],
-        [1],
-        [4],
-        [9],
-        [16],
-        [25],
-        [36],
-        [49],
-        [64],
-        [81],
-        [100]
-    ];
-
+    let x = mat![[1, 0, 0], [1, 1, 1], [1, 2, 4]];
+    let y = mat![[0], [1], [4]];
     let x_t = x.transpose();
     let xtx = &x_t * &x;
     let xty = &x_t * &y;
-
-    println!("xtx: {:?}", xtx);
-    println!("xty: {:?}", xty);
+    let xtx_xty = xtx.augment(&xty);
+    println!("{:?}", xtx_xty);
 }

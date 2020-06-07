@@ -1,7 +1,7 @@
 use num_traits::Num;
 use std::ops::{Index, Mul};
 
-use crate::{row, vector::Col, vector::Row, vector::Vector};
+use crate::{row, vector::Col, vector::Row, vector::Vector, Augment};
 
 #[derive(Debug, PartialEq, Clone)]
 /// High level struct describing a 2D matrix
@@ -47,25 +47,73 @@ where
     /// Create a new `Matrix` B, which is the transpose of `Matrix` A,
     /// that is to say `A[i][j] == B[j][i]`.
     pub fn transpose(&self) -> Self {
-        let a_t = vec_transpose(&self.data_rows);
-        let mut b = Matrix::from(a_t);
-        b.data_cols = self.data_rows.clone();
-
-        b
+        Matrix {
+            rows: self.cols,
+            cols: self.rows,
+            data_rows: self.data_cols.clone(),
+            data_cols: self.data_rows.clone(),
+        }
     }
 }
 
-fn vec_transpose<T>(data: &Vec<Vector<T>>) -> Vec<Vec<T>>
+fn vector_transpose<T>(data: &[Vector<T>]) -> Vec<Vector<T>>
+where
+    T: Num + Copy,
+{
+    let mut b = vec![row![T::zero(); data.len()]; data[0].len()];
+    for (i, vec) in data.iter().enumerate() {
+        for (j, el) in vec.iter().enumerate() {
+            b[j][i] = *el;
+        }
+    }
+    b
+}
+
+fn vec_transpose<T>(data: &[Vec<T>]) -> Vec<Vec<T>>
 where
     T: Num + Copy,
 {
     let mut b = vec![vec![T::zero(); data.len()]; data[0].len()];
-    for i in 0..data.len() {
-        for j in 0..data[0].len() {
-            b[j][i] = data[i][j];
+    for (i, vec) in data.iter().enumerate() {
+        for (j, el) in vec.iter().enumerate() {
+            b[j][i] = *el;
         }
     }
     b
+}
+
+impl<T> Augment<Matrix<T>> for Matrix<T>
+where
+    T: Num + Copy,
+{
+    /// # Example
+    /// ```
+    /// use matrixsolver::{Augment, matrix::Matrix};
+    ///
+    /// let a = Matrix::<u8>::new(5, 5);
+    /// let b = Matrix::<u8>::new(5, 1);
+    /// let c = a.augment(&b);
+    ///
+    /// assert_eq!(c[0].len(), 6);
+    /// ```
+    fn augment(&self, b: &Matrix<T>) -> Matrix<T> {
+        assert!(self.rows == b.rows);
+        let augmented = self
+            .data_rows
+            .iter()
+            .zip(b.data_rows.iter())
+            .map(|(ra, rb)| ra.augment(rb))
+            .collect::<Vec<Vector<T>>>();
+
+        let aug_t = vector_transpose(&augmented);
+
+        Matrix {
+            rows: self.rows,
+            cols: self.cols + b.cols,
+            data_rows: augmented,
+            data_cols: aug_t,
+        }
+    }
 }
 
 impl<T> From<Vec<Vec<T>>> for Matrix<T>
@@ -77,25 +125,18 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::matrix::Matrix;
+    /// use matrixsolver::{mat, matrix::Matrix};
     ///
     /// let a = Matrix::<u8>::from(vec![vec![1, 2, 3], vec![4, 5, 6]]);
+    /// assert_eq!(mat![[1, 2, 3], [4, 5, 6]], a);
     /// ```
-    /// Creates a new `Matrix` with 2 rows, each with 3 columns.
     fn from(v: Vec<Vec<T>>) -> Self {
-        let mut b = Matrix {
+        Matrix {
             rows: v.len(),
             cols: v[0].len(),
             data_rows: v.iter().map(Vector::from).collect(),
-            data_cols: vec![row![T::zero(); v.len()]; v[0].len()],
-        };
-
-        b.data_cols = vec_transpose(&b.data_rows)
-            .iter()
-            .map(Vector::from)
-            .collect();
-
-        b
+            data_cols: vec_transpose(&v).iter().map(Vector::from).collect(),
+        }
     }
 }
 
@@ -332,5 +373,22 @@ mod tests {
     fn test_matrix_scalar_multiplication_float() {
         let sut = mat![[2.0, 4.0], [6.0, 8.0]];
         assert_eq!(&sut * 1.5, mat![[3.0, 6.0], [9.0, 12.0]]);
+    }
+
+    #[test]
+    fn test_augment_compatible() {
+        let a = mat![[3, 3, 5], [3, 5, 9], [5, 9, 17]];
+        let b = mat![[5], [9], [17]];
+        let expected = mat![[3, 3, 5, 5], [3, 5, 9, 9], [5, 9, 17, 17]];
+        let c = a.augment(&b);
+        assert_eq!(expected, c);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_augment_incompatible() {
+        let a = mat![[3, 3, 5], [3, 5, 9]];
+        let b = mat![[5], [9], [17]];
+        let _c = a.augment(&b);
     }
 }

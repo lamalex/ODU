@@ -7,5 +7,11 @@
 //! `matrixsolver` makes an opinionated trade off; choosing to use double the memory and a
 //! highly ineffecient Vec<Vec<T>> internal representations in return for a clean, natural
 //! API (I hope).
+
 pub mod matrix;
 pub mod vector;
+
+pub trait Augment<T> {
+    /// Appends b onto self
+    fn augment(&self, b: &T) -> T;
+}

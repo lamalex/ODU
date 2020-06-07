@@ -1,3 +1,5 @@
+#![allow(clippy::len_without_is_empty)]
+use crate::Augment;
 use num_traits::Num;
 use std::ops::{Add, Div, Index, IndexMut, Mul, Sub};
 
@@ -80,6 +82,10 @@ where
         (max.0, *max.1)
     }
 
+    pub fn iter(&self) -> std::slice::Iter<T> {
+        self.data.iter()
+    }
+
     fn apply_operation<F>(&self, rhs: T, mut op: F) -> Vector<T>
     where
         F: FnMut(T, T) -> T,
@@ -100,6 +106,32 @@ where
                 .iter()
                 .enumerate()
                 .map(|(i, x)| op(*x, rhs[i]))
+                .collect(),
+        }
+    }
+}
+
+impl<T> Augment<Vector<T>> for Vector<T>
+where
+    T: Copy,
+{
+    /// # Example
+    /// ```
+    /// use matrixsolver::{Augment, vector::Vector};
+    ///
+    /// let a = Vector::<u8>::new(5);
+    /// let b = Vector::<u8>::new(1);
+    /// let c = a.augment(&b);
+    ///
+    /// assert_eq!(c.len(), 6);
+    /// ```
+    fn augment(&self, b: &Vector<T>) -> Vector<T> {
+        Vector {
+            data: self
+                .data
+                .iter()
+                .copied()
+                .chain(b.data.iter().copied())
                 .collect(),
         }
     }
@@ -199,42 +231,6 @@ where
     }
 }
 
-impl<T> From<Vec<T>> for Vector<T>
-where
-    T: Num + Copy,
-{
-    /// Creates a new `Vector` A from a `Vec<T>`
-    ///
-    /// # Example
-    /// ```
-    /// use matrixsolver::vector::Vector;
-    ///
-    /// let a = Vector::<u8>::from(vec![1, 2, 3, 4, 5, 6]);
-    /// ```
-    fn from(v: Vec<T>) -> Self {
-        Vector::from(&v)
-    }
-}
-
-impl<T> From<&Vec<T>> for Vector<T>
-where
-    T: Num + Copy,
-{
-    /// Creates a new `Vector` A from a `&Vec<T>`
-    ///
-    /// # Example
-    /// ```
-    /// use matrixsolver::vector::Vector;
-    ///
-    /// let v = vec![1, 2, 3, 4, 5, 6];
-    /// let a = Vector::<u8>::from(&v);
-    /// ```
-    fn from(v: &Vec<T>) -> Self {
-        assert!(v.len() > 0);
-        Vector { data: v.to_vec() }
-    }
-}
-
 impl<T> Index<usize> for Vector<T>
 where
     T: Num + Copy,
@@ -269,6 +265,42 @@ where
     /// ```
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.data[index]
+    }
+}
+
+impl<T> From<Vec<T>> for Vector<T>
+where
+    T: Num + Copy,
+{
+    /// Creates a new `Vector` A from a `Vec<T>`
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::vector::Vector;
+    ///
+    /// let a = Vector::<u8>::from(vec![1, 2, 3, 4, 5, 6]);
+    /// ```
+    fn from(v: Vec<T>) -> Self {
+        Vector::from(&v)
+    }
+}
+
+impl<T> From<&Vec<T>> for Vector<T>
+where
+    T: Num + Copy,
+{
+    /// Creates a new `Vector` A from a `&Vec<T>`
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::vector::Vector;
+    ///
+    /// let v = vec![1, 2, 3, 4, 5, 6];
+    /// let a = Vector::<u8>::from(&v);
+    /// ```
+    fn from(v: &Vec<T>) -> Self {
+        assert!(!v.is_empty());
+        Vector { data: v.to_vec() }
     }
 }
 
