@@ -49,6 +49,43 @@ where
             data_cols: vec![row![T::zero(); rows]; cols],
         }
     }
+
+    /// Returns a new matrix whose rows with given indices are swapped.
+    ///
+    /// # Example
+    /// ```
+    /// use launearalg::{mat, matrix::Matrix};
+    ///
+    /// let a = mat![[1,2,3], [3,2,1]];
+    /// assert_eq!(mat![[3, 2, 1], [1, 2, 3]], a.swap_rows(0, 1));
+    /// ```
+    pub fn swap_rows(&self, r1: usize, r2: usize) -> Matrix<T>
+    where
+        T: Copy,
+    {
+        let mut data_rows = self.data_rows.clone();
+        Matrix::swapsies(&mut data_rows, r1, r2);
+        let data_cols = data_rows.transpose();
+
+        Matrix {
+            rows: self.rows,
+            cols: self.cols,
+            data_rows,
+            data_cols,
+        }
+    }
+
+    // The great thing about private members is you can name them whatever you want
+    // and as long as the next person who comes along can understand what you wrote,
+    // you're squared away!
+    fn swapsies(data: &mut Vec<Vector<T>>, r1: usize, r2: usize)
+    where
+        T: Copy,
+    {
+        let tmp = data[r1].clone();
+        data[r1] = data[r2].clone();
+        data[r2] = tmp;
+    }
 }
 
 impl<T> Transpose for Matrix<T>
@@ -377,5 +414,12 @@ mod tests {
         let a = mat![[3, 3, 5], [3, 5, 9]];
         let b = mat![[5], [9], [17]];
         let _c = a.augment(&b);
+    }
+
+    #[test]
+    fn test_swap_rows() {
+        let sut = mat![[1, 2, 3], [3, 2, 1]];
+        let expected = mat![[3, 2, 1], [1, 2, 3]];
+        assert_eq!(expected, sut.swap_rows(0, 1));
     }
 }

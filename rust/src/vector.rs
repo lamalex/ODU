@@ -58,6 +58,11 @@ where
 
     /// Find position and value for maximum element of Vector
     ///
+    /// # Panics
+    /// Panics if there is no ordering between members of vector.
+    /// Indicates invariant has been violated and somehow our Vector
+    /// contains a NAN.
+    ///
     /// # Example
     /// ```
     /// use launearalg::{row, vector::Row};
@@ -68,7 +73,7 @@ where
     /// ```
     pub fn max_at(&self) -> (usize, T)
     where
-        T: Ord,
+        T: PartialOrd,
     {
         // 0 length rows are forbidden, and so unwrap() is used
         // rather than handling the optional.
@@ -76,7 +81,10 @@ where
             .data
             .iter()
             .enumerate()
-            .max_by(|x, y| x.1.cmp(y.1))
+            .max_by(|x, y| match x.1.partial_cmp(y.1) {
+                Some(ord) => return ord,
+                None => panic!(),
+            })
             .unwrap();
 
         (max.0, *max.1)

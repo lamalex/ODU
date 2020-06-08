@@ -5,11 +5,14 @@ use launearalg::{
 };
 
 fn main() {
-    let x = mat![[1, 0, 0], [1, 1, 1], [1, 2, 4]];
-    let y = mat![[0], [1], [4]];
+    let x: Matrix<f64> = mat![[1.0, 0.0, 0.0], [1.0, 1.0, 1.0], [1.0, 2.0, 4.0]];
+    let y: Matrix<f64> = mat![[0.0], [1.0], [4.0]];
     let x_t = x.transpose();
     let xtx = &x_t * &x;
     let xty = &x_t * &y;
-    let xtx_xty = xtx.augment(&xty);
+    let mut xtx_xty = xtx.augment(&xty);
+    let row_with_max = xtx_xty[..][0].max_at();
+    println!("{:?}", xtx_xty);
+    xtx_xty = xtx_xty.swap_rows(0, row_with_max.0);
     println!("{:?}", xtx_xty);
 }
