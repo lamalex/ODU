@@ -1,5 +1,5 @@
 #![allow(clippy::len_without_is_empty)]
-use crate::Augment;
+use crate::traits::Augment;
 use num_traits::Num;
 use std::ops::{Add, Div, Index, IndexMut, Mul, Sub};
 
@@ -111,20 +111,11 @@ where
     }
 }
 
-impl<T> Augment<Vector<T>> for Vector<T>
+impl<T> Augment<&Vector<T>> for Vector<T>
 where
     T: Copy,
 {
-    /// # Example
-    /// ```
-    /// use matrixsolver::{Augment, vector::Vector};
-    ///
-    /// let a = Vector::<u8>::new(5);
-    /// let b = Vector::<u8>::new(1);
-    /// let c = a.augment(&b);
-    ///
-    /// assert_eq!(c.len(), 6);
-    /// ```
+    type Output = Self;
     fn augment(&self, b: &Vector<T>) -> Vector<T> {
         Vector {
             data: self

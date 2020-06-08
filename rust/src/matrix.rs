@@ -1,7 +1,13 @@
 use num_traits::Num;
 use std::ops::{Index, Mul};
 
-use crate::{row, vector::Col, vector::Row, vector::Vector, Augment};
+use crate::{
+    row,
+    traits::{Augment, Transpose},
+    vector::Col,
+    vector::Row,
+    vector::Vector,
+};
 
 #[derive(Debug, PartialEq, Clone)]
 /// High level struct describing a 2D matrix
@@ -43,10 +49,26 @@ where
             data_cols: vec![row![T::zero(); rows]; cols],
         }
     }
+}
 
+impl<T> Transpose for Matrix<T>
+where
+    T: Clone,
+{
     /// Create a new `Matrix` B, which is the transpose of `Matrix` A,
     /// that is to say `A[i][j] == B[j][i]`.
-    pub fn transpose(&self) -> Self {
+    ///
+    /// # Example
+    /// ```
+    /// use matrixsolver::{mat, matrix::Matrix, traits::Transpose};
+    ///
+    /// let a = mat![[1,2],[3,4]];
+    /// let a_t = a.transpose();
+    ///
+    /// assert_eq!(mat![[1,3],[2,4]], a_t);
+    /// ```
+    type Output = Matrix<T>;
+    fn transpose(&self) -> Self::Output {
         Matrix {
             rows: self.cols,
             cols: self.rows,
@@ -56,46 +78,11 @@ where
     }
 }
 
-fn vector_transpose<T>(data: &[Vector<T>]) -> Vec<Vector<T>>
+impl<T> Augment<&Matrix<T>> for Matrix<T>
 where
     T: Num + Copy,
 {
-    let mut b = vec![row![T::zero(); data.len()]; data[0].len()];
-    for (i, vec) in data.iter().enumerate() {
-        for (j, el) in vec.iter().enumerate() {
-            b[j][i] = *el;
-        }
-    }
-    b
-}
-
-fn vec_transpose<T>(data: &[Vec<T>]) -> Vec<Vec<T>>
-where
-    T: Num + Copy,
-{
-    let mut b = vec![vec![T::zero(); data.len()]; data[0].len()];
-    for (i, vec) in data.iter().enumerate() {
-        for (j, el) in vec.iter().enumerate() {
-            b[j][i] = *el;
-        }
-    }
-    b
-}
-
-impl<T> Augment<Matrix<T>> for Matrix<T>
-where
-    T: Num + Copy,
-{
-    /// # Example
-    /// ```
-    /// use matrixsolver::{Augment, matrix::Matrix};
-    ///
-    /// let a = Matrix::<u8>::new(5, 5);
-    /// let b = Matrix::<u8>::new(5, 1);
-    /// let c = a.augment(&b);
-    ///
-    /// assert_eq!(c[0].len(), 6);
-    /// ```
+    type Output = Self;
     fn augment(&self, b: &Matrix<T>) -> Matrix<T> {
         assert!(self.rows == b.rows);
         let augmented = self
@@ -105,7 +92,7 @@ where
             .map(|(ra, rb)| ra.augment(rb))
             .collect::<Vec<Vector<T>>>();
 
-        let aug_t = vector_transpose(&augmented);
+        let aug_t = augmented.transpose();
 
         Matrix {
             rows: self.rows,
@@ -135,7 +122,7 @@ where
             rows: v.len(),
             cols: v[0].len(),
             data_rows: v.iter().map(Vector::from).collect(),
-            data_cols: vec_transpose(&v).iter().map(Vector::from).collect(),
+            data_cols: v.transpose().iter().map(Vector::from).collect(),
         }
     }
 }

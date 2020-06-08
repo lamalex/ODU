@@ -9,9 +9,8 @@
 //! API (I hope).
 
 pub mod matrix;
+pub mod traits;
 pub mod vector;
 
-pub trait Augment<T> {
-    /// Appends b onto self
-    fn augment(&self, b: &T) -> T;
-}
+mod impl_vec_vec;
+mod impl_vec_vector;

@@ -1,4 +1,8 @@
-use matrixsolver::{mat, matrix::Matrix, Augment};
+use matrixsolver::{
+    mat,
+    matrix::Matrix,
+    traits::{Augment, Transpose},
+};
 
 fn main() {
     let x = mat![[1, 0, 0], [1, 1, 1], [1, 2, 4]];
