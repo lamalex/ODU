@@ -1,4 +1,4 @@
-use matrixsolver::{
+use launearalg::{
     mat,
     matrix::Matrix,
     traits::{Augment, Transpose},

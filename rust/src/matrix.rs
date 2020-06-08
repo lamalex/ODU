@@ -34,7 +34,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::matrix::Matrix;
+    /// use launearalg::matrix::Matrix;
     ///
     /// let a = Matrix::<u8>::new(10, 10);
     /// ```
@@ -60,7 +60,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{mat, matrix::Matrix, traits::Transpose};
+    /// use launearalg::{mat, matrix::Matrix, traits::Transpose};
     ///
     /// let a = mat![[1,2],[3,4]];
     /// let a_t = a.transpose();
@@ -112,7 +112,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{mat, matrix::Matrix};
+    /// use launearalg::{mat, matrix::Matrix};
     ///
     /// let a = Matrix::<u8>::from(vec![vec![1, 2, 3], vec![4, 5, 6]]);
     /// assert_eq!(mat![[1, 2, 3], [4, 5, 6]], a);
@@ -134,7 +134,7 @@ where
     type Output = Vector<T>;
     /// # Example
     /// ```
-    /// use matrixsolver::{mat, matrix::Matrix};
+    /// use launearalg::{mat, matrix::Matrix};
     ///
     /// let matrix = mat![[1,2],[3,4]];
     ///
@@ -153,7 +153,7 @@ where
     type Output = Vec<Col<T>>;
     /// # Example
     /// ```
-    /// use matrixsolver::{mat, row, matrix::Matrix, vector::Row};
+    /// use launearalg::{mat, row, matrix::Matrix, vector::Row};
     ///
     /// let expected = vec![row![1, 3], row![2, 4]];
     ///
@@ -182,7 +182,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{mat, matrix::Matrix};
+    /// use launearalg::{mat, matrix::Matrix};
     ///
     /// let a = mat![
     ///     [1, 2, 3],
@@ -225,7 +225,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{mat, matrix::Matrix};
+    /// use launearalg::{mat, matrix::Matrix};
     ///
     /// let a = mat![
     ///     [1, 2],
@@ -249,7 +249,7 @@ where
 ///
 /// # Example
 /// ```
-/// use matrixsolver::{mat, matrix::Matrix};
+/// use launearalg::{mat, matrix::Matrix};
 ///
 /// let a = mat![
 ///     [0.0, 0.1, 0.2],

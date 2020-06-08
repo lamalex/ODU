@@ -30,7 +30,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::vector::Vector;
+    /// use launearalg::vector::Vector;
     ///
     /// let a = Vector::<u8>::new(10);
     /// ```
@@ -47,7 +47,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::vector::Vector;
+    /// use launearalg::vector::Vector;
     ///
     /// let a = Vector::<u8>::new(5);
     /// assert_eq!(a.len(), 5);
@@ -60,7 +60,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{row, vector::Row};
+    /// use launearalg::{row, vector::Row};
     ///
     /// let r = row![10, 55, 100, -200];
     /// let max = r.max_at();
@@ -82,6 +82,7 @@ where
         (max.0, *max.1)
     }
 
+    /// Returns an Iterator<Item=T > over the elements of the Vector
     pub fn iter(&self) -> std::slice::Iter<T> {
         self.data.iter()
     }
@@ -116,6 +117,17 @@ where
     T: Copy,
 {
     type Output = Self;
+    /// # Example
+    ///
+    /// ```
+    /// use launearalg::{row, vector::Row, traits::Augment, vector::Vector};
+    ///
+    /// let a = row![1, 2, 3];
+    /// let b = row![9];
+    ///
+    /// let c = a.augment(&b);
+    /// assert_eq!(row![1, 2, 3, 9], c);
+    /// ```
     fn augment(&self, b: &Vector<T>) -> Vector<T> {
         Vector {
             data: self
@@ -136,11 +148,11 @@ where
     /// Perform scalar multiplication for A * n
     /// where A is a Vector of <T>, and n is a scalar <T>.
     /// Note: n must be the right-hand side of the equation.
-    /// ``` n * A``` will result in a compiler error.
+    /// **`n * A` will result in a compiler error**.
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{row, vector::Row};
+    /// use launearalg::{row, vector::Row};
     ///
     /// let a = row![1, 2, 3, 4];
     ///
@@ -164,7 +176,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{row, vector::Row};
+    /// use launearalg::{row, vector::Row};
     ///
     /// let a = row![10, 20, 30, 40];
     ///
@@ -186,7 +198,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{row, vector::Row};
+    /// use launearalg::{row, vector::Row};
     ///
     /// let a = row![10, 20, 30, 40];
     /// let b = row![10, 20, 30, 40];
@@ -209,7 +221,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::{row, vector::Row};
+    /// use launearalg::{row, vector::Row};
     ///
     /// let a = row![10, 20, 30, 40];
     /// let b = row![10, 20, 30, 40];
@@ -229,7 +241,7 @@ where
     type Output = T;
     /// # Example
     /// ```
-    /// use matrixsolver::{row, vector::Row};
+    /// use launearalg::{row, vector::Row};
     ///
     /// let row = row![1,2,3,4];
     ///
@@ -247,7 +259,7 @@ where
 {
     /// # Example
     /// ```
-    /// use matrixsolver::{row, vector::Row};
+    /// use launearalg::{row, vector::Row};
     ///
     /// let mut row = row![1,2,3,4];
     ///
@@ -267,7 +279,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::vector::Vector;
+    /// use launearalg::vector::Vector;
     ///
     /// let a = Vector::<u8>::from(vec![1, 2, 3, 4, 5, 6]);
     /// ```
@@ -284,7 +296,7 @@ where
     ///
     /// # Example
     /// ```
-    /// use matrixsolver::vector::Vector;
+    /// use launearalg::vector::Vector;
     ///
     /// let v = vec![1, 2, 3, 4, 5, 6];
     /// let a = Vector::<u8>::from(&v);
@@ -299,7 +311,7 @@ where
 ///
 /// # Example
 /// ```
-/// use matrixsolver::{row, vector::Row};
+/// use launearalg::{row, vector::Row};
 ///
 /// let a = row![0.0, 0.1, 0.2];
 /// let b = row![22.22; 100];
