@@ -82,7 +82,7 @@ where
             .iter()
             .enumerate()
             .max_by(|x, y| match x.1.partial_cmp(y.1) {
-                Some(ord) => return ord,
+                Some(ord) => ord,
                 None => panic!(),
             })
             .unwrap();
@@ -201,7 +201,7 @@ where
     T: Num + Copy,
 {
     fn div_assign(&mut self, rhs: T) {
-        &mut self.data.iter_mut().for_each(|v| *v = *v / rhs);
+        self.data.iter_mut().for_each(|v| *v = *v / rhs);
     }
 }
 

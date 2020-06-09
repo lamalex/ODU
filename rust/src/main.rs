@@ -30,7 +30,7 @@ fn main() {
         for e in (i + 1)..xtx_xty.rows {
             for j in start_col..xtx_xty[..].len() {
                 let s = xtx_xty[e][start_col];
-                xtx_xty[e][j] = xtx_xty[e][j] - s * xtx_xty[i][j];
+                xtx_xty[e][j] -= s * xtx_xty[i][j];
             }
         }
     }
