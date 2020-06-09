@@ -1,7 +1,7 @@
 #![allow(clippy::len_without_is_empty)]
 use crate::traits::Augment;
 use num_traits::Num;
-use std::ops::{Add, Div, Index, IndexMut, Mul, Sub};
+use std::ops::{Add, Div, DivAssign, Index, IndexMut, Mul, Sub};
 
 /// Semantic alias for `Vector`. Represents single column vector of a 2D matrix.
 pub type Col<T> = Vector<T>;
@@ -196,6 +196,15 @@ where
     }
 }
 
+impl<T> DivAssign<T> for Vector<T>
+where
+    T: Num + Copy,
+{
+    fn div_assign(&mut self, rhs: T) {
+        &mut self.data.iter_mut().for_each(|v| *v = *v / rhs);
+    }
+}
+
 impl<T> Add<&Vector<T>> for &Vector<T>
 where
     T: Num + Copy,
@@ -276,6 +285,16 @@ where
     /// ```
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.data[index]
+    }
+}
+
+impl<T> Index<std::ops::RangeFrom<usize>> for Vector<T>
+where
+    T: Num + Copy,
+{
+    type Output = [T];
+    fn index(&self, index: std::ops::RangeFrom<usize>) -> &Self::Output {
+        &self.data[index]
     }
 }
 

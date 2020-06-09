@@ -1,5 +1,5 @@
 use num_traits::Num;
-use std::ops::{Index, Mul};
+use std::ops::{Index, IndexMut, Mul};
 
 use crate::{
     row,
@@ -48,6 +48,10 @@ where
             data_rows: vec![row![T::zero(); cols]; rows],
             data_cols: vec![row![T::zero(); rows]; cols],
         }
+    }
+
+    pub fn iter(&self) -> std::slice::Iter<Vector<T>> {
+        self.data_rows.iter()
     }
 
     /// Returns a new matrix whose rows with given indices are swapped.
@@ -183,11 +187,20 @@ where
     }
 }
 
+impl<T> IndexMut<usize> for Matrix<T>
+where
+    T: Num + Copy,
+{
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.data_rows[index]
+    }
+}
+
 impl<T> Index<std::ops::RangeFull> for Matrix<T>
 where
     T: Num + Copy,
 {
-    type Output = Vec<Col<T>>;
+    type Output = [Col<T>];
     /// # Example
     /// ```
     /// use launearalg::{mat, row, matrix::Matrix, vector::Row};
@@ -202,7 +215,7 @@ where
     /// let first_col = &matrix[..][0];
     /// ```
     fn index(&self, _index: std::ops::RangeFull) -> &Self::Output {
-        &self.data_cols
+        &self.data_cols[..]
     }
 }
 

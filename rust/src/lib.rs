@@ -12,5 +12,6 @@ pub mod matrix;
 pub mod traits;
 pub mod vector;
 
+pub mod impl_slice;
 mod impl_vec_vec;
 mod impl_vec_vector;
