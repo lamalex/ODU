@@ -50,6 +50,29 @@ where
         }
     }
 
+    /// Syncronizes the column representation of the Matrix with the
+    /// row representation.
+    ///
+    /// This is an ugly hack due to time constraints and a desire
+    /// to allow arithmatic operators on rows vs some API like
+    /// matrix /= (row index, n) ≍ matrix[i] /= n.
+    /// It places the onus on users to call after they've finished
+    /// some mutable manipulation of their matrix at the row or element
+    /// level. Cols are only exposed as immutable, and so this works.
+    ///
+    /// # Example
+    /// ```
+    /// use launearalg::{mat, vector::Vector, matrix::Matrix};
+    /// let mut a = mat![[1, 1, 1], [1, 1, 1]];
+    /// a[0] /= 2;
+    /// a.sync();
+    ///
+    /// assert_eq!(mat![[0, 0, 0], [1,1,1]], a);
+    /// ```
+    pub fn sync(&mut self) {
+        self.data_cols = self.data_rows.transpose()
+    }
+
     pub fn iter(&self) -> std::slice::Iter<Vector<T>> {
         self.data_rows.iter()
     }
