@@ -1,8 +1,8 @@
-# CS517 Machine Assignment 3
+# CS517 Machine Assignment 4
 # Alex Launi: UIN 01124306
 # ODU, Summer 2020
 
-Implements matrix multiplication
+Implements gaussian elimination, and some basic matrix manipulation.
 
 ### To run:
 ```
