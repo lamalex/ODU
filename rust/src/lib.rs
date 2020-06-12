@@ -9,6 +9,7 @@
 //! API (I hope).
 
 pub mod matrix;
+pub mod solver;
 pub mod traits;
 pub mod vector;
 
