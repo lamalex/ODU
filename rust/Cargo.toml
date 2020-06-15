@@ -1,10 +1,6 @@
-[package]
-name = "launearalg"
-version = "0.2.0"
-authors = ["Alexander Launi <alex.launi@gmail.com>"]
-edition = "2018"
+[workspace]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-num-traits = "0.2"
+members = [
+    "cputemps",
+    "launearalg"
+]
