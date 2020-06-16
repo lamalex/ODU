@@ -16,3 +16,6 @@ where
 {
     fn max_at(&self) -> Option<(usize, &T)>;
 }
+pub trait Interpolate {
+    fn interpolate(&self, step: f64) -> Vec<String>;
+}
