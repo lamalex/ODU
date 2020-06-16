@@ -1,0 +1,3 @@
+//! # cputemps
+
+pub mod parser;
