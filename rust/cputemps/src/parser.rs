@@ -5,6 +5,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 
 pub struct Parser {
+    pub cores: usize,
     file_path: String,
 }
 
@@ -20,8 +21,15 @@ impl Parser {
     /// let parser = Parser::new(path);
     /// ```
     pub fn new(path: &str) -> Result<Parser, Box<dyn Error>> {
-        open_temperature_data_file(path)?;
+        let f = open_temperature_data_file(path)?;
+        let mut reader = BufReader::new(f);
+        let mut buf = String::new();
+
+        reader.read_line(&mut buf)?;
+        let cores = parse_line(&buf[..])?;
+
         Ok(Parser {
+            cores: cores.len(),
             file_path: path.to_string(),
         })
     }
