@@ -4,8 +4,6 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 
-use launearalg::vector::Vector;
-
 pub struct Parser {
     file_path: String,
 }
@@ -43,7 +41,7 @@ fn open_temperature_data_file(path: &str) -> Result<File, std::io::Error> {
 }
 
 impl Iterator for ParserIterator {
-    type Item = Vector<f64>;
+    type Item = Vec<f64>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let line = self.lines.next();
@@ -57,29 +55,21 @@ impl Iterator for ParserIterator {
     }
 }
 
-fn parse_line(line: &str) -> Result<Vector<f64>, std::num::ParseFloatError> {
+fn parse_line(line: &str) -> Result<Vec<f64>, std::num::ParseFloatError> {
     // Safe to unwrap. Regex has been vetted for correctness.
     // If regex is incorrect it's a programming error and should not be handled.
     let re = Regex::new(r"(?P<temp>\b[0-9.]+)").unwrap();
 
-    let v: Result<Vec<f64>, _> = re
-        .captures_iter(line)
+    re.captures_iter(line)
         .map(|cap| String::from(&cap["temp"]).parse::<f64>())
-        .collect();
-
-    match v {
-        Ok(v) => Ok(Vector::from(v)),
-        Err(err) => Err(err),
-    }
+        .collect()
 }
-
 #[cfg(test)]
 
 mod tests {
     use super::*;
 
     use crate::pairs::Pairs;
-    use launearalg::{row, vector::Row};
     use rand::prelude::*;
     use std::io::Write;
     use tempfile::{tempdir, TempDir};
@@ -152,10 +142,10 @@ mod tests {
         let (_dir, file_name) = make_good_temp_data_file();
         let mut sut = Parser::new(&file_name[..]).unwrap().iter().pairs();
         let row_pair = sut.next().unwrap();
-        assert_eq!(row![83.0, 84.0, 65.0, 81.0], row_pair.0);
-        assert_eq!(row![67.0, 70.0, 57.0, 64.0], row_pair.1);
+        assert_eq!(vec![83.0, 84.0, 65.0, 81.0], row_pair.0);
+        assert_eq!(vec![67.0, 70.0, 57.0, 64.0], row_pair.1);
         let row_pair = sut.next().unwrap();
-        assert_eq!(row![67.0, 70.0, 57.0, 64.0], row_pair.0);
-        assert_eq!(row![68.0, 72.0, 58.0, 66.0], row_pair.1);
+        assert_eq!(vec![67.0, 70.0, 57.0, 64.0], row_pair.0);
+        assert_eq!(vec![68.0, 72.0, 58.0, 66.0], row_pair.1);
     }
 }
