@@ -1,7 +1,6 @@
 use std::env;
 
 use cputemps::parser;
-use launearalg::interpolater;
 
 fn help() {
     let exe = match env::current_exe() {
@@ -23,13 +22,10 @@ fn main() {
         std::process::exit(0x69);
     }
 
-    for arg in &args[1..] {
-        match parser::parse::<f64>(arg) {
-            Ok(m) => {
-                let col = m[..][0].clone();
-                println!("All done");
-            }
-            Err(e) => println!("Oooh no! {}", e.as_str()),
+    for data_file_path in &args[1..] {
+        match parser::Parser::new(&data_file_path[..]) {
+            Ok(p) => {}
+            Err(e) => panic!(e.to_string()),
         }
     }
 }

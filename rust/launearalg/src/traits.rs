@@ -1,3 +1,4 @@
+use num_traits::Num;
 /// Appends b onto self
 pub trait Augment<B = Self> {
     type Output;
@@ -16,6 +17,9 @@ where
 {
     fn max_at(&self) -> Option<(usize, &T)>;
 }
-pub trait Interpolate {
-    fn interpolate(&self, step: f64) -> Vec<String>;
+pub trait Interpolate<T>
+where
+    T: Num,
+{
+    fn interpolate(points: Vec<(T, T)>) -> Option<Vec<T>>;
 }
