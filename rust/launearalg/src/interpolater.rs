@@ -1,7 +1,7 @@
 use crate::traits::{Interpolate, InterpolationSolution};
 use num_traits::Num;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct LinearPiecewiseInterpolationSolution<T>
 where
     T: Num,
@@ -53,7 +53,10 @@ mod tests {
         let p1 = (2.0, 1.0);
         let p2 = (4.0, 2.0);
 
-        //let interp_res = LinearPiecewiseInterpolater::interpolate(vec![p1, p2]);
-        //assert_eq!((0.0, 0.5), interp_res.unwrap());
+        let interp_res = LinearPiecewiseInterpolater::interpolate(vec![p1, p2]);
+        assert_eq!(
+            LinearPiecewiseInterpolationSolution { c0: 0.0, c1: 0.5 },
+            interp_res.unwrap()
+        );
     }
 }
