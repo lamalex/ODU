@@ -1,4 +1,6 @@
+use crate::interpolater::LinearPiecewiseInterpolationResult;
 use num_traits::Num;
+
 /// Appends b onto self
 pub trait Augment<B = Self> {
     type Output;
@@ -17,9 +19,12 @@ where
 {
     fn max_at(&self) -> Option<(usize, &T)>;
 }
+
+pub trait InterpolationResult {}
+
 pub trait Interpolate<T>
 where
     T: Num,
 {
-    fn interpolate(points: Vec<(T, T)>) -> Option<Vec<T>>;
+    fn interpolate(points: Vec<(T, T)>) -> Option<LinearPiecewiseInterpolationResult<T>>;
 }
