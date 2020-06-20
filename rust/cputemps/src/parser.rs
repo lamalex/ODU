@@ -6,7 +6,7 @@ use std::io::BufReader;
 
 pub struct Parser {
     pub cores: usize,
-    file_path: String,
+    pub file_path: String,
 }
 
 pub struct ParserIterator {

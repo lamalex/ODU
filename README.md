@@ -1,11 +1,12 @@
-# CS517 Machine Assignment 4
+# CS517 Semester Project
 # Alex Launi: UIN 01124306
 # ODU, Summer 2020
 
-Implements gaussian elimination, and some basic matrix manipulation.
+Numerical analysis of CPU temperature data
 
 ### To run:
+** Requires nightly rust for unstable `fold_first` iterator. **
 ```
 $ cd rust
-$ cargo run
+$ cargo +nightly run <temperature file 1> [<temperature file 2> ...]
 ```

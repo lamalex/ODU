@@ -1,4 +1,4 @@
-use crate::interpolater::LinearPiecewiseInterpolationResult;
+use crate::interpolater::LinearPiecewiseInterpolationSolution;
 use num_traits::Num;
 
 /// Appends b onto self
@@ -20,11 +20,11 @@ where
     fn max_at(&self) -> Option<(usize, &T)>;
 }
 
-pub trait InterpolationResult {}
+pub trait InterpolationSolution {}
 
 pub trait Interpolate<T>
 where
     T: Num,
 {
-    fn interpolate(points: Vec<(T, T)>) -> Option<LinearPiecewiseInterpolationResult<T>>;
+    fn interpolate(points: Vec<(T, T)>) -> Option<LinearPiecewiseInterpolationSolution<T>>;
 }

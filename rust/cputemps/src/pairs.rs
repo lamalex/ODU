@@ -13,9 +13,7 @@ impl<T: Clone, I: Iterator<Item = T>> Iterator for PairIterator<T, I> {
     type Item = (I::Item, I::Item);
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.previous.is_none() {
-            return None;
-        }
+        self.previous.as_ref()?;
 
         match self.iter.next() {
             Some(next) => {

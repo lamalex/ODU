@@ -2,10 +2,44 @@ pub mod gauss {
     use crate::{matrix::Matrix, traits::PositionalMax, vector::Vector};
     use num_traits::Num;
 
-    pub fn solve<T>(a: Matrix<T>) -> Vector<T>
+    #[derive(Debug)]
+    pub struct GaussianEliminationSolution<T>
+    where
+        T: Num,
+    {
+        weights: Vector<T>,
+    }
+
+    impl<T> std::fmt::Display for GaussianEliminationSolution<T>
+    where
+        T: Num + Copy + std::fmt::Display,
+    {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+            let eqn = self
+                .weights
+                .iter()
+                .enumerate()
+                .map(|w| match w.0 {
+                    0 => std::format!("{:15.4}", w.1),
+                    1 => std::format!("{:8.4}x", w.1),
+                    _ => std::format!("{:8.4}x^{}", w.1, w.0),
+                })
+                .fold_first(|a, b| std::format!("{} + {}", a, b));
+
+            write!(f, "{}; global least squares approximation", eqn.unwrap())
+        }
+    }
+
+    pub fn solve<T>(a: Matrix<T>) -> GaussianEliminationSolution<T>
     where
         T: PartialOrd + Num + Copy + num_traits::NumAssignOps,
     {
+        assert_eq!(
+            a.rows,
+            a.cols - 1,
+            "Gaussian elimination requires an augmented square matrix"
+        );
+
         let mut a_prime = a.clone();
 
         for i in 0..a_prime.rows {
@@ -29,7 +63,9 @@ pub mod gauss {
         backsolve(&mut a_prime);
 
         a_prime.sync();
-        a_prime[..][a.cols - 1].clone()
+        let weights = a_prime[..][a.cols - 1].clone();
+
+        GaussianEliminationSolution { weights }
     }
 
     fn eliminate<T>(a: &mut Matrix<T>, start_col: usize)
