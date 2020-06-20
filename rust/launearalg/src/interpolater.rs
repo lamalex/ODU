@@ -1,8 +1,7 @@
 use crate::traits::Interpolate;
 use num_traits::Num;
 
-pub struct LinearPiecewiseInterpolater();
-
+pub struct LinearPiecewiseInterpolater;
 impl<T> Interpolate<T> for LinearPiecewiseInterpolater
 where
     T: Num + Copy,
