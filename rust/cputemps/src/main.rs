@@ -2,7 +2,7 @@ use std::env;
 
 use cputemps::{pairs::Pairs, parser::Parser, writer::Writer};
 use launearalg::{
-    interpolater,
+    interpolater::linear_piecewise::LinearPiecewiseInterpolater,
     matrix::Matrix,
     solver::gauss,
     traits::{Augment, Interpolate, Transpose},
@@ -69,7 +69,7 @@ fn process_data_single_pass_all_cores(parser: Parser) -> Result<(), std::io::Err
             let x1 = step * STEP_SIZE;
             let x2 = (step + 1.0) * STEP_SIZE;
 
-            let res = interpolater::LinearPiecewiseInterpolater::interpolate(vec![
+            let res = LinearPiecewiseInterpolater::interpolate(vec![
                 (x1, core_data_endpoints.0),
                 (x2, core_data_endpoints.1),
             ]);

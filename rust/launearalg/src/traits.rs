@@ -1,4 +1,4 @@
-use crate::interpolater::LinearPiecewiseInterpolationSolution;
+use crate::interpolater::linear_piecewise::LinearPiecewiseInterpolationSolution;
 use num_traits::Num;
 
 /// Appends b onto self
