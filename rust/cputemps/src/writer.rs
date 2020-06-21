@@ -14,7 +14,7 @@ impl Writer {
     }
 
     pub fn write_global(&mut self, core: usize, lhs: &str, rhs: impl Display) {
-        self.write(core, std::format!("{2:16}{0} = {1}", lhs, rhs, ""))
+        self.write(core, std::format!("{2:22}{0} = {1}", lhs, rhs, ""))
     }
 
     pub fn write_pairwise(&mut self, core: usize, bound: (f64, f64), lhs: &str, rhs: impl Display) {
