@@ -1,6 +1,6 @@
 [package]
 name = "launearalg"
-version = "0.2.1"
+version = "0.3.1"
 authors = ["Alexander Launi <alex.launi@gmail.com>"]
 edition = "2018"
 
