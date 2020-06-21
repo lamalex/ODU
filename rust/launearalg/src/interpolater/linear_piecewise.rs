@@ -25,7 +25,9 @@ impl<T> Interpolate<T> for LinearPiecewiseInterpolater
 where
     T: Num + Copy,
 {
-    fn interpolate(points: Vec<(T, T)>) -> Option<LinearPiecewiseInterpolationSolution<T>> {
+    type Output = LinearPiecewiseInterpolationSolution<T>;
+
+    fn interpolate(points: Vec<(T, T)>) -> Option<Self::Output> {
         if points.len() != 2 {
             return None;
         }
