@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Write;
+
 pub struct Writer {
     files: Vec<File>,
 }

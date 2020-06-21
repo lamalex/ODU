@@ -16,3 +16,5 @@ where
 {
     fn max_at(&self) -> Option<(usize, &T)>;
 }
+
+pub trait Solution: std::fmt::Display {}

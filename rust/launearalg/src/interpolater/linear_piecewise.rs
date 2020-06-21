@@ -1,5 +1,7 @@
-use crate::interpolater::traits::{Interpolate, InterpolationSolution};
+use crate::interpolater::traits::Interpolate;
+use crate::traits::Solution;
 use num_traits::Num;
+use std::fmt;
 
 #[derive(Debug, PartialEq)]
 pub struct LinearPiecewiseInterpolationSolution<T>
@@ -9,24 +11,22 @@ where
     c0: T,
     c1: T,
 }
-impl<T> InterpolationSolution for LinearPiecewiseInterpolationSolution<T> where T: Num {}
+impl<T> Solution for LinearPiecewiseInterpolationSolution<T> where T: Num + fmt::Display {}
 
 impl<T> std::fmt::Display for LinearPiecewiseInterpolationSolution<T>
 where
     T: Num + std::fmt::Display,
 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         write!(f, "{:15.4} + {:8.4}x; interpolation", self.c0, self.c1)
     }
 }
 pub struct LinearPiecewiseInterpolater;
-
 impl<T> Interpolate<T> for LinearPiecewiseInterpolater
 where
-    T: Num + Copy,
+    T: Num + Copy + fmt::Display,
 {
     type Output = LinearPiecewiseInterpolationSolution<T>;
-
     fn interpolate(points: Vec<(T, T)>) -> Option<Self::Output> {
         if points.len() != 2 {
             return None;

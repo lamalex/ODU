@@ -31,6 +31,7 @@ fn main() -> Result<(), std::io::Error> {
         std::process::exit(0x69)
     }
 
+    // TODO drop in rayon for parallelism
     args[1..]
         .iter()
         .map(|data_file_path| match Parser::new(&data_file_path[..]) {
@@ -54,22 +55,21 @@ fn process_data_single_pass_all_cores(parser: Parser) -> Result<(), std::io::Err
     let mut proto_y = vec![vec![]; parser.cores];
 
     let data_pairs = parser.iter().pairs().map(|line_pair| {
-        let first_line = line_pair.0;
-        first_line
+        line_pair
+            .0
             .iter()
             .zip(line_pair.1.iter())
             .map(|z| (*z.0, *z.1))
-            // line_pair goes out of scope so this needs collected
             .collect::<Vec<(f64, f64)>>()
     });
 
     for (i, pairs) in data_pairs.enumerate() {
-        for (core, core_data_endpoints) in pairs.iter().enumerate() {
-            let step = i as f64;
-            let x1 = step * STEP_SIZE;
-            let x2 = (step + 1.0) * STEP_SIZE;
+        let step = i as f64;
+        let x1 = step * STEP_SIZE;
+        let x2 = (step + 1.0) * STEP_SIZE;
 
-            let res = LinearPiecewiseInterpolater::interpolate(vec![
+        for (core, core_data_endpoints) in pairs.iter().enumerate() {
+            let sol = LinearPiecewiseInterpolater::interpolate(vec![
                 (x1, core_data_endpoints.0),
                 (x2, core_data_endpoints.1),
             ]);
@@ -79,15 +79,22 @@ fn process_data_single_pass_all_cores(parser: Parser) -> Result<(), std::io::Err
             proto_x[core].push(x_row);
             proto_y[core].push(y_row);
 
-            match res {
-                Some(res) => writer.write(
+            /*
+            match sol {
+                Some(sol) => writer.write(core, x1, x2, i, sol),
+                None => continue,
+            }
+            */
+
+            match sol {
+                Some(sol) => writer.write(
                     core,
                     std::format!(
                         "{:6} <= {:6}; {:5} = {}",
                         x1,
                         x2,
                         std::format!("y_{}", i),
-                        res
+                        sol
                     ),
                 ),
                 None => continue,
@@ -95,6 +102,7 @@ fn process_data_single_pass_all_cores(parser: Parser) -> Result<(), std::io::Err
         }
     }
 
+    // TODO drop in rayon for parallelism
     for core in 0..parser.cores {
         let core_x = Matrix::from(proto_x[core].clone());
         let core_y = Matrix::from(proto_y[core].clone());
