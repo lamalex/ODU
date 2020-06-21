@@ -1,4 +1,4 @@
-use crate::traits::{Interpolate, InterpolationSolution};
+use crate::interpolater::traits::{Interpolate, InterpolationSolution};
 use num_traits::Num;
 
 #[derive(Debug, PartialEq)]

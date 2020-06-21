@@ -1,2 +1,2 @@
 pub mod linear_piecewise;
-pub mod newton;
+pub mod traits;

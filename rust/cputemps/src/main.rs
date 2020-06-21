@@ -2,10 +2,10 @@ use std::env;
 
 use cputemps::{pairs::Pairs, parser::Parser, writer::Writer};
 use launearalg::{
-    interpolater::linear_piecewise::LinearPiecewiseInterpolater,
+    interpolater::{linear_piecewise::LinearPiecewiseInterpolater, traits::Interpolate},
     matrix::Matrix,
     solver::gauss,
-    traits::{Augment, Interpolate, Transpose},
+    traits::{Augment, Transpose},
 };
 
 const STEP_SIZE: f64 = 30.0;
