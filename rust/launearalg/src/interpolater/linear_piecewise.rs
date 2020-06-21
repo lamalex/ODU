@@ -11,7 +11,14 @@ where
     c0: T,
     c1: T,
 }
-impl<T> Solution for LinearPiecewiseInterpolationSolution<T> where T: Num + fmt::Display {}
+impl<T> Solution for LinearPiecewiseInterpolationSolution<T>
+where
+    T: Num + fmt::Display,
+{
+    fn lhs(&self) -> &'static str {
+        "y"
+    }
+}
 
 impl<T> std::fmt::Display for LinearPiecewiseInterpolationSolution<T>
 where
