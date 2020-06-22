@@ -1,6 +1,7 @@
 //! # cputemps
+pub mod processor;
 
-pub type ProtoMatrix = Vec<Vec<Vec<f64>>>;
-pub mod pairs;
-pub mod parser;
-pub mod writer;
+type ProtoMatrix = Vec<Vec<Vec<f64>>>;
+mod pairs;
+mod parser;
+mod writer;
