@@ -37,8 +37,11 @@ where
                 1 => std::format!("{:8.4}x", w.1),
                 _ => std::format!("{:8.4}x^{}", w.1, w.0),
             })
-            .fold_first(|a, b| std::format!("{} + {}", a, b))
-            .unwrap();
+            // requires nightly.
+            //.fold_first(|a, b| std::format!("{} + {}", a, b))
+            //.unwrap()
+            .collect::<Vec<String>>()
+            .join(" + ");
 
         write!(f, "{}; global least squares approximation", eqn)
     }

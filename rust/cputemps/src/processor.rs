@@ -51,7 +51,7 @@ fn process_all_cores_single_pass(
     let output_path = get_outout_path(output_path, &parser.file_path[..]);
     let mut writer = match Writer::new(&output_path[..], parser.cores) {
         Ok(w) => w,
-        Err(e) => return Err(ProcessorError::IOError),
+        Err(_e) => return Err(ProcessorError::IOError),
     };
 
     let (data_x, data_y) = process_pairwise(parser, &mut writer);
@@ -63,9 +63,7 @@ fn get_outout_path(output_path: Option<&str>, input_file: &str) -> String {
     match output_path {
         Some(path) => {
             let path = Path::new(path);
-            let file_name = Path::new(input_file)
-                .file_name()
-                .unwrap_or_default("coredata");
+            let file_name = Path::new(input_file).file_name().unwrap_or_default();
             let full_path = path.join(file_name);
             full_path.to_string_lossy().to_string()
         }
