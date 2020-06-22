@@ -1,53 +1,7 @@
-use crate::{
-    matrix::Matrix,
-    traits::{PositionalMax, Solution},
-    vector::Vector,
-};
+use crate::{matrix::Matrix, traits::PositionalMax, vector::Vector};
 use num_traits::Num;
-use std::fmt;
 
-#[derive(Debug)]
-pub struct GaussianEliminationSolution<T>
-where
-    T: Num,
-{
-    weights: Vector<T>,
-}
-
-impl<T> Solution for GaussianEliminationSolution<T>
-where
-    T: Num + Copy + fmt::Display,
-{
-    fn lhs(&self) -> &'static str {
-        "φ\u{0302}"
-    }
-}
-
-impl<T> fmt::Display for GaussianEliminationSolution<T>
-where
-    T: Num + Copy + fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), fmt::Error> {
-        let eqn = self
-            .weights
-            .iter()
-            .enumerate()
-            .map(|w| match w.0 {
-                0 => std::format!("{:15.4}", w.1),
-                1 => std::format!("{:8.4}x", w.1),
-                _ => std::format!("{:8.4}x^{}", w.1, w.0),
-            })
-            // requires nightly.
-            //.fold_first(|a, b| std::format!("{} + {}", a, b))
-            //.unwrap()
-            .collect::<Vec<String>>()
-            .join(" + ");
-
-        write!(f, "{}; global least squares approximation", eqn)
-    }
-}
-
-pub fn solve<T>(a: Matrix<T>) -> GaussianEliminationSolution<T>
+pub fn solve<T>(a: Matrix<T>) -> Vector<T>
 where
     T: PartialOrd + Num + Copy + num_traits::NumAssignOps + std::fmt::Debug,
 {
@@ -80,9 +34,7 @@ where
     backsolve(&mut a_prime);
 
     a_prime.sync();
-    let weights = a_prime[..][a.cols - 1].clone();
-
-    GaussianEliminationSolution { weights }
+    a_prime[..][a.cols - 1].clone()
 }
 
 fn eliminate<T>(a: &mut Matrix<T>, basis_row_idx: usize)

@@ -1,9 +1,10 @@
-use clap::{crate_version, App, Arg};
+use clap::{crate_version, value_t, App, Arg};
 use cputemps::processor::{Processor, ProcessorError};
 use rayon::prelude::*;
 use std::env;
 
 fn main() -> Result<(), ProcessorError> {
+    const DEFAULT_STEP: u32 = 30;
     const ABOUT: &'static str =
         "Analyzes n-core CPU temperature data via interpolation, and least squares approximation.
 🖖🏽 Live long and interpolate.";
@@ -12,6 +13,13 @@ fn main() -> Result<(), ProcessorError> {
         .version(crate_version!())
         .author("Alex L. Launi <alaun001@odu.edu>")
         .about(ABOUT)
+        .arg(
+            Arg::with_name("step-size")
+                .help("Data point spacing (X-axis)")
+                .long("step")
+                .takes_value(true)
+                .value_name("STEP"),
+        )
         .arg(
             Arg::with_name("output-path")
                 .help("Set path for output. Default output is alongside input file.")
@@ -30,9 +38,10 @@ fn main() -> Result<(), ProcessorError> {
 
     let files: Vec<&str> = matches.values_of("INPUT").unwrap().collect();
     let output_path = matches.value_of("output-path");
+    let step = value_t!(matches.value_of("step_size"), u32).unwrap_or(DEFAULT_STEP);
 
     files
         .par_iter()
-        .map(|data_file_path| Processor::process_data_file(data_file_path, output_path))
+        .map(|data_file_path| Processor::process_data_file(step, data_file_path, output_path))
         .collect()
 }

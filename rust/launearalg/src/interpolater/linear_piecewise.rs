@@ -1,40 +1,27 @@
-use crate::interpolater::traits::Interpolate;
-use crate::traits::Solution;
-use num_traits::Num;
+use crate::traits::{Analyzer, Interpolate, Solution};
 use std::fmt;
 
 #[derive(Debug, PartialEq)]
-pub struct LinearPiecewiseInterpolationSolution<T>
-where
-    T: Num,
-{
-    c0: T,
-    c1: T,
+pub struct LinearPiecewiseInterpolationSolution {
+    c0: f64,
+    c1: f64,
 }
-impl<T> Solution for LinearPiecewiseInterpolationSolution<T>
-where
-    T: Num + fmt::Display,
-{
+impl Solution for LinearPiecewiseInterpolationSolution {
     fn lhs(&self) -> &'static str {
-        "y"
+        "y_"
     }
 }
 
-impl<T> std::fmt::Display for LinearPiecewiseInterpolationSolution<T>
-where
-    T: Num + std::fmt::Display,
-{
+impl std::fmt::Display for LinearPiecewiseInterpolationSolution {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         write!(f, "{:15.4} + {:8.4}x; interpolation", self.c0, self.c1)
     }
 }
 pub struct LinearPiecewiseInterpolater;
-impl<T> Interpolate<T> for LinearPiecewiseInterpolater
-where
-    T: Num + Copy + fmt::Display,
-{
-    type Output = LinearPiecewiseInterpolationSolution<T>;
-    fn interpolate(points: Vec<(T, T)>) -> Option<Self::Output> {
+
+impl Interpolate for LinearPiecewiseInterpolater {
+    type Output = LinearPiecewiseInterpolationSolution;
+    fn interpolate(points: Vec<(f64, f64)>) -> Option<Self::Output> {
         if points.len() != 2 {
             return None;
         }
@@ -52,7 +39,18 @@ where
         Some(LinearPiecewiseInterpolationSolution { c0, c1 })
     }
 }
+/*
+impl Analyzer<Output = Box<LinearPiecewiseInterpolationSolution>> {
+    type Output = LinearPiecewiseInterpolationSolution;
+    fn analyze_piecewise(&self, points: Vec<(f64, f64)>) -> Option<Self::Output> {
+        Some(Box::new(LinearPiecewiseInterpolater::interpolate(points)))
+    }
 
+    fn analyze_global(&self, _x_data: Vec<f64>, _y_data: Vec<f64>) -> Option<Self::Output> {
+        None
+    }
+}
+*/
 #[cfg(test)]
 mod tests {
     use super::*;

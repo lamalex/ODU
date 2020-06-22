@@ -17,6 +17,34 @@ where
     fn max_at(&self) -> Option<(usize, &T)>;
 }
 
-pub trait Solution: std::fmt::Display {
+pub trait Solution: std::fmt::Display
+where
+    Self: Sized,
+{
     fn lhs(&self) -> &'static str;
+}
+
+pub trait Analyzer
+where
+    Self::Output: Solution,
+{
+    type Output;
+    fn analyze_piecewise(&self, points: Vec<(f64, f64)>) -> Option<Box<Self::Output>>;
+    fn analyze_global(&self, x_data: Vec<f64>, y_data: Vec<f64>) -> Option<Box<Self::Output>>;
+}
+
+pub trait Approximate
+where
+    Self::Output: Solution,
+{
+    type Output;
+    fn approximate() -> Option<Self::Output>;
+}
+
+pub trait Interpolate
+where
+    Self::Output: Solution,
+{
+    type Output;
+    fn interpolate(points: Vec<(f64, f64)>) -> Option<Self::Output>;
 }

@@ -8,6 +8,7 @@
 //! highly ineffecient Vec<Vec<T>> internal representations in return for a clean, natural
 //! API (I hope).
 
+pub mod approximator;
 pub mod interpolater;
 pub mod matrix;
 pub mod solver;
