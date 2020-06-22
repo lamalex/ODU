@@ -7,6 +7,7 @@ use launearalg::{
 };
 use rayon::prelude::*;
 use std::fmt;
+use std::path::Path;
 
 const STEP_SIZE: f64 = 30.0;
 
@@ -28,9 +29,12 @@ impl fmt::Display for ProcessorError {
 
 pub struct Processor;
 impl Processor {
-    pub fn process_data_file(file_path: &str) -> Result<(), ProcessorError> {
+    pub fn process_data_file(
+        file_path: &str,
+        output_path: Option<&str>,
+    ) -> Result<(), ProcessorError> {
         match Parser::new(file_path) {
-            Ok(p) => process_all_cores_single_pass(p),
+            Ok(p) => process_all_cores_single_pass(p, output_path),
             Err(_e) => Err(ProcessorError::IOError),
         }
     }
@@ -40,15 +44,33 @@ impl Processor {
 // Save one line and build matrix from which to compute global least squares
 // Takes 1 pass through each file and computes while reading.
 // Writes file next to input with -out-core-#.txt appended.
-fn process_all_cores_single_pass(parser: Parser) -> Result<(), ProcessorError> {
-    let mut writer = match Writer::new(&parser.file_path[..], parser.cores) {
+fn process_all_cores_single_pass(
+    parser: Parser,
+    output_path: Option<&str>,
+) -> Result<(), ProcessorError> {
+    let output_path = get_outout_path(output_path, &parser.file_path[..]);
+    let mut writer = match Writer::new(&output_path[..], parser.cores) {
         Ok(w) => w,
-        Err(_e) => return Err(ProcessorError::IOError),
+        Err(e) => return Err(ProcessorError::IOError),
     };
 
     let (data_x, data_y) = process_pairwise(parser, &mut writer);
     process_full_dataset(data_x, data_y, &mut writer);
     Ok(())
+}
+
+fn get_outout_path(output_path: Option<&str>, input_file: &str) -> String {
+    match output_path {
+        Some(path) => {
+            let path = Path::new(path);
+            let file_name = Path::new(input_file)
+                .file_name()
+                .unwrap_or_default("coredata");
+            let full_path = path.join(file_name);
+            full_path.to_string_lossy().to_string()
+        }
+        None => String::from(input_file),
+    }
 }
 
 fn process_pairwise(parser: Parser, writer: &mut Writer) -> (ProtoMatrix, ProtoMatrix) {
