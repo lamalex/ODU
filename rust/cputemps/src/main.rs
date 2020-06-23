@@ -1,5 +1,5 @@
 use clap::{crate_version, value_t, App, Arg};
-use cputemps::processor::{Processor, ProcessorError};
+use cputemps::processor::*;
 use rayon::prelude::*;
 use std::env;
 
@@ -42,6 +42,6 @@ fn main() -> Result<(), ProcessorError> {
 
     files
         .par_iter()
-        .map(|data_file_path| Processor::process_data_file(step, data_file_path, output_path))
+        .map(|data_file_path| process_data_file(step, data_file_path, output_path))
         .collect()
 }

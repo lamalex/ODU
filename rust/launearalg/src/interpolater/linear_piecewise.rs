@@ -18,6 +18,11 @@ impl std::fmt::Display for LinearPiecewiseInterpolationSolution {
     }
 }
 pub struct LinearPiecewiseInterpolater;
+impl LinearPiecewiseInterpolater {
+    pub fn new() -> LinearPiecewiseInterpolater {
+        LinearPiecewiseInterpolater {}
+    }
+}
 
 impl Interpolate for LinearPiecewiseInterpolater {
     type Output = LinearPiecewiseInterpolationSolution;
@@ -39,18 +44,22 @@ impl Interpolate for LinearPiecewiseInterpolater {
         Some(LinearPiecewiseInterpolationSolution { c0, c1 })
     }
 }
-/*
-impl Analyzer<Output = Box<LinearPiecewiseInterpolationSolution>> {
-    type Output = LinearPiecewiseInterpolationSolution;
-    fn analyze_piecewise(&self, points: Vec<(f64, f64)>) -> Option<Self::Output> {
-        Some(Box::new(LinearPiecewiseInterpolater::interpolate(points)))
+
+impl Analyzer for LinearPiecewiseInterpolater {
+    type Output = dyn Solution;
+
+    fn analyze_piecewise(&mut self, points: Vec<(f64, f64)>) -> Option<Box<Self::Output>> {
+        match LinearPiecewiseInterpolater::interpolate(points) {
+            Some(sol) => Some(Box::new(sol)),
+            None => None,
+        }
     }
 
-    fn analyze_global(&self, _x_data: Vec<f64>, _y_data: Vec<f64>) -> Option<Self::Output> {
+    fn analyze_global(&mut self) -> Option<Box<Self::Output>> {
         None
     }
 }
-*/
+
 #[cfg(test)]
 mod tests {
     use super::*;

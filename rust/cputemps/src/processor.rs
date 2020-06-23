@@ -1,10 +1,10 @@
 use crate::{pairs::Pairs, parser::Parser, writer::Writer};
-use launearalg::{approximator::least_squares::*, matrix::Matrix, solver::gauss, traits::*};
-use rayon::prelude::*;
+use launearalg::{
+    approximator::least_squares::*, interpolater::cubic_spline::*,
+    interpolater::linear_piecewise::*, traits::*,
+};
 use std::fmt;
 use std::path::Path;
-
-type ProtoMatrix = Vec<Vec<f64>>;
 
 #[derive(Debug)]
 pub enum ProcessorError {
@@ -22,17 +22,14 @@ impl fmt::Display for ProcessorError {
     }
 }
 
-pub struct Processor;
-impl Processor {
-    pub fn process_data_file(
-        step: u32,
-        file_path: &str,
-        output_path: Option<&str>,
-    ) -> Result<(), ProcessorError> {
-        match Parser::new(file_path) {
-            Ok(p) => process_all_cores_single_pass(step, p, output_path),
-            Err(_e) => Err(ProcessorError::IOError),
-        }
+pub fn process_data_file(
+    step: u32,
+    file_path: &str,
+    output_path: Option<&str>,
+) -> Result<(), ProcessorError> {
+    match Parser::new(file_path) {
+        Ok(p) => process_all_cores_single_pass(step, p, output_path),
+        Err(_e) => Err(ProcessorError::IOError),
     }
 }
 
@@ -51,10 +48,21 @@ fn process_all_cores_single_pass(
         Err(_e) => return Err(ProcessorError::IOError),
     };
 
-    let analyzers = vec![]; //Box::new(LinearPiecewiseInterpolater {})];
+    let mut analyzers: Vec<Vec<Box<dyn Analyzer<Output = dyn Solution>>>> = (0..parser.cores)
+        .map(|_core| {
+            vec![
+                Box::new(LinearPiecewiseInterpolater::new())
+                    as Box<dyn Analyzer<Output = dyn Solution>>,
+                Box::new(LeastSquaresApproximator::new())
+                    as Box<dyn Analyzer<Output = dyn Solution>>,
+                Box::new(CubicSplineInterpolator::new())
+                    as Box<dyn Analyzer<Output = dyn Solution>>,
+            ]
+        })
+        .collect();
 
-    process_pairwise(step, &parser, &mut writer, analyzers);
-    //process_global(step, &parser, &mut writer, analyzers);
+    process_pairwise(step, &parser, &mut writer, &mut analyzers[..]);
+    process_global(step, &parser, &mut writer, &mut analyzers[..]);
     Ok(())
 }
 
@@ -71,10 +79,10 @@ fn get_outout_path(output_path: Option<&str>, input_file: &str) -> String {
 }
 
 fn process_pairwise(
-    _step: u32,
+    step: u32,
     parser: &Parser,
     writer: &mut Writer,
-    analyzers: Vec<Box<dyn Analyzer<Output = Box<dyn Solution>>>>,
+    analyzers: &mut [Vec<Box<dyn Analyzer<Output = dyn Solution>>>],
 ) {
     let data_pairs = parser.iter().pairs().map(|line_pair| {
         line_pair
@@ -86,13 +94,15 @@ fn process_pairwise(
     });
 
     for (i, pairs) in data_pairs.enumerate() {
-        let step = i as f64;
-        let x1 = step * step;
-        let x2 = (step + 1.0) * step;
+        let i = i as f64;
+        let step = step as f64;
+
+        let x1 = i * step as f64;
+        let x2 = (i + 1.0) * step;
 
         for (core, endpoints) in pairs.iter().enumerate() {
             let (y1, y2) = *endpoints;
-            for analyzer in analyzers.iter() {
+            for analyzer in analyzers[core].iter_mut() {
                 let sol = analyzer.analyze_piecewise(vec![(x1, y1), (x2, y2)]);
                 match sol {
                     Some(sol) => {
@@ -108,70 +118,22 @@ fn process_pairwise(
 
 fn process_global(
     _step: u32,
-    _parser: &Parser,
-    _writer: &mut Writer,
-    _analyzers: Vec<Box<dyn Analyzer<Output = Box<dyn Solution>>>>,
+    parser: &Parser,
+    writer: &mut Writer,
+    analyzers: &mut [Vec<Box<dyn Analyzer<Output = dyn Solution>>>],
 ) {
-    /*
-    let cores = parser.cores;
-    let globals: Vec<(usize, LeastSquaresApproximationSolution<f64>)> = (0..cores)
-        .into_par_iter()
-        .map(|core| {
-            process_cubic_spline(&cs_data.0[core][..], &cs_data.1[core][..]);
-            (
-                core,
-                process_global_least_squares(&glsa_data.0[core], &glsa_data.1[core]),
-            )
-        })
-        .collect();
+    let mut globals = Vec::<(usize, Box<dyn Solution>)>::new();
 
-    for (core, glsa) in globals {
-        writer.write_global(core, glsa.lhs(), glsa);
-    }
-    */
-}
-
-fn process_global_least_squares(
-    data_x: &ProtoMatrix,
-    data_y: &ProtoMatrix,
-) -> LeastSquaresApproximationSolution {
-    let core_x = Matrix::from(data_x.clone());
-    let core_y = Matrix::from(data_y.clone());
-
-    let core_xt = core_x.transpose();
-    let core_xtx = &core_xt * &core_x;
-    let core_xty = &core_xt * &core_y;
-    let core_xtxxty = core_xtx.augment(&core_xty);
-
-    let weights = gauss::solve(core_xtxxty);
-    LeastSquaresApproximationSolution { weights }
-}
-
-fn process_cubic_spline(delta_x: &[f64], delta_y: &[f64]) {
-    let size = delta_x.len();
-
-    let mut a = Matrix::<f64>::new(size, size);
-    let mut b = Matrix::<f64>::new(size, 1);
-    a[0][0] = 1.0;
-    a[size - 1][size - 1] = 1.0;
-
-    for i in 1..(size - 1) {
-        a[i][i - 1] = delta_x[i - 1];
-        a[i][i + 1] = delta_x[i];
-        a[i][i] = 2.0 * (delta_x[i - 1] + delta_x[i]);
-        b[i][0] = 3.0 * delta_y[i] / delta_x[i] - delta_y[i - 1] / delta_x[i - 1];
+    for core in 0..parser.cores {
+        for analyzer in analyzers[core].iter_mut() {
+            match analyzer.analyze_global() {
+                Some(sol) => globals.push((core, sol)),
+                None => continue,
+            }
+        }
     }
 
-    let ab = a.augment(&b);
-    let c_i = gauss::solve(ab);
-    let mut b_i = vec![0.0; size - 1];
-    let mut d_i = vec![0.0; size - 1];
-    for i in 0..(size - 1) {
-        b_i[i] = (delta_y[i] / delta_x[i]) - (delta_x[i] / 3.0) * (2.0 * c_i[i] + c_i[i + 1]);
-        d_i[i] = (c_i[i + 1] - c_i[i]) / (3.0 * delta_x[i]);
-        println!(
-            "S_{0}(x) = y{0} + {2}(x - x{0}) + {3}(x - x{0})\u{00B2} + {4}(x - x{0})\u{00B3} on [x{0}, x{1}",
-            i, i+1, b_i[i], c_i[i], d_i[i],
-        );
+    for (core, sol) in globals {
+        writer.write_global(core, sol.lhs(), sol);
     }
 }
