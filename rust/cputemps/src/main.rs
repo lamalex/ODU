@@ -9,7 +9,7 @@ fn main() -> Result<(), ProcessorError> {
         "Analyzes n-core CPU temperature data via interpolation, and least squares approximation.
 🖖🏽 Live long and interpolate.";
 
-    let matches = App::new("CS517 Semester Project: CPU Temperatur intep-o-matic")
+    let matches = App::new("CS517 Semester Project: CPU Temperatur interp-o-matic")
         .version(crate_version!())
         .author("Alex L. Launi <alaun001@odu.edu>")
         .about(ABOUT)

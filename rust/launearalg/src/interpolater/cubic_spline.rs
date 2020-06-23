@@ -12,22 +12,23 @@ pub struct CubicSplineInterpolationSolution {
     c: Vector<f64>,
     d: Vector<f64>,
     x: Vector<f64>,
+    y: Vector<f64>
 }
 impl Solution for CubicSplineInterpolationSolution {
     fn lhs(&self) -> &'static str {
-        "S_"
+        ""
     }
 }
 
 impl std::fmt::Display for CubicSplineInterpolationSolution {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         self.b.iter().enumerate().map(|(i, _x)| {
-        writeln!(f, "{:9} = {:6} + {:20} + {:20} + {:20} on [{:5}, {:5}]; cubic spline", 
+        writeln!(f, "{:9} = {:3} + {:20} + {:20} + {:20} on [{:5}, {:5}]; cubic spline", 
             format!("S_{}(x)", i), 
-            format!("y_{}", i), 
-            format!("{:.4}(x - {})", self.b[i], self.x[i]),
-            format!("{:.4}(x - {})\u{00B2}", self.c[i], self.x[i]),
-            format!("{:.4}(x - {})\u{00B3}", self.d[i], self.x[i]),
+            format!("{}", self.y[i]), 
+            format!("{:8.4}(x - {})", self.b[i], self.x[i]),
+            format!("{:8.4}(x - {})\u{00B2}", self.c[i], self.x[i]),
+            format!("{:8.4}(x - {})\u{00B3}", self.d[i], self.x[i]),
             self.x[i],
             self.x[i+1]
         )?;
@@ -40,6 +41,7 @@ pub struct CubicSplineInterpolator {
     delta_x: Vec<f64>,
     delta_y: Vec<f64>,
     x_values: Vec<f64>,
+    y_values: Vec<f64>
 }
 
 impl CubicSplineInterpolator {
@@ -47,7 +49,8 @@ impl CubicSplineInterpolator {
         CubicSplineInterpolator {
             delta_x: Vec::new(),
             delta_y: Vec::new(),
-            x_values: Vec::new()
+            x_values: Vec::new(),
+            y_values: Vec::new()
         }
     }
 }
@@ -61,6 +64,7 @@ impl Analyzer for CubicSplineInterpolator {
         self.delta_x.push(d_x);
         self.delta_y.push(d_y);
         self.x_values.push(points[0].0);
+        self.y_values.push(points[0].1);
 
         None
     }
@@ -97,7 +101,8 @@ impl Analyzer for CubicSplineInterpolator {
             b: Vector::from(b_i),
             c: Vector::from(c_i),
             d: Vector::from(d_i),
-            x: Vector::from(self.x_values.clone())
+            x: Vector::from(self.x_values.clone()),
+            y: Vector::from(self.y_values.clone()),
         }))
     }
 }
