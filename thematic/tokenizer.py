@@ -12,6 +12,7 @@ import re
 import string
 from typing import List
 import nltk
+from nltk.stem.snowball import SnowballStemmer
 
 _RE_WHITESPACE = re.compile(r'\s+', re.MULTILINE | re.IGNORECASE)
 _RE_METADATA = re.compile(r'Writers.*', re.IGNORECASE)
@@ -32,15 +33,21 @@ def tokenize(text: str) -> List[str]:
     # tokenize
     cleaned = nltk.word_tokenize(cleaned)
     # process after tokenization
-    cleaned = _process_tokenized(cleaned)
-
-    return cleaned
+    tokens = _process_tokenized(cleaned)
+    return tokens
 
 
 def _process_as_string(text: str) -> str:
-    cleaned = _compress_whitespace(text)
+    cleaned = _remove_punctuation(text)
+    cleaned = _compress_whitespace(cleaned)
     cleaned = _remove_trailing_metadata(cleaned)
     return cleaned
+
+
+def _remove_punctuation(text: str) -> str:
+    punctuation_replacement_table = text.maketrans(
+        '', '', string.punctuation)
+    return text.translate(punctuation_replacement_table)
 
 
 def _compress_whitespace(text: str) -> str:
@@ -51,17 +58,10 @@ def _remove_trailing_metadata(text: str) -> str:
     return re.sub(_RE_METADATA, '', text)
 
 
-def _process_tokenized(text: List[str]) -> List[str]:
-    cleaned = _remove_punctuation(text)
-    cleaned = _normalize_case(cleaned)
-    return cleaned
-
-
-def _remove_punctuation(text: List[str]) -> List[str]:
-    punctuation_replacement_table = text.maketrans(
-        '', '', string.punctuation).j
-    return [w.translate(punctuation_replacement_table)
-            for w in text if w not in string.punctuation]
+def _process_tokenized(tokens: List[str]) -> List[str]:
+    stemmer = SnowballStemmer('english', ignore_stopwords=True)
+    clean_tokens = _normalize_case(tokens)
+    return [stemmer.stem(token) for token in clean_tokens]
 
 
 def _normalize_case(text: List[str]) -> List[str]:

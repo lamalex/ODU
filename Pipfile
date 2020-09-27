@@ -16,6 +16,8 @@ aiohttp = "*"
 beautifulsoup4 = "*"
 aiofiles = "*"
 nltk = "*"
+scikit-learn = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.6"

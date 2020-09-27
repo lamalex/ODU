@@ -13,8 +13,7 @@ import asyncio
 import aiohttp
 import aiofiles
 from bs4 import BeautifulSoup
-from constants import DATA_DIR
-
+from utils import setup_logging, DATA_DIR
 
 class RateLimitingSemaphore:
     """
@@ -208,20 +207,6 @@ async def run(qps):
         downloaders = [ScriptDownloader(semaphore, session, script_url, DATA_DIR) async for script_url in fetch_all_scripts(semaphore, session, scripts_url)]
         tasks = map(lambda d: asyncio.ensure_future(d.download()), downloaders)
         await asyncio.wait(tasks)
-
-
-def setup_logging():
-    """
-    Initialize logging system at desired level
-    """
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M')
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-    console.setFormatter(formatter)
-    logging.getLogger('').addHandler(console)
 
 
 def main():
