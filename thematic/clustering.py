@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""
+Perform hierarchal agglomerative clustering on scripts downloaded using
+download_data.py. Output tree structure for processing with d3.js to
+clusters.json
+
+hyperparameter defaults:
+  - ngram_shape: (5, 10)
+  - linkage: weighted
+"""
 
 import os
 import json
@@ -69,7 +78,7 @@ def cluster():
     Read all script files and vectorize them using TF-IDF vectorizer.
     Use cosine distance to perform hierarchal clustering on ngrams
     """
-    NGRAM_SHAPE = (5, 10)
+    ngram_shape = (5, 10)
 
     scripts = {}
     script_files = map(
@@ -93,10 +102,10 @@ def cluster():
         use_idf=True,
         lowercase=False,
         tokenizer=tokenize,
-        ngram_range=NGRAM_SHAPE)  
+        ngram_range=ngram_shape)
     tfidf_matrix = tfidf_vectorizer.fit_transform(scripts.values())
     logging.info("End Vectorizing")
-    
+
     logging.info("Begin Clustering")
     cosine_dist = cosine_distances(tfidf_matrix)
     cosine_dist_matrix = distance.pdist(cosine_dist)
