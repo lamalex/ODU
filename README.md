@@ -27,7 +27,7 @@ Point net is a **deep learning** approach for **scene segmentation** and **objec
 
 *for example:* Take an Microsoft Kinect scan of a room. We can use `PointNet` to find all of the unique objects in the scan, and identify them!
 
-# Questions
+# Questions?
 <!--
 _class:
  - lead
