@@ -14,7 +14,7 @@ jobs:
         MARP_ARGS: "README.md -o index.html"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPOSITORY: ${{ github.repository }}
-        PUBLISH_TO_BRANCH: master
-        BASE_URL: https://alexsci.com/test-marp-action/
+        PUBLISH_TO_BRANCH: gh-pages
+        BASE_URL: https://lamalex.github.io
       uses: ralexander-phi/marp-action@master
       
