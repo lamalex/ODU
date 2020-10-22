@@ -12,5 +12,3 @@ Markdown is simple, and easy to learn. A quick intro is available at [CommonMark
 
 ## Code
 * `todo`: Python project inside of project 
-
-# Test
