@@ -19,7 +19,7 @@ _class:
 # PointNet
 Segmentation and Classification of point-clouds with Deep Learning
 
-`Tareq Alghamdi & Alex Launi`
+`Alex Launi & Tareq Alghamdi `
 ` ODU CS722 Fall 2020`
 
 ## What is PointNet?
@@ -34,7 +34,5 @@ _class:
  - invert
 -->
 ### 🙋🏿‍♂️ 🙋🏻 🙋🏽‍♀️ 🙋‍♂️
-
-# Test
 
 
