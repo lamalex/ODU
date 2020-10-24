@@ -37,6 +37,24 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 
 **PointNet learns to summarize a point cloud by a spare set of key points, which is approximately an object's skeleton** 💀
 
+## What is a point cloud?
+![bg left:45% Torus gif from WikiPedia](images/Point_cloud_torus.gif)
+> A set of 3D points 
+> $\{ P_{i} | i = 1,\ldots,n \}$, where each point $P_i$ is a vector of its  $(x,y,z)$ coordinates plus extra feature channels such as color, normal, etc
+
+---
+
+**Point clouds are generated from**
+- MS Kinect 
+- LiDAR Scans
+- 3D modelling/CAD software
+
+**Point clouds**
+- are unordered
+- exhibit local structure
+  - adjacency has meaning
+- Invariant to (certain) transformations
+
 # Questions?
 <!--
 _class:
