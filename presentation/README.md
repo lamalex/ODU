@@ -24,7 +24,7 @@ Segmentation and Classification of point-clouds with Deep Learning
 <!-- _class: lead invert-->
 PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
 
-![w:500 drop-shadow:0,20px,10px,rgba(0,0,0,.4)](images/tasks.png)
+![w:500 drop-shadow:0,20px,10px,rgba(0,0,0,.4)](presentation/images/tasks.png)
 
 *for example:* Take a Microsoft Kinect scan of a room. We can use PointNet to find all of the unique objects in the scan, and identify them!
 
@@ -38,7 +38,7 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 **PointNet learns to summarize a point cloud by a spare set of key points, which is approximately an object's skeleton** 💀
 
 ## What is a point cloud?
-![bg left:45% Torus gif from WikiPedia](images/Point_cloud_torus.gif)
+![bg left:45% Torus gif from WikiPedia](presentation/images/Point_cloud_torus.gif)
 > A set of 3D points 
 > $\{ P_{i} | i = 1,\ldots,n \}$, where each point $P_i$ is a vector of its  $(x,y,z)$ coordinates plus extra feature channels such as color, normal, etc
 
