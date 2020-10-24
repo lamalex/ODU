@@ -55,6 +55,14 @@ but PointNet operates directly on **sets of points** using a *convolution networ
   - adjacency has meaning
 - Invariant to (certain) transformations
 
+## PointNet Architecture
+<!-- _class: lead invert -->
+![PointNet architecture diagram](presentation/images/architecture.png)
+- 2 Joint Alignment Networks
+- Local & Global information combination
+- Max pooling aggregation layer
+
+
 # Questions?
 <!--
 _class:
