@@ -42,5 +42,6 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 _class:
  - lead
  - invert
+paginate: false
 -->
 ### 🙋🏿‍♂️ 🙋🏻 🙋🏽‍♀️ 🙋‍♂️
