@@ -1,0 +1,20 @@
+---
+language: shell
+dist: 20.04
+
+addons:
+  apt:
+    update: true
+    packages:
+      - hugo
+
+script:
+  - hugo
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: public
+  token: $GH_TOKEN
+  on:
+    branch: main
