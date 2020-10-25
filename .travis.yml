@@ -1,10 +1,8 @@
 ---
-language: shell
 dist: 20.04
-
-before_install:
-  - sudo apt update -y
-  - sudo apt install -y hugo
+addons:
+  snaps:
+    - hugo
 
 script:
   - hugo
