@@ -2,11 +2,9 @@
 language: shell
 dist: 20.04
 
-addons:
-  apt:
-    update: true
-    packages:
-      - hugo
+before_install:
+  - sudo apt update -y
+  - sudo apt install -y hugo
 
 script:
   - hugo
