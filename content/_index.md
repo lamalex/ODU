@@ -4,8 +4,9 @@ outputs = ["Reveal"]
 
 [reveal_hugo]
 slide_number = true
-custom_theme = "theme-overrides.scss"
-custom_theme_compile = true
+theme = "serif"
+#custom_theme = "theme-overrides.scss"
+#custom_theme_compile = true
 
 +++
 
