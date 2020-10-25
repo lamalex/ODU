@@ -4,9 +4,9 @@ outputs = ["Reveal"]
 
 [reveal_hugo]
 slide_number = true
-theme = "serif"
-#custom_theme = "theme-overrides.scss"
-#custom_theme_compile = true
+#theme = "serif"
+custom_theme = "theme-overrides.scss"
+custom_theme_compile = true
 
 +++
 
@@ -193,9 +193,9 @@ Job phases are run in serial and do everything from installing additional depend
 ...
 
 before_install:
-install:
+install: # install any dependencies
 before_script:
-script:
+script: # this is the build phase
 before_cache: #only used if caching was enabled
 
 # Only 1 of these will run per stage
@@ -207,6 +207,14 @@ deploy:
 after_deploy:
 after_script:
 ```
+
+{{% note %}}
+Job steps are configured and run in the order shown here.
+Dependencies can be installed with various package managers like apt, homebrew, npm, cargo, etc.
+Arbitrary shell commands can be issued so these phases can be used flexibly, rather than adhering to
+a rigid semantic meaning.
+
+{{% /note %}}
 
 ---
 
