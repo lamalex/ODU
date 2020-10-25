@@ -1,8 +1,8 @@
 ---
 dist: 20.04
-addons:
-  snaps:
-    - hugo
+  addons:
+    snaps:
+      - hugo
 
 script:
   - hugo
