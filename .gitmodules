@@ -1,3 +1,6 @@
 [submodule "themes/reveal-hugo"]
 	path = themes/reveal-hugo
 	url = git@github.com:dzello/reveal-hugo.git
+[submodule ".vscode"]
+	path = .vscode
+	url = git@github.com:lamalex/vscode-snippets.git
