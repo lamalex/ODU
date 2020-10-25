@@ -3,8 +3,10 @@ title = "Travis et al: 3rd party CI services"
 outputs = ["Reveal"]
 
 [reveal_hugo]
-theme = "blood"
 slide_number = true
+custom_theme = "theme-overrides.scss"
+custom_theme_compile = true
+
 +++
 
 # Travis et al

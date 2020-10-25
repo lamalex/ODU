@@ -1,8 +1,11 @@
 baseURL = "https://lamlex.github.io/cs795-lp"
 languageCode = "en-us"
 title = "Travis et. al: 3rd party CI/CD services"
-
+disableKinds = ["sitemap", "RSS"]
 theme = "reveal-hugo"
+
+[author]
+name = "Alex Launi"
 
 footnoteReturnLinkContents = "↩"
 enableGitInfo = true
