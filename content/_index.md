@@ -4,9 +4,9 @@ outputs = ["Reveal"]
 
 [reveal_hugo]
 slide_number = true
-#theme = "serif"
-custom_theme = "theme-overrides.scss"
-custom_theme_compile = true
+theme = "solarized"
+#custom_theme = "theme-overrides.scss"
+#custom_theme_compile = true
 
 +++
 
@@ -97,6 +97,7 @@ tool chain availability and licensing constraints.
 
 ---
 
+{{% section %}}
 # Builds, Jobs, Phases, and Stages
 
 {{% note %}}
@@ -213,9 +214,34 @@ Job steps are configured and run in the order shown here.
 Dependencies can be installed with various package managers like apt, homebrew, npm, cargo, etc.
 Arbitrary shell commands can be issued so these phases can be used flexibly, rather than adhering to
 a rigid semantic meaning.
-
 {{% /note %}}
 
 ---
 
 ## Stages
+
+Stages group jobs to be run in parallel, but run each stage sequentially
+![Travis stages in action](images/stages.gif)
+
+{{% note %}}
+Stages are a powerful and flexible tool.
+In the animation a Ruby project is executing 2 concurrent jobs on different versions of Ruby, 
+and only if **both** jobs pass will the deploy stage execute.
+{{% /note %}}
+
+{{% /section %}}
+
+--- 
+
+{{% section %}}
+
+# Let's deploy!
+
+{{% note %}}
+In this section we're going to deploy a snake game as a static site to GitHub pages.
+You'll need, and should already have:
+- git installed
+- a GitHub account
+{{% /note %}}
+
+{{% /section %}}
