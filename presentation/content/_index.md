@@ -168,4 +168,4 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 ---
 
 # Questions?
-### 🙋🏿‍♂️ 🙋🏻 🙋🏽‍♀️ 🙋‍♂️
+### 🙋🏿‍♂️ 🙋🏻 🧟‍♀️ 🙋🏽‍♀️
