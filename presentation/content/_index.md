@@ -79,5 +79,31 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 
 ---
 
+## Joint Alignment Network
+Labeling an object should be invariant to rigid transformations of that object.
+Pointnet solves this by attempting to align all input set to a canonical space prior to feature extraction.
+
+Pointnet predicts an affine transformation matrix using a sub-network, `T-Net`, and applying the predicted transformation
+to the input points.
+
+The idea is extended to feature space as well, however due to high dimensionality a regularization term is added to the 
+Softmax loss function.
+
+$$ L_{reg} = ||I - AA^T||_F^2 $$
+
+---
+
+## T-Net
+
+---
+
+## Local <> Global Information Combination
+
+---
+
+## Max pooling aggregation layer
+
+---
+
 # Questions?
 ### 🙋🏿‍♂️ 🙋🏻 🙋🏽‍♀️ 🙋‍♂️
