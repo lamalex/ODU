@@ -55,10 +55,16 @@ but PointNet operates directly on **sets of points** using a **convolution netwo
 ---
 
 ## What is a point cloud?
+<div class="container" data-markdown>
+  <div class="col">
 ![Torus gif from WikiPedia](images/Point_cloud_torus.gif)
+  </div>
+  <div class="col">
 > A set of 3D points $$ \{ P_{i} | i = 1,\ldots,n \} $$,
 > where each point $P_i$ is a vector of its  $(x,y,z)$ coordinates 
 > plus extra feature channels such as color, normal, etc.
+  </div>
+</div>
 
 ---
 
