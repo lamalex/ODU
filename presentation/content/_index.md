@@ -136,11 +136,18 @@ $$ L_{reg} = ||I - AA^T||_F^2 $$
 
 ---
 
+{{% section %}}
+
 ## Local <> Global Information Combination
+
+Stuff goes here
+
+{{% /section %}}
 
 ---
 
 {{% section %}}
+
 ## Max pooling aggregation layer
 
 Make the model invariant to input permutation (except that order matters cannot be totally ignored!)
