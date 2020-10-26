@@ -88,9 +88,9 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 
 ## PointNet Architecture
 ![PointNet architecture diagram](images/architecture.png)
-- {{% fragment %}}2 Joint Alignment Networks{{% /fragment %}}
-- {{% fragment %}}Local & Global information combination{{% /fragment %}}
-- {{% fragment %}}Max pooling aggregation layer{{% /fragment %}}
+- 2 Joint Alignment Networks
+- Local & Global information combination
+- Max pooling aggregation layer
 
 ---
 
