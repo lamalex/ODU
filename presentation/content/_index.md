@@ -5,6 +5,7 @@ outputs = ["Reveal"]
 [reveal_hugo]
 slide_number = true
 theme = "moon"
+hide_cursor_time = 500
 +++
 
 <style>
@@ -47,7 +48,7 @@ PointNet is a novel approach to 3D-structure classification. Many prior approach
  - 3D Voxels
  - Image grids
 
-but PointNet operates directly on **sets of points** using a *convolution network* and *max pooling function*.
+but PointNet operates directly on **sets of points** using a **convolution network** and **max pooling function**.
 
 > PointNet learns to summarize a point cloud by a sparse set of key points, which is approximately an object's skeleton 💀
 
