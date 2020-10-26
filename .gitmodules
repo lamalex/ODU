@@ -1,5 +1,5 @@
 [submodule "presentation/.vscode"]
-	path = presentation/.vscode
+	path = .vscode
 	url = https://github.com/lamalex/vscode-snippets.git
 [submodule "presentation/themes/reveal-hugo"]
 	path = presentation/themes/reveal-hugo

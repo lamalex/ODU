@@ -1,0 +1,20 @@
+{
+	"Insert speaker notes": {
+		"scope": "markdown",
+		"prefix": "note",
+		"body": [
+			"{{% note %}}",
+			"$1",
+			"{{% /note %}}"
+		],
+		"description": "Insert speaker note in hugo-revealjs"
+	},
+	"Insert slide fragment": {
+		"scope": "markdown",
+		"prefix": "frag",
+		"body": [
+			"{{% fragment %}}$1{{% /fragment %}}"
+		],
+		"description": "Insert speaker note in hugo-revealjs"
+	}
+}
