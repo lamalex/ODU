@@ -1,0 +1,17 @@
+---
+language: minimal
+dist: focal
+
+before_install:
+  - sudo snap install hugo
+
+script:
+  - hugo
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: presentaton/public
+  token: $GH_TOKEN
+  on:
+    branch: main

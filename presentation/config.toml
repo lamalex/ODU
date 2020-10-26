@@ -1,0 +1,19 @@
+baseURL = "https://lamlex.github.io/cs722-pointnet"
+languageCode = "en-us"
+title = "PointNet: Segmentation and Classification of point-clouds with Deep Learning"
+disableKinds = ["sitemap", "RSS"]
+theme = "reveal-hugo"
+
+[author]
+name = "Alex Launi & Tareq Alghamdi"
+
+footnoteReturnLinkContents = "↩"
+enableGitInfo = true
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[outputFormats.Reveal]
+baseName = "index"
+mediaType = "text/html"
+isHTML = true
