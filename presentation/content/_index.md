@@ -5,15 +5,31 @@ outputs = ["Reveal"]
 [reveal_hugo]
 slide_number = true
 theme = "moon"
-center = true
 +++
+
+<style>
+.container{
+    display: flex;
+}
+.col{
+    flex: 1;
+}
+.text-left {
+  text-align: left;
+}
+.text-xs {
+  font-size: 10px
+}
+</style>
 
 # PointNet
 Segmentation and Classification of point-clouds with Deep Learning
 
-> Alex Launi & Tareq Alghamdi \
-> ODU CS722 \
-> Fall 2020
+```php
+Alex Launi & Tareq Alghamdi
+ODU CS722
+Fall 🎃 2020
+```
 
 ---
 
@@ -21,7 +37,7 @@ Segmentation and Classification of point-clouds with Deep Learning
 PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
 
 ![PointNet task figure](images/tasks.png)
-<div style="font-size: 10px;" data-markdown>
+<div class="text-xs" data-markdown>
 ## PointNet can find all of the unique objects in a scan, and identify them
 </div>
 
@@ -46,28 +62,20 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 ---
 
 ## Point Clouds
-<style>
-.container{
-    display: flex;
-}
-.col{
-    flex: 1;
-}
-</style>
 
-<div class="container" data-markdown>
-<div class="col">
+<div class="container text-left" data-markdown>
+  <div class="col">
 #### are generated from
  - MS Kinect 
  - LiDAR Scans
  - 3D modelling/CAD software
-</div>
+  </div>
 
-<div class="col">
+  <div class="col">
 - are unordered
 - exhibit local structure
 - are invariant to (certain) transformations
-</div>
+  </div>
 </div>
 
 {{% note %}}
@@ -80,15 +88,15 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 
 ## PointNet Architecture
 ![PointNet architecture diagram](images/architecture.png)
-- 2 Joint Alignment Networks
-- Local & Global information combination
-- Max pooling aggregation layer
+- {{% fragment %}}2 Joint Alignment Networks{{% /fragment %}}
+- {{% fragment %}}Local & Global information combination{{% /fragment %}}
+- {{% fragment %}}Max pooling aggregation layer{{% /fragment %}}
 
 ---
 
 {{% section %}}
 
-## Joint Alignment Network
+# Joint Alignment Network
 
 ---
 
@@ -138,7 +146,9 @@ $$ L_{reg} = ||I - AA^T||_F^2 $$
 
 {{% section %}}
 
-## Local <> Global Information Combination
+# Local ↔︎ Global Information Combination
+
+---
 
 Stuff goes here
 
@@ -148,7 +158,9 @@ Stuff goes here
 
 {{% section %}}
 
-## Max pooling aggregation layer
+# Max pooling aggregation layer
+
+---
 
 Make the model invariant to input permutation (except that order matters cannot be totally ignored!)
 
