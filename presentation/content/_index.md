@@ -5,7 +5,7 @@ outputs = ["Reveal"]
 [reveal_hugo]
 slide_number = true
 theme = "moon"
-center = false
+center = true
 +++
 
 # PointNet
