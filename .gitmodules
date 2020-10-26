@@ -3,4 +3,4 @@
 	url = https://github.com/lamalex/vscode-snippets.git
 [submodule "presentation/themes/reveal-hugo"]
 	path = presentation/themes/reveal-hugo
-	url = https://github.com/dzello/reveal-hugo.git
+	url = https://github.com/lamalex/reveal-hugo.git
