@@ -37,6 +37,14 @@ And for the record: this presentation is built and deployed using Travis!
 
 ---
 
+## References
+
+* [Official Travis Docs](https://docs.travis-ci.com/)
+* [Official CircleCI Docs](https://circleci.com/docs/2.0/)
+* [Official Azure Pipelines Docs](https://docs.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops)
+
+---
+
 ## Infrastructure is expensive both in *time* and *dollars*
 
 {{% note %}}
