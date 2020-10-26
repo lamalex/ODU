@@ -16,11 +16,14 @@ theme = "solarized"
 > Alex Launi <br />
 > CS795 Fall 2020
 
+{{% fragment %}} *`Built and deployed with Travis CI`* {{% /fragment %}}
 
 {{% note %}}
 * Introduce self
 * Establish relevancy
 * Establish SME
+
+And for the record: this presentation is built and deployed using Travis!
 {{% /note %}}
 
 ---
@@ -64,6 +67,12 @@ For instance: yaml is used to configure Travis, Circle, Github Actions, GitLab C
 
 so let's talk about
 # Travis CI
+
+{{% note %}}
+As students we have access to the GitHub student developer pack, which among many other great things,
+gives you access to unlimited private builds in Travis. If you have not yet requested your developer pack
+I **HIGHLY** recommend you do that. It's extraordinarily valuable.
+{{% /note %}}
 
 ---
 
@@ -169,6 +178,11 @@ Visual Basic
 
 {{% note %}}
 The .travis.yml file describes the build process. 
+Yaml stands for
+> Yaml aint markup language
+
+It's a simple, easy to read serialization format that has become popular and you will come across
+more as you do more devops (for instance with kubernetes)
 
 Travis build are usually triggered by a commit to a source control hosting platform
  - GitHub
@@ -229,6 +243,24 @@ In the animation a Ruby project is executing 2 concurrent jobs on different vers
 and only if **both** jobs pass will the deploy stage execute.
 {{% /note %}}
 
+---
+
+## Stage usage
+
+```yaml
+...
+
+jobs:
+  include:
+    # Stages will run sequentially
+    - stage: test
+      # scripts will run concurrently on separate VMs
+      script: ./test 1
+      script: ./test 2
+    - stage: deploy
+      script: ./deploy
+```
+
 {{% /section %}}
 
 --- 
@@ -243,5 +275,48 @@ You'll need, and should already have:
 - git installed
 - a GitHub account
 {{% /note %}}
+
+---
+
+## Let's setup GitHub
+<div style="text-align: left;" >
+
+1) Fork the [Snake repository](https://github.com/lamalex/cs795-elm) (lamalex/cs795-elm)
+2) Enable GitHub pages in `Settings`
+   1) Set `Source` to `gh-pages` `/ (root)`
+3) [Create a new API token](https://github.com/settings/tokens/new) with `repo` scope
+   - Keep this available, you'll need it and it's not recoverable - you'll have to generate a new one otherwise
+
+</div>
+
+---
+
+## [Create an account on Travis-CI](https://travis-ci.com/signup)
+  
+![Sign up with github](images/signup-w-gh.png)
+
+Then go to settings and activate GitHub
+
+---
+
+## Setup your deploy token
+
+- Click settings on the CS795 repository
+- Add an environment variable named `GH_TOKEN` to the value of token you generated in GitHub earlier on branch `main`. Do not display its value in build log
+
+---
+
+## Add a .travis.yml file
+
+Use what you've learned in this lesson to write a travis configuration file. 
+
+
+```bash
+# 1) Run the tests with
+$ elm-test
+# 2) and build your site with   
+$ elm make --optimize --output=public/index.html src/Main.elm
+``` 
+</div>
 
 {{% /section %}}
