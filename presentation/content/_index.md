@@ -1,14 +1,11 @@
 +++
 title = "PointNet: Segmentation and Classification of point-clouds with Deep Learning"
 outputs = ["Reveal"]
-katex = true
-markup = "mmark"
 
 [reveal_hugo]
 slide_number = true
 theme = "moon"
-#custom_theme = "theme-overrides.scss"
-#custom_theme_compile = true
+center = false
 +++
 
 # PointNet
