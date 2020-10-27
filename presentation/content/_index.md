@@ -49,6 +49,12 @@ Segmentation and Classification of point-clouds with Deep Learning
 </div>
 </div>
 ---
+# Challenges of Deep Learning with Point Clouds
+-  Irregularity
+-  Unstructured
+-  Unorderdness
+{{< figure src="Desktop/MLP.png" title="Challenges of point cloud data!" >}}
+---
 # What is PointNet?
 PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
 
