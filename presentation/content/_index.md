@@ -10,8 +10,13 @@ theme = "moon"
 #custom_theme = "theme-overrides.scss"
 #custom_theme_compile = true
 +++
----
+# PointNet
+Segmentation and Classification of point-clouds with Deep Learning
 
+> Alex Launi & Tareq Alghamdi
+> ODU CS722 Fall 2020
+
+---
 ## Point Clouds
 <style>
 .container{
@@ -37,15 +42,7 @@ theme = "moon"
 - are invariant to (certain) transformations
 </div>
 </div>
-
-# PointNet
-Segmentation and Classification of point-clouds with Deep Learning
-
-> Alex Launi & Tareq Alghamdi
-> ODU CS722 Fall 2020
-
 ---
-
 # What is PointNet?
 PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
 
