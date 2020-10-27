@@ -96,7 +96,7 @@ Fall 🎃 2020
 #### Multi-View-Based Approach
 - Images are actual representations of the 3D world squashed onto a 2D grid by a camera, methods. 
 - Multi-view-based methods take advantage of the benefits and apply them into three dimensions by converting point cloud data into a collection of 2D images and applying existing 2D CNN techniques to it.
-{{< figure src="images/MVB.png" title=" Multi-view projection of a point cloud to 2D images.!" >}} 
+{{< figure src="images/MVB.jpg" title=" Multi-view projection of a point cloud to 2D images.!" >}} 
 - Each 2D image represents the same object viewed from a different angle.
 - Multi-view based networks have better performance than voxel-based methods. 
 --- 
