@@ -49,7 +49,7 @@ Segmentation and Classification of point-clouds with Deep Learning
 </div>
 </div>
 ---
-# ##Challenges of Deep Learning with Point Clouds:
+## Challenges of Deep Learning with Point Clouds:
 -  Irregularity
 -  Unstructured
 -  Unorderdness
