@@ -79,10 +79,33 @@ Fall 🎃 2020
 -  Unstructured
 -  Unorderdness
 
-{{< figure src=“images/MLP.png" title="Challenges of point cloud data!" >}}
+{{< figure src="images/MLP.png" title="Challenges of point cloud data!" >}}
 
 ---
-
+## Structured Grid-Based Learning: 
+- A typical convolution operation on a 2D grid using a 3 × 3 filter can be shown in this figure 
+{{< figure src="images/CNN.png" title="A typical 2D convolution operation!" >}}
+- The convolution operation requires a structured grid. Point cloud data are unstructured, and this is a challenge for deep learning. 
+---
+- To overcome this challenge, many approaches convert the point cloud data into a structured form. 
+- These approaches can be broadly divided into two categories:
+- Voxel-Based Approach
+{{< figure src="images/VBA.png" title="The point cloud of an airplane is voxelized to a 30×30×30 volumetric occupancy grid.!" >}}
+- Although voxel-based methods have shown good performance, they suffer from high memory consumption due to the sparsity of the voxels
+--- 
+- Multi-View-Based Approach
+- Images are actual representations of the 3D world squashed onto a 2D grid by a camera, methods. 
+- Multi-view-based methods take advantage of the benefits and apply them into three dimensions by converting point cloud data into a collection of 2D images and applying existing 2D CNN techniques to it.
+{{< figure src="images/MVB.png" title=" Multi-view projection of a point cloud to 2D images. Each 2D image represents the same object viewed from a different angle..!" >}}
+- Multi-view based networks have better performance than voxel-based methods. 
+--- 
+- Higher-Dimensional Lattices
+- There are other methods for point cloud processing using deep learning that convert the point clouds into a higher-dimensional regular lattice.
+- SplatNet
+- SFCNN
+- Compared to voxel-based and multi-view approaches, higher-dimensional approaches have better performance in terms of segmentation with SplatNet. They are also better than the voxel-based approach in terms of classification.
+--- 
+## Deep Learning Directly with a Raw Point Cloud
 # What is PointNet?
 PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
 
