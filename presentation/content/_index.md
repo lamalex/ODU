@@ -79,7 +79,7 @@ Fall 🎃 2020
 -  Unstructured
 -  Unorderdness
 
-{{< figure src="Desktop/MLP.png" title="Challenges of point cloud data!" >}}
+{{< figure src=“images/MLP.png" title="Challenges of point cloud data!" >}}
 
 ---
 
