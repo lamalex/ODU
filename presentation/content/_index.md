@@ -47,6 +47,7 @@ Fall 🎃 2020
 </div>
 
 ---
+
 ## Point Clouds
 
 <div class="container text-left" data-markdown>
@@ -71,14 +72,13 @@ Fall 🎃 2020
 3) Sets of points can be skewed, rotated, scaled, and should still be identifiable as their object class
 {{% /note %}}
 
-</div>
-
 ---
 
 ## Challenges of Deep Learning with Point Clouds:
 -  Irregularity
 -  Unstructured
 -  Unorderdness
+
 {{< figure src="Desktop/MLP.png" title="Challenges of point cloud data!" >}}
 
 ---
@@ -99,6 +99,7 @@ but PointNet operates directly on **sets of points** using a *convolution networ
 > PointNet learns to summarize a point cloud by a sparse set of key points, which is approximately an object's skeleton 💀
 
 ---
+
 ## PointNet Architecture
 ![PointNet architecture diagram](images/architecture.png)
 - 2 Joint Alignment Networks
