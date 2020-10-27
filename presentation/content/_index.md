@@ -34,26 +34,6 @@ Fall 🎃 2020
 
 ---
 
-# What is PointNet?
-PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
-
-![PointNet task figure](images/tasks.png)
-<div class="text-xs" data-markdown>
-## PointNet can find all of the unique objects in a scan, and identify them
-</div>
-
----
-
-PointNet is a novel approach to 3D-structure classification. Many prior approaches transformed data into structured formats like
- - 3D Voxels
- - Image grids
-
-but PointNet operates directly on **sets of points** using a **convolution network** and **max pooling function**.
-
-> PointNet learns to summarize a point cloud by a sparse set of key points, which is approximately an object's skeleton 💀
-
----
-
 ## What is a point cloud?
 <div class="container" data-markdown>
   <div class="col">
@@ -67,7 +47,6 @@ but PointNet operates directly on **sets of points** using a **convolution netwo
 </div>
 
 ---
-
 ## Point Clouds
 
 <div class="container text-left" data-markdown>
@@ -85,14 +64,41 @@ but PointNet operates directly on **sets of points** using a **convolution netwo
   </div>
 </div>
 
+
 {{% note %}}
 1) Points in 3d space have no defined ordering. This makes some approaches difficult, for instance they cannot be sorted
 2) Adjacency of points matters. Points cannot be arbitrarily permuted. While they are *not ordered*; order matters.
 3) Sets of points can be skewed, rotated, scaled, and should still be identifiable as their object class
 {{% /note %}}
 
+</div>
+
 ---
 
+## Challenges of Deep Learning with Point Clouds:
+-  Irregularity
+-  Unstructured
+-  Unorderdness
+{{< figure src="Desktop/MLP.png" title="Challenges of point cloud data!" >}}
+
+---
+
+# What is PointNet?
+PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
+
+{{< figure src="images/tasks.png" title="PointNet can find all of the unique objects in the scan, and identify them!" >}}
+
+---
+
+PointNet is a novel approach to 3D-structure classification. Many prior approaches transformed data into structured formats like
+ - 3D Voxels
+ - Image grids
+
+but PointNet operates directly on **sets of points** using a *convolution network* and *max pooling function*.
+
+> PointNet learns to summarize a point cloud by a sparse set of key points, which is approximately an object's skeleton 💀
+
+---
 ## PointNet Architecture
 ![PointNet architecture diagram](images/architecture.png)
 - 2 Joint Alignment Networks
