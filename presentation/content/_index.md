@@ -11,6 +11,7 @@ hide_cursor_time = 500
 <style>
 .container{
     display: flex;
+    justify-content: space-between
 }
 .col{
     flex: 1;
@@ -75,11 +76,19 @@ Fall 🎃 2020
 ---
 
 ## Challenges of Deep Learning with Point Clouds:
--  Irregularity
--  Unstructured
--  Unorderdness
+<div class="container text-left" data-markdown>
+  <div class="col">
+- Irregular
+  </div>
+  <div class="col">
+- Unstructured
+  </div>
+  <div class="col">
+- Unordered
+  </div>
+</div>
 
-{{< figure src="images/MLP.png" title="Challenges of point cloud data!" >}}
+![Challenges of point cloud data](images/MLP.png)
 
 ---
 ## Structured Grid-Based Learning: 
