@@ -214,17 +214,30 @@ There are a few techniques that have been applied to solve this problem.
 3) Apply a symmetric function to aggregate the information from each point
 {{% /note %}}
 
-Pointnet predicts an affine transformation matrix using a sub-network, `T-Net`, and applies the predicted transformation
-to the input points.
 
-The idea is extended to feature space as well; however, due to high dimensionality a regularization term is added to the 
-Softmax loss function.
-
-$$ L_{reg} = ||I - AA^T||_F^2 $$
+Pointnet predicts an affine transformation matrix using a sub-network, 
+### `T-Net`,
+and applies the predicted transformation to the input points.
 
 ---
 
+
 ## T-Net
+
+![T-Net flow](images/tnet.png)
+
+![Use an affine matrix for transformation invariance](images/spat-trans.gif)
+
+---
+
+### The idea is extended to feature space as well
+
+however, due to high dimensionality $(64\times64)$ a regularization term is added to the 
+Softmax loss function
+
+$$ L_{reg} = ||I - AA^T||_F^2 $$
+
+to approximate an orthogonal transformation
 
 {{% /section %}}
 
