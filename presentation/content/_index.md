@@ -249,7 +249,8 @@ to approximate an orthogonal transformation
 
 ---
 
-Stuff goes here
+For semantic segmentation the pointwise and global feature matrices are concatenated
+and information is then extracted from this combined set.
 
 {{% /section %}}
 
@@ -261,18 +262,14 @@ Stuff goes here
 
 ---
 
-Make the model invariant to input permutation (except that order matters cannot be totally ignored!)
+Make the model invariant to input permutation (except that order matters and cannot be totally ignored!)
 
 Approximate a general function defined on a point set by applying a symmetric function on transformed set elements
 $ f(\{x_1, \ldots, x_n\}) \approx g(h(x_1), \ldots, h(x_n)) $ where $ f : 2^{R^N} \rightarrow R, h : R^N -> R^K $
 and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric function.
 
----
-
-- $ h $ is approximated by an MLP network
-  - DETAILS
+- $ h $ is approximated by the MLP network
 - $ g $ by a composition of a simple single variable function and a max pooling function
-  - DETAILS
 
 {{% /section %}}
 
