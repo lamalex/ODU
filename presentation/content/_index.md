@@ -11,13 +11,18 @@ hide_cursor_time = 500
 <style>
 .container{
     display: flex;
-    justify-content: space-between
+}
+.space-evenly {
+  justify-content: space-between;
 }
 .col{
     flex: 1;
 }
 .text-left {
   text-align: left;
+}
+.text-sm {
+  font-size: 20px;
 }
 .text-xs {
   font-size: 10px
@@ -76,7 +81,8 @@ Fall 🎃 2020
 ---
 
 ## Challenges of Deep Learning with Point Clouds:
-<div class="container text-left" data-markdown>
+
+<div class="container space-evenly" data-markdown>
   <div class="col">
 - Irregular
   </div>
@@ -91,33 +97,65 @@ Fall 🎃 2020
 ![Challenges of point cloud data](images/MLP.png)
 
 ---
-## Structured Grid-Based Learning: 
-- A typical convolution operation on a 2D grid using a 3 × 3 filter can be shown in this figure 
-{{< figure src="images/CNN.png" title="A typical 2D convolution operation!" >}}
-- The convolution operation requires a structured grid. Point cloud data are unstructured, and this is a challenge for deep learning. 
+
+{{% section %}}
+
+## Structured Grid-Based Learning
+
+<div class="container" data-markdown>
+  <div class="col">
+![A typical 2D convolution operation](images/CNN.png)
+  </div>
+  <div class="col">
+- The convolution operation requires a structured grid. 
+- Point cloud data are unstructured, and this is a challenge for deep learning. 
+  </div>
+</div>
+
+#### To overcome this challenge, many approaches convert the point cloud data into a structured form. 
+
 ---
-- To overcome this challenge, many approaches convert the point cloud data into a structured form. 
-- These approaches can be broadly divided into two categories:
+
 #### Voxel-Based Approach
-{{< figure src="images/VBA.png" title="The point cloud of an airplane is voxelized to a 30×30×30 volumetric occupancy grid.!" >}}
-- Although voxel-based methods have shown good performance, they suffer from high memory consumption due to the sparsity of the voxels
+
+![The point cloud of an airplane is voxelized to a 30×30×30 volumetric occupancy grid](images/VBA.png)
+
+#### Although voxel-based methods have shown good performance, they suffer from high memory consumption due to the sparsity of the voxels
+
 --- 
-#### Multi-View-Based Approach
-- Images are actual representations of the 3D world squashed onto a 2D grid by a camera, methods. 
-- Multi-view-based methods take advantage of the benefits and apply them into three dimensions by converting point cloud data into a collection of 2D images and applying existing 2D CNN techniques to it.
-{{< figure src="images/MVB.jpg" title=" Multi-view projection of a point cloud to 2D images.!" >}} 
-- Each 2D image represents the same object viewed from a different angle.
+
+## Multi-View-Based Approach
+
+![Ok cool](images/MVB.jpg)
+<div class="container text-sm space-evenly" data-markdown>
+<div class="col">
+- Images are actual representations of the 3D world projected onto a 2D grid
+- Each 2D image represents the same object viewed from a different angle
+</div>
+<div class="col">
+- Can then apply existing 2D CNN techniques to the projections
 - Multi-view based networks have better performance than voxel-based methods. 
+</div>
+</div>
+
 --- 
-#### Higher-Dimensional Lattices:
+
+## Higher-Dimensional Lattices
 - There are other methods for point cloud processing using deep learning that convert the point clouds into a higher-dimensional regular lattice.
 - SplatNet
 - SFCNN
 - Compared to voxel-based and multi-view approaches, higher-dimensional approaches have better performance in terms of segmentation with SplatNet. 
 - They are also better than the voxel-based approach in terms of classification.
+
+{{% /section %}}
+
 --- 
-## Deep Learning Directly with a Raw Point Cloud
-# What is PointNet?
+
+# Deep Learning Directly with Point Clouds
+
+---
+
+## PointNet
 PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
 
 {{< figure src="images/tasks.png" title="PointNet can find all of the unique objects in the scan, and identify them!" >}}
