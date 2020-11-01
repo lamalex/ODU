@@ -248,9 +248,16 @@ to approximate an orthogonal transformation
 # Local ↔︎ Global Information Combination
 
 ---
+<div style="font-size: 25px;">
+The classification network extracts embeddings from Point featurees
+</div>
 
-For semantic segmentation the pointwise and global feature matrices are concatenated
+![PointNet arch](images/architecture.png)
+
+<div style="font-size: 25px;">
+In semantic segmentation the pointwise and global feature matrices are concatenated
 and information is then extracted from this combined set.
+</div>
 
 {{% /section %}}
 
@@ -270,6 +277,20 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 
 - $ h $ is approximated by the MLP network
 - $ g $ by a composition of a simple single variable function and a max pooling function
+
+{{% /section %}}
+
+---
+
+{{% section %}}
+
+# Evaluating PointNet
+
+<div class="text-left" data-markdown>
+- Object Classification
+- Object Part Segmentation
+- Semantic Scene Segmentation
+</div>
 
 {{% /section %}}
 
