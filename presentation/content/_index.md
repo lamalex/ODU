@@ -199,6 +199,8 @@ So can PointNet
 
 Pointnet solves this by attempting to align all input set to a canonical space prior to feature extraction.
 
+![Use an affine matrix for transformation invariance](images/spat-trans.gif)
+
 {{% note %}}
 There are a few techniques that have been applied to solve this problem.
 1) Sort points into a canonical order
@@ -225,8 +227,6 @@ and applies the predicted transformation to the input points.
 ## T-Net
 
 ![T-Net flow](images/tnet.png)
-
-![Use an affine matrix for transformation invariance](images/spat-trans.gif)
 
 ---
 
