@@ -292,6 +292,36 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 - Semantic Scene Segmentation
 </div>
 
+---
+
+### Obect Classification
+
+- Evaluated on ModelNet40
+- 12311 CAD models from 40 object categories
+  - 80/20 train-test split
+  - 89% Accuracy on Test set
+
+---
+
+### Object Part Segmentation
+
+- Evaluated on ShapeNet
+- 16,881 shapes from 16 categories annotated with 50 parts
+  - Most objects have 2-5 parts
+  - 83.7 mIoU(%)
+    - 2.3% mIoU improvement over compared methods
+
+---
+
+### Scene Segmentation
+
+- Evaluated on Stanford 3D Semantic Parsing dataset
+  - 3D scans from Matterport scanners in 271 rooms
+  - 47.71 mIoU(%)
+  - 78.62% Accuracy
+  - *A major improvement over baseline*
+    - 20.12 mIoU / 53.19% Accuracy
+
 {{% /section %}}
 
 ---
