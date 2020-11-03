@@ -323,8 +323,21 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
     - 20.12 mIoU / 53.19% Accuracy
 
 {{% /section %}}
+---
+### Visualizing PointNet
+<div style="font-size: 25px;">
+While critical points jointly determine the global shape feature for a given shape, any point cloud that falls between the critical points set and the upper bound shape gives exactly the same feature.
+</div>
+
+![Critical points and upper bound shape](images/Critical point.png)
+ 
+---
+### Conclusion:
+- This paper proposes a novel deep neural network PointNet that directly consumes point cloud. 
+- This network provides a unified approach to a number of 3D recognition tasks including object classification, part segmentation, and semantic segmentation.  
+- Obtaining better results than state of the arts on standard benchmarks.
+- Providing theoretical analysis and visualizations towards understanding of the network.
 
 ---
-
 # Questions?
 ### 🙋🏿‍♂️ 🙋🏻 🧟‍♀️ 🙋🏽‍♀️
