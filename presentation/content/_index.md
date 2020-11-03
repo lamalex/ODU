@@ -294,7 +294,7 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 
 ---
 
-### Obect Classification
+### 3D Object Classification
 
 - Evaluated on ModelNet40
 - 12311 CAD models from 40 object categories
@@ -303,13 +303,15 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 
 ---
 
-### Object Part Segmentation
+### 3D Object Part Segmentation
 
 - Evaluated on ShapeNet
 - 16,881 shapes from 16 categories annotated with 50 parts
   - Most objects have 2-5 parts
   - 83.7 mIoU(%)
     - 2.3% mIoU improvement over compared methods
+![Network architecture for part segmentation.](images/Network Arch.png)
+![Qualitative results for part segmentation.](images/partial.png)
 
 ---
 
@@ -321,6 +323,7 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
   - 78.62% Accuracy
   - *A major improvement over baseline*
     - 20.12 mIoU / 53.19% Accuracy
+![Qualitative results for semantic segmentation.](images/Semantic Segmentation.png)
 
 {{% /section %}}
 
@@ -338,7 +341,6 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 <div style="font-size: 25px;">
 While critical points jointly determine the global shape feature for a given shape, any point cloud that falls between the critical points set and the upper bound shape gives exactly the same feature.
 </div>
-
 ![Critical points and upper bound shape](images/Critical point.png)
  
 ---
