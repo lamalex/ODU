@@ -310,7 +310,9 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
   - Most objects have 2-5 parts
   - 83.7 mIoU(%)
     - 2.3% mIoU improvement over compared methods
+
 ![Network architecture for part segmentation.](images/Network Arch.png)
+
 ![Qualitative results for part segmentation.](images/partial.png)
 
 ---
@@ -323,6 +325,7 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
   - 78.62% Accuracy
   - *A major improvement over baseline*
     - 20.12 mIoU / 53.19% Accuracy
+
 ![Qualitative results for semantic segmentation.](images/Semantic Segmentation.png)
 
 {{% /section %}}
@@ -333,6 +336,7 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 - PointNet is robust to various kinds of input corruptions.
 - As to missing points, when there are 50% points missing,the accuracy only drops by 2.4% and 3.8% w.r.t. furthest and random input sampling.
 - As to the outliers, the net has more than 80% accuracy even when 20% of the points are outliers.
+
 ![PointNet robustness test.](images/Robust.png)
 
 ---
