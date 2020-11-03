@@ -323,7 +323,17 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
     - 20.12 mIoU / 53.19% Accuracy
 
 {{% /section %}}
+
 ---
+
+### Robustness Test
+- PointNet is robust to various kinds of input corruptions.
+- As to missing points, when there are 50% points missing,the accuracy only drops by 2.4% and 3.8% w.r.t. furthest and random input sampling.
+- As to the outliers, the net has more than 80% accuracy even when 20% of the points are outliers.
+![PointNet robustness test.](images/Robust.png)
+
+---
+
 ### Visualizing PointNet
 <div style="font-size: 25px;">
 While critical points jointly determine the global shape feature for a given shape, any point cloud that falls between the critical points set and the upper bound shape gives exactly the same feature.
@@ -332,6 +342,7 @@ While critical points jointly determine the global shape feature for a given sha
 ![Critical points and upper bound shape](images/Critical point.png)
  
 ---
+
 ### Conclusion:
 - This paper proposes a novel deep neural network PointNet that directly consumes point cloud. 
 - This network provides a unified approach to a number of 3D recognition tasks including object classification, part segmentation, and semantic segmentation.  
