@@ -305,47 +305,61 @@ and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric functi
 
 ### 3D Object Part Segmentation
 
+<div class="text-sm" data-markdown>
 - Evaluated on ShapeNet
 - 16,881 shapes from 16 categories annotated with 50 parts
   - Most objects have 2-5 parts
   - 83.7 mIoU(%)
     - 2.3% mIoU improvement over compared methods
+</div>
 
-![Network architecture for part segmentation.](images/Network Arch.png)
-
-![Qualitative results for part segmentation.](images/partial.png)
+<div class="container" data-markdown>
+<div class="col">
+![Network architecture for part segmentation.](images/Network-Arch.png)
+</div>
+<div class="col">
+![Qualitative results for part segmentation.](images/Partial.png)
+</div>
+</div>
 
 ---
 
 ### Scene Segmentation
 
+<div class="text-sm" data-markdown>
 - Evaluated on Stanford 3D Semantic Parsing dataset
   - 3D scans from Matterport scanners in 271 rooms
   - 47.71 mIoU(%)
   - 78.62% Accuracy
   - *A major improvement over baseline*
     - 20.12 mIoU / 53.19% Accuracy
+</div>
 
-![Qualitative results for semantic segmentation.](images/Semantic Segmentation.png)
+![Qualitative results for semantic segmentation](images/Semantic-Segmentation.png)
 
 {{% /section %}}
 
 ---
 
 ### Robustness Test
+
+<div class="text-sm" data-markdown>
 - PointNet is robust to various kinds of input corruptions.
 - As to missing points, when there are 50% points missing,the accuracy only drops by 2.4% and 3.8% w.r.t. furthest and random input sampling.
 - As to the outliers, the net has more than 80% accuracy even when 20% of the points are outliers.
+</div>
 
-![PointNet robustness test.](images/Robust.png)
+![PointNet robustness test](images/Robust.png)
 
 ---
 
 ### Visualizing PointNet
+
 <div style="font-size: 25px;">
 While critical points jointly determine the global shape feature for a given shape, any point cloud that falls between the critical points set and the upper bound shape gives exactly the same feature.
 </div>
-![Critical points and upper bound shape](images/Critical point.png)
+
+![Critical points and upper bound shape](images/Critical-point.png)
  
 ---
 
