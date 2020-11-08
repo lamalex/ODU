@@ -100,19 +100,7 @@ Fall 🎃 2020
 
 {{% section %}}
 
-## Structured Grid-Based Learning
-
-<div class="container" data-markdown>
-  <div class="col">
-![A typical 2D convolution operation](images/CNN.png)
-  </div>
-  <div class="col">
-- The convolution operation requires a structured grid. 
-- Point cloud data are unstructured, and this is a challenge for deep learning. 
-  </div>
-</div>
-
-#### To overcome this challenge, many approaches convert the point cloud data into a structured form. 
+# Previous Work
 
 ---
 
@@ -120,7 +108,9 @@ Fall 🎃 2020
 
 ![The point cloud of an airplane is voxelized to a 30×30×30 volumetric occupancy grid](images/VBA.png)
 
-#### Although voxel-based methods have shown good performance, they suffer from high memory consumption due to the sparsity of the voxels
+<div class="text-sm">
+3D CNNs applied to voxelized data have shown good performance, but they suffer from high memory consumption due to the sparsity.
+</div>
 
 --- 
 
@@ -138,15 +128,6 @@ Fall 🎃 2020
 </div>
 </div>
 
---- 
-
-## Higher-Dimensional Lattices
-- There are other methods for point cloud processing using deep learning that convert the point clouds into a higher-dimensional regular lattice.
-- SplatNet
-- SFCNN
-- Compared to voxel-based and multi-view approaches, higher-dimensional approaches have better performance in terms of segmentation with SplatNet. 
-- They are also better than the voxel-based approach in terms of classification.
-
 {{% /section %}}
 
 --- 
@@ -158,35 +139,32 @@ Fall 🎃 2020
 ## PointNet
 PointNet is a **deep learning** approach for **scene segmentation** and **object classification** of 3D structures.
 
-{{< figure src="images/tasks.png" title="PointNet can find all of the unique objects in the scan, and identify them!" >}}
+{{< figure src="images/tasks.png" title="PointNet can find all of the unique objects in the scan and identify them!" >}}
 
 ---
 
-PointNet is a novel approach to 3D-structure classification. Many prior approaches transformed data into structured formats like
- - 3D Voxels
- - Image grids
-
-but PointNet operates directly on **sets of points** using a *convolution network* and *max pooling function*.
-
-> PointNet learns to summarize a point cloud by a sparse set of key points, which is approximately an object's skeleton 💀
-
----
-
-## PointNet Architecture
-![PointNet architecture diagram](images/architecture.png)
-- 2 Joint Alignment Networks
-- Local & Global information combination
-- Max pooling aggregation layer
+![PointNet arch](images/architecture.png)
 
 ---
 
 {{% section %}}
 
-# Joint Alignment Network
+## How does PointNet overcome the challenges of Unordered input and Transformation Invariance?
 
 ---
 
-### Labeling an object should be invariant to rigid transformations of that object.
+## Unordered Input
+
+Approximate a general function defined on a point set by applying a symmetric function on transformed set elements
+$ f(\{x_1, \ldots, x_n\}) \approx g(h(x_1), \ldots, h(x_n)) $ where $ f : 2^{R^N} \rightarrow R, h : R^N -> R^K $
+and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric function.
+
+- $ h $ is approximated by the MLP network
+- $ g $ by a composition of a simple single variable function and a max pooling function
+
+---
+
+### Labeling an object should be invariant to rigid transformations of that object
 
 {{% note %}}
 Imagine you are a 3D segmentation algorithm and you're asked to segment a 3D scan of this room.
@@ -195,36 +173,13 @@ Now imagine we arbitrarily rotated the desks.  You would still be able to identi
 So can PointNet
 {{% /note %}}
 
----
-
-Pointnet solves this by attempting to align all input set to a canonical space prior to feature extraction.
-
 ![Use an affine matrix for transformation invariance](images/spat-trans.gif)
 
-{{% note %}}
-There are a few techniques that have been applied to solve this problem.
-1) Sort points into a canonical order
-  - as mentioned prior sorting in high dimensions is undefined
-2) Use a RNN with augmented training data
-{{% /note %}}
-
 ---
 
-## Apply a symmetric aggregation function
-
-{{% note %}}
-3) Apply a symmetric function to aggregate the information from each point
-{{% /note %}}
-
-
-Pointnet predicts an affine transformation matrix using a sub-network, 
-### `T-Net`,
+Pointnet predicts an affine transformation matrix using a sub-network
+### `T-Net`
 and applies the predicted transformation to the input points.
-
----
-
-
-## T-Net
 
 ![T-Net flow](images/tnet.png)
 
@@ -238,16 +193,10 @@ Softmax loss function
 $$ L_{reg} = ||I - AA^T||_F^2 $$
 
 to approximate an orthogonal transformation
-
 {{% /section %}}
 
 ---
 
-{{% section %}}
-
-# Local ↔︎ Global Information Combination
-
----
 <div style="font-size: 25px;">
 The classification network extracts embeddings from Point featurees
 </div>
@@ -258,27 +207,6 @@ The classification network extracts embeddings from Point featurees
 In semantic segmentation the pointwise and global feature matrices are concatenated
 and information is then extracted from this combined set.
 </div>
-
-{{% /section %}}
-
----
-
-{{% section %}}
-
-# Max pooling aggregation layer
-
----
-
-Make the model invariant to input permutation (except that order matters and cannot be totally ignored!)
-
-Approximate a general function defined on a point set by applying a symmetric function on transformed set elements
-$ f(\{x_1, \ldots, x_n\}) \approx g(h(x_1), \ldots, h(x_n)) $ where $ f : 2^{R^N} \rightarrow R, h : R^N -> R^K $
-and $ g : R^K_0 \times \cdots \times R^K_n \rightarrow R $ is a symmetric function.
-
-- $ h $ is approximated by the MLP network
-- $ g $ by a composition of a simple single variable function and a max pooling function
-
-{{% /section %}}
 
 ---
 
