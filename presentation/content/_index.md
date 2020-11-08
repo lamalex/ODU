@@ -233,17 +233,13 @@ and information is then extracted from this combined set.
 
 ### 3D Object Part Segmentation
 
-<div class="text-sm" data-markdown>
+<div class="container text-sm" data-markdown>
+<div class="col">
 - Evaluated on ShapeNet
 - 16,881 shapes from 16 categories annotated with 50 parts
   - Most objects have 2-5 parts
   - 83.7 mIoU(%)
     - 2.3% mIoU improvement over compared methods
-</div>
-
-<div class="container" data-markdown>
-<div class="col">
-![Network architecture for part segmentation.](images/Network-Arch.png)
 </div>
 <div class="col">
 ![Qualitative results for part segmentation.](images/Partial.png)
@@ -254,7 +250,9 @@ and information is then extracted from this combined set.
 
 ### Scene Segmentation
 
-<div class="text-sm" data-markdown>
+
+<div class="container text-sm" data-markdown>
+<div class="col">
 - Evaluated on Stanford 3D Semantic Parsing dataset
   - 3D scans from Matterport scanners in 271 rooms
   - 47.71 mIoU(%)
@@ -262,10 +260,10 @@ and information is then extracted from this combined set.
   - *A major improvement over baseline*
     - 20.12 mIoU / 53.19% Accuracy
 </div>
-
+<div class="col">
 ![Qualitative results for semantic segmentation](images/Semantic-Segmentation.png)
-
-{{% /section %}}
+</div>
+</div>
 
 ---
 
@@ -279,24 +277,19 @@ and information is then extracted from this combined set.
 
 ![PointNet robustness test](images/Robust.png)
 
+{{% /section %}}
+
 ---
 
-### Visualizing PointNet
-
-<div style="font-size: 25px;">
-While critical points jointly determine the global shape feature for a given shape, any point cloud that falls between the critical points set and the upper bound shape gives exactly the same feature.
-</div>
-
-![Critical points and upper bound shape](images/Critical-point.png)
- 
----
-
-### Conclusion:
+## Conclusion:
+<div class="text-sm" data-markdown>
 - This paper proposes a novel deep neural network PointNet that directly consumes point cloud. 
 - This network provides a unified approach to a number of 3D recognition tasks including object classification, part segmentation, and semantic segmentation.  
 - Obtaining better results than state of the arts on standard benchmarks.
 - Providing theoretical analysis and visualizations towards understanding of the network.
+</div>
 
 ---
+
 # Questions?
 ### 🙋🏿‍♂️ 🙋🏻 🧟‍♀️ 🙋🏽‍♀️
