@@ -44,15 +44,48 @@ And for the record: this presentation is built and deployed using Travis!
 
 ---
 
-## Infrastructure is expensive both in *time* and *dollars*
+## CI is *fundamental* to DevOps
 
 {{% note %}}
-* On-site equipment has administrative costs- electricity, a technician/administrator, etc.
-  * Out-sourcing CI/CD infrastructure allows you to focus on building your product, and not managing a build system.
+At the heart of modern software delivery is a fast, reliable, and automated feedback cycle.
+Developers need to be able to quickly share, iterate, and test their work.
+Out of this need a market has arrisen to provide this systems as a service.
 
 As we've covered over this semester decreasing the resistance to deploying software is a *competitive advantage*.
 As demonstrated by the proliferation of CI/CD services solving build/deploy is a product in and of itself.
 Spend your time on your central line of business, and delivering quality. Let someone else solve the build problem.
+
+In 2020 even the simple projects deserve their own CI pipeline. Even as students this has value. Professors/PIs,
+although intelligent and experts in their field are busy, and in my experience need access to your project to be
+low friction.
+
+Anecdotal evidence: In my work in Dr. Jain's lab I spent a few weeks developing an application for a study we are
+conducting. Despite our weekly meetings and on-screen demos, when I finally set up a deployment pipeline and Dr.
+Jain was able to test the app on her own hardware we realized I had very much missed the mark.
+
+We needed significant iteration on the design, but now I had an automated build/deployment pipeline. I was able to
+get updates into her hands **effortlessly**. 
+
+I should have set this up **first**. 
+{{% /note %}}
+
+---
+
+## Infrastructure is expensive both in *time* and *dollars*
+
+{{% note %}}
+But why use a 3rd party service?
+
+* On-site equipment has administrative costs- electricity, a technician/administrator, etc.
+  * Out-sourcing CI/CD infrastructure allows you to focus on building your product, and not managing a build system.
+
+I could have set up an XCode build server in my house to do the same thing that Travis provided, but I would have
+had to spend time managing it.
+
+And what about when requirements change? For instance I have a message queue that collects data from the mobile app.
+I would need to spend time configurating a manual build/deploy system for that Rust project.
+
+A 3rd party CI/CD allows you to employ a single ecosystem for build/deploy across languages. 
 {{% /note %}}
 
 ---
