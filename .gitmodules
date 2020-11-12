@@ -4,3 +4,6 @@
 [submodule ".vscode"]
 	path = .vscode
 	url = https://github.com/lamalex/vscode-snippets.git
+[submodule "content"]
+	path = content
+	url = https://github.com/lamalex/cs795-content.git
