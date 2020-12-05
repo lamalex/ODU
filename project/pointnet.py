@@ -3,9 +3,10 @@
 Pytorch implementation of Pointnet
 
 Usage:
-    pointnet.py [--one] [--path=<path>]
+    pointnet.py [--one] [--epochs=<n>] [--path=<path>]
 
 --one           Perform a single training iteration
+--epochs=<n>    Number of epochs to train model [default: 10]
 --path=<dir>    Data input directory
 '''
 
@@ -25,16 +26,8 @@ from typing import Tuple, List, Dict, Optional, Callable
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-
-from sklearn.metrics import confusion_matrix
-
-import plotly.graph_objects as go
-import plotly.figure_factory as ff
-from plotly.subplots import make_subplots
-
 
 logger = logging.getLogger('pointnet')
 logging.basicConfig(level=logging.DEBUG,
@@ -514,16 +507,15 @@ if __name__ == '__main__':
         inputs = data['pointcloud'].to(device).float().transpose(1, 2)
         labels = data['class'].to(device)
 
-        outputs, points_xformed, features_xformed = pn(inputs)
-
-        sys.exit(69)
+        pn(inputs)
+        sys.exit(0)
 
     # TODO:
     #  * Turn this into a function so we can use it to train segmentation
     #  * Reduce learning rate after 20 epochs (from paper)
     #    - https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
     # Training loop from https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
-    epochs = 10
+    epochs = int(args['--epochs'])
     logger.info(f'[ {"Beginning Pointnet training loop":^47} ]')
     for epoch in range(1, epochs + 1):
         pn.train()
