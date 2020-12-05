@@ -521,7 +521,7 @@ if __name__ == '__main__':
     #    - https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
     # Training loop from https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
     epochs = 10
-    logger.info('Beginning Pointnet training loop')
+    logger.info(f'[ {"Beginning Pointnet training loop":^47} ]')
     for epoch in range(1, epochs + 1):
         pn.train()
         running_loss = 0.0
@@ -561,3 +561,4 @@ if __name__ == '__main__':
             logger.info(f'[ {acc_str:^47} ]')
 
         torch.save(pn.state_dict(), f'pointnet-{epoch}.pt')
+    logger.info(f'[ {"Finished training Pointnet":^47} ]')
