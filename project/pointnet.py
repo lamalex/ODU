@@ -520,7 +520,7 @@ if __name__ == '__main__':
     #  * Reduce learning rate after 20 epochs (from paper)
     #    - https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
     # Training loop from https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
-    epochs = 6
+    epochs = 10
     logger.info('Beginning Pointnet training loop')
     for epoch in range(1, epochs + 1):
         pn.train()
@@ -559,3 +559,5 @@ if __name__ == '__main__':
                 correct += (predicted == labels).sum().item()
             acc_str = f'Accuracy after epoch {epoch}: {100.0 * correct / total:.3f}'
             logger.info(f'[ {acc_str:^47} ]')
+
+        torch.save(pn.state_dict(), f'pointnet-{epoch}.pt')
