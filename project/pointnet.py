@@ -3,9 +3,10 @@
 Pytorch implementation of Pointnet
 
 Usage:
-    pointnet.py [--one]
+    pointnet.py [--one] [--path=<path>]
 
---one   Perform a single training iteration
+--one           Perform a single training iteration
+--path=<dir>    Data input directory
 '''
 
 import os
@@ -476,7 +477,9 @@ class PointnetClassificationNet(nn.Module):
 if __name__ == '__main__':
     args = docopt(__doc__)
 
-    path = Path("ModelNet10")
+    path = args['--path']
+
+    path = Path(path)
     training_data = PointCloudDataSet(
         root_dir=path,
         split_type=DataSplitType.TRAIN)
