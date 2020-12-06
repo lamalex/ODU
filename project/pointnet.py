@@ -512,8 +512,7 @@ if __name__ == '__main__':
         batch_size=BATCH_SIZE)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    num_classes = len(test_dataloader.class_map)
-    pn = PointnetClassificationNet(classes=num_classes)
+    pn = PointnetClassificationNet()
     if torch.cuda.device_count() > 1:
         logger.info(f'Running on {torch.cuda.device_count()} GPUs')
         pn = nn.DataParallel(pn)
