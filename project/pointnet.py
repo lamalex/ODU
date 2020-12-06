@@ -65,7 +65,7 @@ def read_off(file: str) -> Tuple[List[int], List[float]]:
     '''
     cast_w_msg = partial(lambda msg, f, v: safe_cast(f, v, msg), f'in {file}')
     if 'OFF' != file.readline().strip():
-        raise('Not a valid OFF header')
+        raise(f'{file} lacks a valid OFF header')
 
     n_verts, n_faces, _ = tuple(
         [cast_w_msg(int, s) for s in file.readline().strip().split(' ')]
