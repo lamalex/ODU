@@ -57,6 +57,19 @@ def read_off(file: str) -> Tuple[List[int], List[float]]:
     Simple geometry definition file containing lists
     of vertices, faces, and edges
 
+    ModelNet40 has a number of malformatted files
+    so some additional checks have been added to read
+    the header in format
+
+    OFFxxxxx xxx xxx
+      instead of
+    OFF xxxxx xxx xxx
+      or
+    OFF
+    xxxxx xxx xxx
+
+    All of these should readable with this function
+
     Args:
         file: File system path to be read
 
@@ -64,11 +77,17 @@ def read_off(file: str) -> Tuple[List[int], List[float]]:
         Tuple of (vertices, faces)
     '''
     cast_w_msg = partial(lambda msg, f, v: safe_cast(f, v, msg), f'in {file}')
-    if 'OFF' != file.readline().strip():
-        raise(f'{file} lacks a valid OFF header')
+
+    firstline = file.readline().strip()
+
+    if not firstline.startswith('OFF'):
+        logger.error(f'{file} lacks a valid OFF header')
+        raise ValueError
+
+    num_line = firstline[3:].strip() if firstline != 'OFF' else file.readline()
 
     n_verts, n_faces, _ = tuple(
-        [cast_w_msg(int, s) for s in file.readline().strip().split(' ')]
+        [cast_w_msg(int, s) for s in num_line.split(' ')]
     )
     vertices = [
         [cast_w_msg(float, s) for s in file.readline().strip().split(' ')]
