@@ -330,10 +330,16 @@ class PointCloudDataSet(Dataset):
         return len(self.datafiles)
 
     def __getitem__(self, idx):
-        with open(self.datafiles[idx]['path'], 'r') as f:
-            pointcloud = self._process(f)
+        filepath = self.datafiles[idx]['path']
 
-        return {'pointcloud': pointcloud, 'class': self.datafiles[idx]['class']}
+        try:
+            with open(filepath, 'r') as f:
+                pointcloud = self._process(f)
+
+            return {'pointcloud': pointcloud, 'class': self.datafiles[idx]['class']}
+        except OSError:
+            logger.error(f'Encountered I/O error reading {filepath}')
+            return None
 
 
 class TNet(nn.Module):
