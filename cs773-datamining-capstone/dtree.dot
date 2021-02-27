@@ -1,0 +1,33 @@
+digraph Tree {
+node [shape=box, style="rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="studied_credits <= 87.5\nentropy = 0.997\nsamples = 25186\nvalue = [11724, 13462]\nclass = not at risk"] ;
+1 [label="num_of_prev_attempts <= 0.5\nentropy = 1.0\nsamples = 15564\nvalue = [7940, 7624]\nclass = at risk"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="imd_band <= 2.5\nentropy = 0.998\nsamples = 14029\nvalue = [7415, 6614]\nclass = at risk"] ;
+1 -> 2 ;
+3 [label="entropy = 0.986\nsamples = 3232\nvalue = [1394, 1838]\nclass = not at risk"] ;
+2 -> 3 ;
+4 [label="entropy = 0.99\nsamples = 10797\nvalue = [6021, 4776]\nclass = at risk"] ;
+2 -> 4 ;
+5 [label="imd_band <= 7.5\nentropy = 0.927\nsamples = 1535\nvalue = [525, 1010]\nclass = not at risk"] ;
+1 -> 5 ;
+6 [label="entropy = 0.903\nsamples = 1261\nvalue = [402, 859]\nclass = not at risk"] ;
+5 -> 6 ;
+7 [label="entropy = 0.992\nsamples = 274\nvalue = [123, 151]\nclass = not at risk"] ;
+5 -> 7 ;
+8 [label="imd_band <= 2.5\nentropy = 0.967\nsamples = 9622\nvalue = [3784, 5838]\nclass = not at risk"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="highest_education <= 2.5\nentropy = 0.89\nsamples = 2579\nvalue = [792, 1787]\nclass = not at risk"] ;
+8 -> 9 ;
+10 [label="entropy = 0.818\nsamples = 1540\nvalue = [392, 1148]\nclass = not at risk"] ;
+9 -> 10 ;
+11 [label="entropy = 0.961\nsamples = 1039\nvalue = [400, 639]\nclass = not at risk"] ;
+9 -> 11 ;
+12 [label="highest_education <= 1.5\nentropy = 0.984\nsamples = 7043\nvalue = [2992, 4051]\nclass = not at risk"] ;
+8 -> 12 ;
+13 [label="entropy = 0.996\nsamples = 1098\nvalue = [589, 509]\nclass = at risk"] ;
+12 -> 13 ;
+14 [label="entropy = 0.973\nsamples = 5945\nvalue = [2403, 3542]\nclass = not at risk"] ;
+12 -> 14 ;
+}
