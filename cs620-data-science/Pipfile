@@ -1,0 +1,23 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+pytest = "*"
+rope = "*"
+autopep8 = "*"
+mypy = "*"
+pytest-cov = "*"
+
+[packages]
+aiohttp = "*"
+beautifulsoup4 = "*"
+aiofiles = "*"
+nltk = "*"
+scikit-learn = "*"
+scipy = "*"
+
+[requires]
+python_version = "3.6"

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+div.note{
+    width:900px;
+    font-family: 'Cuprum', serif;
+    font-size:21px;
+    color:#ffffff;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.node circle {
+    fill: black;
+    stroke: steelblue;
+    stroke-width: 1px;
+}
+
+.node {
+    font: 9px sans-serif;
+    font-family: 'Cuprum', serif;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1px;
+}
+
+body{
+    background-color:black;
+}
+
+</style>
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v3.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="vis"></div>
+<script>
+function run(fname){
+    d3.select("svg").remove();
+    var radius = 4096/2;
+
+    var cluster = d3.layout.cluster()
+	.size([360, radius-120]);
+
+    var diagonal = d3.svg.diagonal.radial()
+	.projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
+
+    var svg = d3.select("#vis").append("svg")
+	.attr("width", radius * 3)
+	.attr("height", radius * 3)
+	.append("g")
+	.attr("transform", "translate(" + radius + "," + radius + ")");
+
+    d3.json(fname, function(error, root) {
+	    if (error) throw error;
+
+	    var nodes = cluster.nodes(root);
+
+	    var link = svg.selectAll("path.link")
+		.data(cluster.links(nodes))
+		.enter().append("path")
+		.attr("class", "link")
+		.attr("d", diagonal);
+
+	    var node = svg.selectAll("g.node")
+		.data(nodes)
+		.enter().append("g")
+		.attr("class", "node")
+		.attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+		node.append("circle")
+		.attr("r", 3)
+		.on('click', click);
+
+	    node.append("text")
+		.attr("dy", ".31em")
+		.attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+		.attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
+	        .attr("font-family", "sans-serif")
+                .style("fill", "#FFF")
+		.text(function(d) { return d.children ? "" : d.name; });
+
+	    function click(d) {
+		var ch = d.name.split("-");
+		var node = svg.selectAll("g.node")
+		    .data(nodes)
+		    .enter()
+		    .text(function(d) { 
+                return ch.indexOf(d.name) == -1 ? "" : d.name
+            });
+        }
+	});
+
+}
+</script>
+<script>run("http://127.0.0.1:8888/clusters-scriptless.json")</script>
