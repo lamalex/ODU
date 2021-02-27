@@ -1,0 +1,8 @@
+[package]
+name = "launearalg"
+version = "0.4.1"
+authors = ["Alexander Launi <alex.launi@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+num-traits = "0.2"
