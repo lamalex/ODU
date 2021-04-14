@@ -34,6 +34,7 @@ class AuthController
                 $registerData["name"],
                 $registerData["email"],
                 $registerData["password"],
+                $registerData["department"],
             );
         } catch (\InvalidArgumentException $e) {
             throw new Exception($e);

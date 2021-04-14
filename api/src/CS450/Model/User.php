@@ -80,7 +80,7 @@ final class User {
     }
 
     public function register(RegisterUserInfo $userInfo): string {
-        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department) VALUES (?, ?, ?, 1)";
+        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department) VALUES (?, ?, ?, ?)";
 
         $conn = $this->db->getConnection();
         $stmt = $conn->prepare($insertUserSql);
@@ -91,10 +91,11 @@ final class User {
         }
 
         $executed = $stmt->bind_param(
-            "sss", 
+            "sssd",
             $userInfo->name,
             $userInfo->email,
             $userInfo->password,
+            $userInfo->department,
         ) && $stmt->execute() && $stmt->close();
 
         if (!$executed) {

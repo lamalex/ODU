@@ -24,7 +24,7 @@ final class UserTest extends TestCase {
 
     public function testRegisterCreatesJwtWithGoodData(): void {
         $jwtService = self::$container->get(CS450\Service\JwtService::class);
-        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345");
+        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
 
         $user = self::$container->get('CS450\Model\User');
         $jwt = $user->register($registerInfo);
@@ -42,7 +42,7 @@ final class UserTest extends TestCase {
 
     public function testRegisterLogsInWhenRegisteringValidUser(): void {
         $jwtService = self::$container->get(CS450\Service\JwtService::class);
-        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345");
+        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
 
         // Given a user is already registered
         $user = self::$container->get('CS450\Model\User');
@@ -66,7 +66,7 @@ final class UserTest extends TestCase {
 
     public function testThrowsWhenRegisteredUserReregistersWithNewPassword(): void {
         $jwtService = self::$container->get(CS450\Service\JwtService::class);
-        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345");
+        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
 
         // Given a user is already registered
         $user = self::$container->get('CS450\Model\User');
@@ -74,7 +74,7 @@ final class UserTest extends TestCase {
         
         // When user tries to register using the same username and password
         // that they previously registered with
-        $registerInfo2 = RegisterUserInfo::create("test", "hi@example.com", "ANewPwd");
+        $registerInfo2 = RegisterUserInfo::create("test", "hi@example.com", "ANewPwd", 1);
 
         $this->expectException(\Exception::class);
         $jwt = $user->register($registerInfo2);
