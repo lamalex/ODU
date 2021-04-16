@@ -18,6 +18,7 @@ final class UserTest extends TestCase {
     protected function tearDown(): void
     {
         $conn = self::$db->getConnection();
+        $result = $conn->query("SET FOREIGN_KEY_CHECKS = 0;");
         $result = $conn->query("DELETE FROM tbl_fact_users WHERE 1=1;");
         $this->assertTrue($result != false);
     }

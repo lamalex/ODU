@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS tbl_fact_employment(
+CREATE TABLE IF NOT EXISTS tbl_fact_employments(
         id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
         student_uin INT UNSIGNED,
         type ENUM('GRA', 'GTA', 'URA'),
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS tbl_fact_employment(
         start_date TIMESTAMP,
         end_date TIMESTAMP,
         FOREIGN KEY (student_uin)
-                REFERENCES tbl_fact_student(uin),
+                REFERENCES tbl_fact_students(uin),
         FOREIGN KEY (faculty_id)
                 REFERENCES tbl_fact_users(id)
 );

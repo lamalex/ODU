@@ -36,6 +36,8 @@ jobs:
         run: npm run test:migrate:dry
       - name: Run migrations
         run: npm run test:migrate
+      - name: Run seeds
+        run: npm run test:seed
 
   test_backend:
     runs-on: ubuntu-latest

@@ -3,8 +3,12 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class OtherDepartmentsSeed extends AbstractSeed
+class StudentsSeeder extends AbstractSeed
 {
+    public function getDependencies()
+    {
+        return ['DepartmentSeeder'];
+    }
     /**
      * Run Method.
      *
@@ -15,7 +19,10 @@ class OtherDepartmentsSeed extends AbstractSeed
      */
     public function run()
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/012_add_departments.sql');
+        $this->execute('SET FOREIGN_KEY_CHECKS = 0');
+        $this->execute('TRUNCATE TABLE tbl_fact_students');
+
+        $sql = file_get_contents(__DIR__ . '/../sql/014_add_students.sql');
         $this->execute($sql);
     }
 }

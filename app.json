@@ -33,7 +33,8 @@
                 "PIPELINE_STAGE": {
                     "description": "current pipeline stage",
                     "value": "development"
-                }
+                },
+                "NPM_CONFIG_PRODUCTION": "false"
             }
         }
     }

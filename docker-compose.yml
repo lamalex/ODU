@@ -38,7 +38,7 @@ services:
 
   composer:
     image: composer:latest
-    command: ["composer", "install"]
+    command: ["composer", "install", "--no-scripts"]
     volumes:
       - .:/app
 

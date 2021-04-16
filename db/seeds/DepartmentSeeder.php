@@ -3,7 +3,7 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class ITDepartmentSeed extends AbstractSeed
+class DepartmentSeeder extends AbstractSeed
 {
     /**
      * Run Method.
@@ -15,7 +15,12 @@ class ITDepartmentSeed extends AbstractSeed
      */
     public function run()
     {
+        $this->execute('SET FOREIGN_KEY_CHECKS = 0');
+        $this->execute('TRUNCATE TABLE tbl_fact_departments');
+
         $sql = file_get_contents(__DIR__ . '/../sql/011_add_it_department.sql');
+        $this->execute($sql);
+        $sql = file_get_contents(__DIR__ . '/../sql/012_add_departments.sql');
         $this->execute($sql);
     }
 }
