@@ -8,27 +8,9 @@ class MysqlDb implements DbService {
 
     /**
      * 
-     * @Inject("db.host")
+     * @Inject("db")
      */
-    private $dbHost;
-
-    /**
-     * 
-     * @Inject("db.user")
-     */
-    private $dbUser;
-
-    /**
-     * 
-     * @Inject("db.name")
-     */
-    private $dbName;
-
-    /**
-     * 
-     * @Inject("db.password")
-     */
-    private $dbPassword;
+    private $db;
 
     /**
      * 
@@ -42,16 +24,16 @@ class MysqlDb implements DbService {
     public function getConnection() {
         $this->logger->debug(sprintf(
             "Returning mysql connection to %s@%s/%s",
-            $this->dbUser,
-            $this->dbHost,
-            $this->dbName,
+            $this->db['user'],
+            $this->db['host'],
+            $this->db['name'],
         ));
         
         $this->conn = new \mysqli(
-            $this->dbHost,
-            $this->dbUser,
-            $this->dbPassword,
-            $this->dbName,
+            $this->db['host'],
+            $this->db['user'],
+            $this->db['pass'],
+            $this->db['name'],
         );
 
         return $this->conn;

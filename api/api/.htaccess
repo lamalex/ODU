@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteCond /api/%{REQUEST_FILENAME} !-f
+RewriteCond /api/%{REQUEST_FILENAME} !-d
+RewriteRule "(.*)" "index.php?$1" [L,PT,QSA]
+RewriteRule ^api/(.*)$ 0 [L,QSA]

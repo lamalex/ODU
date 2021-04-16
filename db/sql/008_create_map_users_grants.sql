@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS tbl_map_grant_users(
+CREATE TABLE IF NOT EXISTS tbl_fact_map_grant_users(
     grant_id INT UNSIGNED,
     user_id INT UNSIGNED,
     FOREIGN KEY (grant_id)

@@ -2,11 +2,10 @@ version: "3.9"
 services:
   web:
     build: ./api
-    image: nginx:latest
     ports:
       - "8888:80"
     volumes:
-      - ./api:/var/www/html/
+      - .:/var/www/
       - ./apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
     env_file:
       - dev.env
@@ -26,11 +25,22 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
 
+  mysql_for_tests:
+    image: mysql:8.0.23
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3307:3306"
+    env_file:
+      - dev.env
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+
   composer:
     image: composer:latest
     command: ["composer", "install"]
     volumes:
-      - ./api:/app
+      - .:/app
 
   frontend:
     profiles: ["frontend"]

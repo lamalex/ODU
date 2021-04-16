@@ -4,7 +4,7 @@ node_modules
 sql-datadir
 # php
 api/composer.phar
-api/vendor
+**/vendor
 api/tests/.phpunit.result.cache
 # local env files
 .env.local
@@ -26,3 +26,4 @@ pnpm-debug.log*
 *.sw?
 
 **/logs/**
+public/**

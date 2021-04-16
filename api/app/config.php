@@ -1,5 +1,7 @@
 <?
 
+require_once 'dbconfig.php';
+
 use Psr\Container\ContainerInterface;
 use function DI\factory;
 use function DI\create;
@@ -11,13 +13,26 @@ use Monolog\Handler\StreamHandler;
 use CS450\Service\JwtService;
 use CS450\Service\DbService;
 
+$db_conn_params = load_db_config(
+    getenv("MYSQL_HOST"),
+    getenv("MYSQL_USER"),
+    getenv("MYSQL_PASSWORD"),
+    getenv("MYSQL_DATABASE"),
+);
+
+$db_config = array_merge(
+    $db_conn_params,
+    array(
+        'adapter' => 'mysql',
+        'charset' => 'utf8',
+        'port' => '3306',
+    )
+);
+
 return [
-    "env" => "dev",
+    "env" => "development",
+    "db" => $db_config,
     "jwt.key" => "5f2b5cdbe5194f10b3241568fe4e2b24",
-    "db.host" => getenv("MYSQL_HOST"),
-    "db.user" => getenv("MYSQL_USER"),
-    "db.name" => getenv("MYSQL_DATABASE"),
-    "db.password" => getenv("MYSQL_PASSWORD"),
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
     JwtService::class => create(CS450\Service\Jwt\FirebaseJwt::class),
     Psr\Log\LoggerInterface::class => DI\factory(function () {
