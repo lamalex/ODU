@@ -33,7 +33,7 @@ final class UserTest extends TestCase {
         $this->assertTrue(
             array_key_exists(
                 'uid',
-                $jwtService->decode($jwt, 
+                (array) $jwtService->decode($jwt, 
                     self::$container->get('jwt.key'), 
                     array('HS256')
                 )
@@ -57,7 +57,7 @@ final class UserTest extends TestCase {
         $this->assertTrue(
             array_key_exists(
                 'uid',
-                $jwtService->decode($jwt, 
+                (array) $jwtService->decode($jwt, 
                     self::$container->get('jwt.key'), 
                     array('HS256')
                 )
