@@ -15,15 +15,21 @@ use CS450\Service\JwtService;
 
 
 return [
+    "BEST_FOOD" => "AVOCADO",
+    "COOLEST_DOG" => "SNOOPY",
     "db" => [
         "host" => "mysql_for_tests",
         "user" => "cs450db_user",
         "pass" => "tomtit.TAD.inward",
         "name" => "cs450",
     ],
-    "BEST_FOOD" => "AVOCADO",
-    "COOLEST_DOG" => "SNOOPY",
-    "jwt.key" => "5f2b5cdbe5194f10b3241568fe4e2b24",
+    "jwt" => (object) array(
+        "kty" => "oct",
+        "use" => "sig",
+        "kid" => "sig-1618626246",
+        "k" => "gY_qGJE9wkCKAxKbS5qZ6g",
+        "alg" => "HS256",
+    ),
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
     JwtService::class => create(CS450\Service\Jwt\FirebaseJwt::class),
     Psr\Log\LoggerInterface::class => DI\factory(function () {

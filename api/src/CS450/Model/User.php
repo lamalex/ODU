@@ -9,9 +9,9 @@ use CS450\Model\User\RegisterUserInfo;
 final class User {
     /**
      * 
-     * @Inject("jwt.key")
+     * @Inject("jwt")
      */
-    private $jwtKey;
+    private $jwtCfg;
 
     /**
      * 
@@ -39,7 +39,7 @@ final class User {
             'uid' => $uid,
         );
 
-        return $this->jwt->encode($payload, $this->jwtKey);
+        return $this->jwt->encode($payload, $this->jwtCfg->k, $this->jwtCfg->alg);
     }
 
     public function login(EmailAddress $email, Password $password) {

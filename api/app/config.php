@@ -29,10 +29,12 @@ $db_config = array_merge(
     )
 );
 
+$jwt_config = json_decode(base64_decode(getenv("JWT_CONFIG")));
+
 return [
     "env" => "development",
     "db" => $db_config,
-    "jwt.key" => "5f2b5cdbe5194f10b3241568fe4e2b24",
+    "jwt" => $jwt_config,
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
     JwtService::class => create(CS450\Service\Jwt\FirebaseJwt::class),
     Psr\Log\LoggerInterface::class => DI\factory(function () {
