@@ -1,8 +1,5 @@
 <template>
   <div :class="{ shake: registrationRejected }">
-    <b-alert fade :show="registrationRejected" variant="danger">{{
-      registrationRejectedMsg
-    }}</b-alert>
     <b-form @submit="onSubmit">
       <b-form-group label="Your Name:" label-for="name">
         <b-form-input
@@ -77,7 +74,6 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import * as dot from "ts-dot-prop";
 import store from "@/store";
 import Borat from "@/components/BoratValidated.vue";
 
@@ -129,6 +125,7 @@ export default Vue.extend({
   methods: {
     onSubmit(event: Event): void {
       event.preventDefault();
+      
       if (!(this.passwordsMatch && this.pwRequirements)) {
         return;
       }
@@ -140,13 +137,19 @@ export default Vue.extend({
         .then(({ data }) => {
           const { token } = data;
           store.commit("setToken", token);
+          this.$router.replace("/about");
         })
         .catch((error) => {
-          this.registrationRejectedMsg = dot.get(
-            error,
-            "response.data.message",
-            "Something unexpected happened 😵"
-          );
+          this.form.password = "";
+          this.verify.password = "";
+
+          const {message: errMsg, code: errCode} = error.response?.data;
+          this.$store.commit("setError", errMsg 
+            ?? "Something unexpected happened 😵");
+          
+          if (errCode === 69) {
+            this.$router.replace(`/login/${this.form.email}`);
+          }
         });
     },
     async loadDepartments() {

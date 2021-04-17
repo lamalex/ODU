@@ -36,6 +36,7 @@ switch ($route[0]) {
         } catch (Exception $e) {
             echo Response::error()->toJSON(array(
                 'message' => strval($e),
+                'code' => $e->getCode(),
             ));
         }
 

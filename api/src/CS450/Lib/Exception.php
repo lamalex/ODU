@@ -5,6 +5,7 @@ namespace CS450\Lib;
 class Exception extends \Exception {
     public function __construct(\Throwable $previous) {
         parent::__construct("Something went wrong on our end.", $previous->getCode(), $previous);
+
     }
 
     public function __toString(): string {

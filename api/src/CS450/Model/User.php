@@ -68,7 +68,7 @@ final class User {
         $this->logger->debug(sprintf("verifying stored hash %s against new hash %s for user %d", $storedPassword, $password, $uid));
 
         if (!$password->verifyhash($storedPassword)) {
-            throw new \Exception("Incorrect password");
+            throw new \Exception("Incorrect password", 69);
         }
 
         $this->logger->info(sprintf(
@@ -80,7 +80,7 @@ final class User {
     }
 
     public function register(RegisterUserInfo $userInfo): string {
-        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department) VALUES (?, ?, ?, ?)";
+        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department, user_role) VALUES (?, ?, ?, ?, 'FACULTY')";
 
         $conn = $this->db->getConnection();
         $stmt = $conn->prepare($insertUserSql);
