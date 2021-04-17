@@ -6,15 +6,15 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: "",
-    errorMsg: ""
+    errorMsg: "",
   },
   getters: {
     errorMsg: (state) => {
       return state.errorMsg;
     },
     authenticated: (state) => {
-      return state.token && state.token !== ""
-    }
+      return state.token && state.token !== "";
+    },
   },
   mutations: {
     setToken(state, token) {
@@ -25,6 +25,6 @@ export default new Vuex.Store({
     },
     clearError(state) {
       state.errorMsg = "";
-    }
+    },
   },
 });

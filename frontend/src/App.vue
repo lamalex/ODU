@@ -8,9 +8,15 @@
       <router-link to="/about">About</router-link>
     </b-nav>
     <b-container>
-      <b-alert fade :show="errorMsg !== '' " variant="danger" dismissible @dismissed="clearError">{{
-      errorMsg
-    }}</b-alert>
+      <b-alert
+        fade
+        :show="errorMsg !== ''"
+        variant="danger"
+        dismissible
+        @dismissed="clearError"
+      >
+        {{ errorMsg }}
+      </b-alert>
       <router-view />
     </b-container>
   </div>
@@ -22,12 +28,12 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "App",
   computed: {
-    ...mapGetters(["errorMsg", "authenticated"])
+    ...mapGetters(["errorMsg", "authenticated"]),
   },
   methods: {
-    ...mapMutations(["clearError"])
-  }
-}
+    ...mapMutations(["clearError"]),
+  },
+};
 </script>
 
 <style lang="scss">

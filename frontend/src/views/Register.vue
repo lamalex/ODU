@@ -60,8 +60,8 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
-    <b-form-group label="Enter your department:" label-for="department">
-        <b-form-select v-model="form.department" :options="options"></b-form-select>
+      <b-form-group label="Enter your department:" label-for="department">
+        <b-form-select v-model="form.department" :options="options" />
       </b-form-group>
 
       <div class="ml-auto">
@@ -96,13 +96,13 @@ export default Vue.extend({
         email: "",
         name: "",
         password: "",
-        department: ""
+        department: "",
       },
       verify: {
         password: "",
       },
       registrationRejectedMsg: "",
-      options: []
+      options: [],
     };
   },
   computed: {
@@ -125,7 +125,7 @@ export default Vue.extend({
   methods: {
     onSubmit(event: Event): void {
       event.preventDefault();
-      
+
       if (!(this.passwordsMatch && this.pwRequirements)) {
         return;
       }
@@ -143,28 +143,30 @@ export default Vue.extend({
           this.form.password = "";
           this.verify.password = "";
 
-          const {message: errMsg, code: errCode} = error.response?.data;
-          this.$store.commit("setError", errMsg 
-            ?? "Something unexpected happened 😵");
-          
+          const { message: errMsg, code: errCode } = error.response?.data;
+          this.$store.commit(
+            "setError",
+            errMsg ?? "Something unexpected happened 😵"
+          );
+
           if (errCode === 69) {
             this.$router.replace(`/login/${this.form.email}`);
           }
         });
     },
     async loadDepartments() {
-      const { data } = await axios.get('/api/departments');
-      this.options = data.map((dept: { id: any; name: any; }) => {
+      const { data } = await axios.get("/api/departments");
+      this.options = data.map((dept: { id: number; name: string }) => {
         return {
           value: dept.id,
-          text: dept.name
-        }
+          text: dept.name,
+        };
       });
     },
   },
   mounted() {
     this.loadDepartments();
-  }
+  },
 });
 </script>
 

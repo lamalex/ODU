@@ -16,7 +16,7 @@ const routes: Array<RouteConfig> = [
     path: "/login/:prefillEmail*",
     name: "Login",
     component: Login,
-    props: true
+    props: true,
   },
   {
     path: "/about",
