@@ -34,9 +34,10 @@ final class User {
      */
     private $db;
 
-    private function makeJwt($uid): string {
+    private function makeJwt($uid, $role): string {
         $payload = array(
             'uid' => $uid,
+            'role' => $role,
         );
 
         return $this->jwt->encode($payload, $this->jwtCfg->k, $this->jwtCfg->alg);
@@ -45,7 +46,7 @@ final class User {
     public function login(EmailAddress $email, Password $password) {
         $conn = $this->db->getConnection();
 
-        $selectEmailQ = "SELECT id, password FROM tbl_fact_users WHERE email=?";
+        $selectEmailQ = "SELECT id, password, user_role FROM tbl_fact_users WHERE email=?";
         $stmt = $conn->prepare($selectEmailQ);
 
         if (!$stmt) {
@@ -62,7 +63,7 @@ final class User {
             throw new \Exception($conn->error);
         }
 
-        $stmt->bind_result($uid, $storedPassword);
+        $stmt->bind_result($uid, $storedPassword, $role);
         $stmt->fetch();
 
         $this->logger->debug(sprintf("verifying stored hash %s against new hash %s for user %d", $storedPassword, $password, $uid));
@@ -72,15 +73,17 @@ final class User {
         }
 
         $this->logger->info(sprintf(
-            "User (%s) has been authenticated",
-            $email
+            "User (%s) has been authenticated with role %s",
+            $email,
+            $role,
         ));
 
-        return $this->makeJwt($uid);
+        return $this->makeJwt($uid, $role);
     }
 
     public function register(RegisterUserInfo $userInfo): string {
-        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department, user_role) VALUES (?, ?, ?, ?, 'FACULTY')";
+        $role = 'FACULTY';
+        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department, user_role) VALUES (?, ?, ?, ?, '$role')";
 
         $conn = $this->db->getConnection();
         $stmt = $conn->prepare($insertUserSql);
@@ -122,7 +125,7 @@ final class User {
         $uid = $conn->insert_id;
         $this->logger->info(sprintf("Created new user with id: %d", $uid));
 
-        return $this->makeJwt(0);
+        return $this->makeJwt($uid, $role);
     }
 
     private static function errorIsEmailExists(int $errorcode): bool {

@@ -39,6 +39,16 @@ final class UserTest extends TestCase {
                 )
             ),
         );
+
+        $this->assertTrue(
+            array_key_exists(
+                'role',
+                (array) $jwtService->decode($jwt,
+                    self::$container->get('jwt')->k,
+                    array('HS256')
+                )
+            ),
+        );
     }
 
     public function testRegisterLogsInWhenRegisteringValidUser(): void {
@@ -57,6 +67,16 @@ final class UserTest extends TestCase {
         $this->assertTrue(
             array_key_exists(
                 'uid',
+                (array) $jwtService->decode($jwt,
+                    self::$container->get('jwt')->k,
+                    array('HS256')
+                )
+            ),
+        );
+
+        $this->assertTrue(
+            array_key_exists(
+                'role',
                 (array) $jwtService->decode($jwt,
                     self::$container->get('jwt')->k,
                     array('HS256')
