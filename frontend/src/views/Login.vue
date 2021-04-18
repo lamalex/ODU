@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import axios from "axios";
 import { mapActions } from "vuex";
 
 export default Vue.extend({
@@ -49,6 +50,7 @@ export default Vue.extend({
     onSubmit(): void {
       this.login(this.form)
         .then(() => {
+          axios.get("/api/", { withCredentials: true });
           //this.$router.replace("/about");
         })
         .catch(() => {

@@ -15,7 +15,7 @@ class HomeController
     {
         $config = (require '__DIR__' . '/../../../phinx.php');
         //$config = (require '__DIR__' . '/../../app/config.php')['db'];
-        var_dump($config);
+        var_dump($_SERVER);
         echo "<div><h1>Hi Dummy! Oh, no, not you! I'm the dummy (page)<h1>";
         phpinfo();
         echo "</div>";

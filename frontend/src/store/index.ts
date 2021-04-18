@@ -56,8 +56,7 @@ export default new Vuex.Store({
       return axios
         .post<AuthResponse>(`/api/auth/${actionName}`, credentials)
         .then(({ data }) => {
-          const { token } = data;
-          commit("setAuthData", token);
+          commit("setAuthData", data);
         })
         .catch((error) => {
           const { message: errMsg, code: errCode } = error.response?.data;

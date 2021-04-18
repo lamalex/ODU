@@ -3,6 +3,7 @@
 namespace CS450\Controller;
 
 use CS450\Model\User;
+use CS450\Model\User\LoginUserInfo;
 use CS450\Model\User\RegisterUserInfo;
 use CS450\Lib\Exception;
 
