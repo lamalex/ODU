@@ -9,12 +9,6 @@ use CS450\Model\User\RegisterUserInfo;
 final class User {
     /**
      * 
-     * @Inject("jwt")
-     */
-    private $jwtCfg;
-
-    /**
-     * 
      * @Inject
      * @var \Psr\Log\LoggerInterface
      */
@@ -40,7 +34,7 @@ final class User {
             'role' => $role,
         );
 
-        return $this->jwt->encode($payload, $this->jwtCfg->k, $this->jwtCfg->alg);
+        return $this->jwt->encode($payload);
     }
 
     public function login(EmailAddress $email, Password $password) {

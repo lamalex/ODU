@@ -6,11 +6,18 @@ use Firebase\JWT\JWT;
 use CS450\Service\JwtService;
 
 class FirebaseJwt implements JwtService {
-    public function encode($payload, $key, $alg = 'HS256', $head = array()) {
-        return JWT::encode($payload, $key, $alg, $head);
+
+    /**
+    *
+    * @Inject("jwt")
+    */
+    private $jwt;
+
+    public function encode($payload) {
+        return JWT::encode($payload, $this->jwt->k, $this->jwt->alg, null);
     }
 
-    public function decode($jwt, $key, array $allowed_algs = array('hs264')) {
-        return JWT::decode($jwt, $key, $allowed_algs);
+    public function decode($jwt) {
+        return (array) JWT::decode($jwt, $this->jwt->k, [$this->jwt->alg]);
     }
 }

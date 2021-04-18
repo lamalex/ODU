@@ -31,7 +31,7 @@ return [
         "alg" => "HS256",
     ),
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
-    JwtService::class => create(CS450\Service\Jwt\FirebaseJwt::class),
+    JwtService::class => DI\Autowire(CS450\Service\Jwt\FirebaseJwt::class),
     Psr\Log\LoggerInterface::class => DI\factory(function () {
         $logger = new Logger("CS450-Test");
 

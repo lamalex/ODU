@@ -12,7 +12,7 @@ interface JwtService {
      *
      * @return string A signed JWT
      */
-    public function encode($payload, $key, $alg, $head);
+    public function encode($payload);
 
     /**
      * Decodes a JWT string into a PHP object.
@@ -28,5 +28,5 @@ interface JwtService {
      * @throws InvalidArgumentException     Provided JWT was empty
      * @throws UnexpectedValueException     Provided JWT was invalid
      */
-    public function decode($jwt, $key, array $allowed_algs);
+    public function decode($jwt);
 }

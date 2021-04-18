@@ -4,7 +4,6 @@ require_once 'dbconfig.php';
 
 use Psr\Container\ContainerInterface;
 use function DI\factory;
-use function DI\create;
 
 use Monolog\Logger;
 use Monolog\ErrorHandler;
@@ -36,7 +35,7 @@ return [
     "db" => $db_config,
     "jwt" => $jwt_config,
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
-    JwtService::class => create(CS450\Service\Jwt\FirebaseJwt::class),
+    JwtService::class => DI\Autowire(CS450\Service\Jwt\FirebaseJwt::class),
     Psr\Log\LoggerInterface::class => DI\factory(function () {
         $logger = new Logger("CS450");
 
