@@ -7,15 +7,9 @@ namespace CS450\Controller;
  */
 class HomeController
 {
-    public function __construct()
-    {
-    }
-
     public function __invoke($params)
     {
-        $config = (require '__DIR__' . '/../../../phinx.php');
-        //$config = (require '__DIR__' . '/../../app/config.php')['db'];
-        var_dump($_SERVER);
+        var_dump($params);
         echo "<div><h1>Hi Dummy! Oh, no, not you! I'm the dummy (page)<h1>";
         phpinfo();
         echo "</div>";

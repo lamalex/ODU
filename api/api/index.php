@@ -5,6 +5,8 @@ use CS450\Lib\Response;
 use CS450\Lib\Exception;
 use FastRoute\RouteCollector;
 
+error_reporting(E_ALL ^ E_WARNING);
+
 $container = require __DIR__ . '/../app/bootstrap.php';
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/api/', 'CS450\Controller\HomeController');
@@ -13,7 +15,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/api/departments', 'CS450\Controller\DepartmentController');
 });
 
-$request = new Request();
+$request = $container->get(CS450\Lib\Request::class);
 $route = $dispatcher->dispatch($request->method, $request->uri);
 
 switch ($route[0]) {
@@ -29,7 +31,11 @@ switch ($route[0]) {
         $controller = $route[1];
         $request->params = $route[2];
 
-        $data = array_merge_recursive(["params" => $route[2]], ["post" => $request->getJSON()]);
+        $data = array_merge_recursive(
+            ["params" => $route[2]],
+            ["post" => $request->getJSON()],
+            ["token" => $request->getAuthToken()],
+        );
 
         try {
             $res = $container->call($controller, [$data]);

@@ -2,12 +2,21 @@
 
 namespace CS450\Lib;
 
-class Request
+final class Request
 {
     public $uri;
     public $params;
     public $method;
     public $contentType;
+
+    /**
+     *
+     * @Inject
+     * @var CS450\Service\JwtService
+     */
+    private $jwt;
+
+    private $authHeader;
     
     private $dataInputFile;
 
@@ -19,6 +28,7 @@ class Request
         $this->uri = $_SERVER['REQUEST_URI'];
         $this->method = trim($_SERVER['REQUEST_METHOD']);
         $this->contentType = trim($_SERVER["CONTENT_TYPE"] ?? "");
+        $this->authHeader = trim($_SERVER["HTTP_AUTHORIZATION"] ?? "");
     }
 
     public function getBody()
@@ -45,5 +55,14 @@ class Request
         // Receive the RAW post data.
         $content = trim(file_get_contents($this->dataInputFile));
         return json_decode($content, true);
+    }
+
+    public function getAuthToken(): array {
+        if (preg_match('/Bearer\s(\S+)/', $this->authHeader, $matches)) {
+            $tokenBase64 = $matches[1];
+            return $this->jwt->decode($tokenBase64);
+        }
+
+        return [];
     }
 }

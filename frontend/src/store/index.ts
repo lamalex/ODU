@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: "",
+    authData: { token: "" },
     errorMsg: "",
     departments: [],
   },
@@ -17,7 +17,7 @@ export default new Vuex.Store({
       return state.errorMsg;
     },
     authenticated: (state) => {
-      return state.token && state.token !== "";
+      return !!state.authData?.token;
     },
     departments: (state) => {
       return state.departments;
@@ -36,11 +36,13 @@ export default new Vuex.Store({
       state.departments = departments;
     },
     setAuthData(state, authData) {
-      state.token = authData;
+      state.authData = authData;
+
       localStorage.setItem("authData", JSON.stringify(authData));
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${authData.token}`;
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${
+        authData?.token ?? ""
+      }`;
     },
     setError(state, message) {
       state.errorMsg = message;
