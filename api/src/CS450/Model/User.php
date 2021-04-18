@@ -62,7 +62,10 @@ final class User {
 
         $this->logger->debug(sprintf("verifying stored hash %s against new hash %s for user %d", $storedPassword, $password, $uid));
 
-        if (!$password->verifyhash($storedPassword)) {
+        if (!$storedPassword) {
+            throw new \Exception("User not found", 420);
+        }
+        else if (!$password->verifyhash($storedPassword)) {
             throw new \Exception("Incorrect password", 69);
         }
 

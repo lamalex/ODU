@@ -24,6 +24,26 @@ class AuthController
      */
     private $user;
 
+    public function login($params)
+    {
+        $loginData = $params["post"];
+        $this->logger->info($loginData["email"] . " is trying to login.");
+
+        try {
+            $loginInfo = LoginUserInfo::create(
+                $loginData["email"],
+                $loginData["password"],
+            );
+
+            return array(
+                'token' => $this->user->login($loginInfo->email, $loginInfo->password),
+            );
+        } catch (\Exception $e) {
+            $this->logger->error("caught error throwing new one");
+            throw new Exception($e);
+        }
+    }
+
     public function register($params)
     {
         $registerData = $params["post"];
@@ -36,10 +56,7 @@ class AuthController
                 $registerData["password"],
                 $registerData["department"],
             );
-        } catch (\InvalidArgumentException $e) {
-            throw new Exception($e);
-        }
-        try {
+
             $payload = array(
                 'token' => $this->user->register($userInfo),
             );

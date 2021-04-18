@@ -8,7 +8,8 @@ use FastRoute\RouteCollector;
 $container = require __DIR__ . '/../app/bootstrap.php';
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/api/', 'CS450\Controller\HomeController');
-    $r->addRoute('POST', '/api/register', ['CS450\Controller\AuthController', 'register']);
+    $r->addRoute('POST', '/api/auth/login', ['CS450\Controller\AuthController', 'login']);
+    $r->addRoute('POST', '/api/auth/register', ['CS450\Controller\AuthController', 'register']);
     $r->addRoute('GET', '/api/departments', 'CS450\Controller\DepartmentController');
 });
 

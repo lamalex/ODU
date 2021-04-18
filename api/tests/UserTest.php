@@ -3,6 +3,8 @@
 use PHPUnit\Framework\TestCase;
 
 use CS450\Model\User;
+use CS450\Lib\Password;
+use CS450\Model\User\LoginUserInfo;
 use CS450\Model\User\RegisterUserInfo;
 
 final class UserTest extends TestCase {
@@ -23,30 +25,65 @@ final class UserTest extends TestCase {
         $this->assertTrue($result != false);
     }
 
-    public function testRegisterCreatesJwtWithGoodData(): void {
-        $jwtService = self::$container->get(CS450\Service\JwtService::class);
-        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
+    public function testLoginCreatesJwtWithGoodData(): void {
+        $conn = self::$db->getConnection();
+        $result = $conn->query(sprintf(
+            "INSERT INTO tbl_fact_users (name, email, password, department) VALUES ('%s', '%s', '%s', %d)",
+            "Test User",
+            "test@example.com",
+            Password::fromString("TestPassword1"),
+            1
+        ));
+        $this->assertTrue($conn->error === "", $conn->error);
 
-        $user = self::$container->get('CS450\Model\User');
-        $jwt = $user->register($registerInfo);
+        $loginInfo = LoginUserInfo::create("test@example.com", "TestPassword1");
+
+        $user = self::$container->get(CS450\Model\User::class);
+        $jwt = $user->login($loginInfo->email, $loginInfo->password);
+        $jwtService = self::$container->get(CS450\Service\JwtService::class);
 
         $this->assertTrue(
             array_key_exists(
                 'uid',
-                (array) $jwtService->decode($jwt,
-                    self::$container->get('jwt')->k,
-                    array('HS256')
-                )
+                (array) $jwtService->decode($jwt),
             ),
         );
 
         $this->assertTrue(
             array_key_exists(
                 'role',
-                (array) $jwtService->decode($jwt,
-                    self::$container->get('jwt')->k,
-                    array('HS256')
-                )
+                (array) $jwtService->decode($jwt),
+            ),
+        );
+    }
+    
+    public function testThrowsWhenUserDoesNotExist(): void {
+        $loginInfo = LoginUserInfo::create("test@example.com", "TestPassword1");
+
+        $user = self::$container->get(CS450\Model\User::class);
+        
+        $this->expectException(\Exception::class);
+        $jwt = $user->login($loginInfo->email, $loginInfo->password);
+    }
+
+    public function testRegisterCreatesJwtWithGoodData(): void {
+        $jwtService = self::$container->get(CS450\Service\JwtService::class);
+        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
+
+        $user = self::$container->get(CS450\Model\User::class);
+        $jwt = $user->register($registerInfo);
+
+        $this->assertTrue(
+            array_key_exists(
+                'uid',
+                (array) $jwtService->decode($jwt),
+            ),
+        );
+
+        $this->assertTrue(
+            array_key_exists(
+                'role',
+                (array) $jwtService->decode($jwt),
             ),
         );
     }
@@ -67,20 +104,14 @@ final class UserTest extends TestCase {
         $this->assertTrue(
             array_key_exists(
                 'uid',
-                (array) $jwtService->decode($jwt,
-                    self::$container->get('jwt')->k,
-                    array('HS256')
-                )
+                (array) $jwtService->decode($jwt),
             ),
         );
 
         $this->assertTrue(
             array_key_exists(
                 'role',
-                (array) $jwtService->decode($jwt,
-                    self::$container->get('jwt')->k,
-                    array('HS256')
-                )
+                (array) $jwtService->decode($jwt),
             ),
         );
     }
