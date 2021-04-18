@@ -1,11 +1,15 @@
 <template>
   <div id="app">
     <b-nav id="nav">
-      <span v-if="!authenticated">
+      <b-nav-item v-if="!authenticated">
         <router-link to="/">Register</router-link>
-        <span class="pl-1 pr-1">|</span>
-      </span>
-      <router-link to="/about">About</router-link>
+      </b-nav-item>
+      <b-nav-item>
+        <router-link to="/about">About</router-link>
+      </b-nav-item>
+      <b-nav-item v-if="authenticated" class="ml-auto">
+        <b-button variant="outline-primary" @click="logout">Logout</b-button>
+      </b-nav-item>
     </b-nav>
     <b-container>
       <b-alert
@@ -22,8 +26,8 @@
   </div>
 </template>
 
-<script>
-import { mapGetters, mapMutations } from "vuex";
+<script lang="ts">
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "App",
@@ -32,6 +36,7 @@ export default {
   },
   methods: {
     ...mapMutations(["clearError"]),
+    ...mapActions(["logout"]),
   },
 };
 </script>

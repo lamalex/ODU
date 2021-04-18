@@ -44,6 +44,10 @@ export default new Vuex.Store({
         authData?.token ?? ""
       }`;
     },
+    clearAuthData() {
+      localStorage.removeItem("authData");
+      location.reload();
+    },
     setError(state, message) {
       state.errorMsg = message;
     },
@@ -73,6 +77,9 @@ export default new Vuex.Store({
         credentials,
       });
     },
+    logout({ commit }) {
+      commit("clearAuthData");
+    },
     register({ dispatch }, credentials) {
       return dispatch("authAction", {
         actionName: "register",
@@ -82,6 +89,19 @@ export default new Vuex.Store({
     async fetchDepartments({ commit }) {
       const { data } = await axios.get("/api/departments");
       commit("setDepartments", data);
+    },
+    sendInvite({ commit }, inviteData) {
+      return axios
+        .post("/api/sendinvite", inviteData)
+        .then(() => {
+          console.log(`sent invitation to ${JSON.stringify(inviteData)}`);
+        })
+        .catch((error) => {
+          const { message: errMsg, code: errCode } = error.response?.data;
+
+          commit("setError", errMsg ?? "Something unexpected happened 😵");
+          throw errCode;
+        });
     },
   },
 });
