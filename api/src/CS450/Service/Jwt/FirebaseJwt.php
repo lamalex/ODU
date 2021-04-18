@@ -18,6 +18,10 @@ class FirebaseJwt implements JwtService {
     }
 
     public function decode($jwt) {
-        return (array) JWT::decode($jwt, $this->jwt->k, [$this->jwt->alg]);
+        try {
+            return (array) JWT::decode($jwt, $this->jwt->k, [$this->jwt->alg]);
+        } catch (\UnexpectedValueException $e) {
+            throw new InvalidTokenException($e);
+        }
     }
 }

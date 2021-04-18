@@ -3,6 +3,7 @@
 use CS450\Lib\Request;
 use CS450\Lib\Response;
 use CS450\Lib\Exception;
+use CS450\Service\Jwt\InvalidTokenException;
 use FastRoute\RouteCollector;
 
 error_reporting(E_ALL ^ E_WARNING);
@@ -15,7 +16,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/api/departments', 'CS450\Controller\DepartmentController');
 });
 
+
 $request = $container->get(CS450\Lib\Request::class);
+
 $route = $dispatcher->dispatch($request->method, $request->uri);
 
 switch ($route[0]) {
@@ -31,15 +34,21 @@ switch ($route[0]) {
         $controller = $route[1];
         $request->params = $route[2];
 
-        $data = array_merge_recursive(
-            ["params" => $route[2]],
-            ["post" => $request->getJSON()],
-            ["token" => $request->getAuthToken()],
-        );
-
         try {
+            $data = array_merge_recursive(
+                ["params" => $route[2]],
+                ["post" => $request->getJSON()],
+                ["token" => $request->getAuthToken()],
+            );
+
             $res = $container->call($controller, [$data]);
             echo Response::ok()->toJSON($res);
+        } catch (InvalidTokenException $e) {
+            echo Response::withCode(401)->toJSON(array(
+                'message' => strval($e),
+                'code' => $e->getCode(),
+            ));
+            return;
         } catch (Exception $e) {
             echo Response::error()->toJSON(array(
                 'message' => strval($e),
