@@ -8,12 +8,20 @@ use FastRoute\RouteCollector;
 
 error_reporting(E_ALL ^ E_WARNING);
 
-$container = require __DIR__ . '/../app/bootstrap.php';
+$container = require __DIR__ . "/../app/bootstrap.php";
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
-    $r->addRoute('GET', '/api/', 'CS450\Controller\HomeController');
-    $r->addRoute('POST', '/api/auth/login', ['CS450\Controller\AuthController', 'login']);
-    $r->addRoute('POST', '/api/auth/register', ['CS450\Controller\AuthController', 'register']);
-    $r->addRoute('GET', '/api/departments', 'CS450\Controller\DepartmentController');
+    $r->addGroup("/api", function (RouteCollector $r) {
+        $r->addRoute("GET", "/", "CS450\Controller\HomeController");
+        $r->addRoute("GET", "/departments", "CS450\Controller\DepartmentController");
+
+        $r->addGroup("/auth", function (RouteCollector $r) {
+            $authControllerName = "CS450\Controller\AuthController";
+
+            $r->addRoute("POST", "/login", [$authControllerName, "login"]);
+            $r->addRoute("POST", "/register", [$authControllerName, "register"]);
+            $r->addRoute("POST", "/sendinvite", [$authControllerName, "sendInvite"]);
+        });
+    });
 });
 
 
@@ -50,6 +58,12 @@ switch ($route[0]) {
             ));
             return;
         } catch (Exception $e) {
+            echo Response::error()->toJSON(array(
+                'message' => strval($e),
+                'code' => $e->getCode(),
+            ));
+        } catch (\Exception $e) {
+            $e = new Exception($e);
             echo Response::error()->toJSON(array(
                 'message' => strval($e),
                 'code' => $e->getCode(),

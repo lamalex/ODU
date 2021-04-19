@@ -1,6 +1,7 @@
-<?
+<?php
+require_once __DIR__ . '/dbconfig.php';
 
-require_once 'dbconfig.php';
+use Appconfig\load_db_config;
 
 use Psr\Container\ContainerInterface;
 use function DI\factory;
@@ -9,10 +10,11 @@ use Monolog\Logger;
 use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 
-use CS450\Service\JwtService;
 use CS450\Service\DbService;
+use CS450\Service\JwtService;
+use CS450\Service\EmailService;
 
-$db_conn_params = load_db_config(
+$db_conn_params = Appconfig\load_db_config(
     getenv("MYSQL_HOST"),
     getenv("MYSQL_USER"),
     getenv("MYSQL_PASSWORD"),
@@ -31,11 +33,16 @@ $db_config = array_merge(
 $jwt_config = json_decode(base64_decode(getenv("JWT_CONFIG")));
 
 return [
-    "env" => "development",
+    "env" => empty(getenv("PIPELINE_STAGE")) ? "development" : getenv("PIPELINE_STAGE"),
     "db" => $db_config,
     "jwt" => $jwt_config,
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
     JwtService::class => DI\Autowire(CS450\Service\Jwt\FirebaseJwt::class),
+    EmailService::class => DI\Autowire(CS450\Service\Email\MailgunEmail::class),
+    "mailgun.cfg" => (object) array(
+        "apiKey" => getenv("MAILGUN_API_KEY"),
+        "domain" => getenv("MAILGUN_DOMAIN"),
+    ),
     Psr\Log\LoggerInterface::class => DI\factory(function () {
         $logger = new Logger("CS450");
 

@@ -1,6 +1,6 @@
 <?php
 
-$db_config = (require 'api/app/config.php')['db'];
+$db_config = (require __DIR__ .'/api/app/config.php')['db'];
 
 return
 [

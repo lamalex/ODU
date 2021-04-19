@@ -1,43 +1,20 @@
 <template>
   <div id="app">
-    <b-nav id="nav">
-      <b-nav-item v-if="!authenticated">
-        <router-link to="/">Register</router-link>
-      </b-nav-item>
-      <b-nav-item>
-        <router-link to="/about">About</router-link>
-      </b-nav-item>
-      <b-nav-item v-if="authenticated" class="ml-auto">
-        <b-button variant="outline-primary" @click="logout">Logout</b-button>
-      </b-nav-item>
-    </b-nav>
+    <Header />
     <b-container>
-      <b-alert
-        fade
-        :show="errorMsg !== ''"
-        variant="danger"
-        dismissible
-        @dismissed="clearError"
-      >
-        {{ errorMsg }}
-      </b-alert>
+      <MessageBox />
       <router-view />
     </b-container>
   </div>
 </template>
 
 <script lang="ts">
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import Header from "@/components/Header.vue";
+import MessageBox from "@/components/MessageBox.vue";
 
 export default {
   name: "App",
-  computed: {
-    ...mapGetters(["errorMsg", "authenticated"]),
-  },
-  methods: {
-    ...mapMutations(["clearError"]),
-    ...mapActions(["logout"]),
-  },
+  components: { Header, MessageBox },
 };
 </script>
 

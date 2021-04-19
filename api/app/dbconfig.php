@@ -1,4 +1,6 @@
-<?php
+<?php 
+
+namespace Appconfig;
 
 function load_db_config(
     $defaultHost = '',

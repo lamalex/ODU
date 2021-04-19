@@ -91,17 +91,14 @@ export default new Vuex.Store({
       commit("setDepartments", data);
     },
     sendInvite({ commit }, inviteData) {
-      return axios
-        .post("/api/sendinvite", inviteData)
-        .then(() => {
-          console.log(`sent invitation to ${JSON.stringify(inviteData)}`);
-        })
-        .catch((error) => {
-          const { message: errMsg, code: errCode } = error.response?.data;
+      commit("clearError");
 
-          commit("setError", errMsg ?? "Something unexpected happened 😵");
-          throw errCode;
-        });
+      return axios.post("/api/auth/sendinvite", inviteData).catch((error) => {
+        const { message: errMsg, code: errCode } = error.response?.data;
+
+        commit("setError", errMsg ?? "Something unexpected happened 😵");
+        throw errCode;
+      });
     },
   },
 });

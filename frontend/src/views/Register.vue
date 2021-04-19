@@ -77,10 +77,17 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import Borat from "@/components/BoratValidated.vue";
 
+type PrefillData = {
+  name: string;
+  email: string;
+  department: number;
+};
+
 export default Vue.extend({
   name: "Register",
   components: { Borat },
   props: {
+    prefillData: Object as () => PrefillData,
     minPasswordLen: {
       type: Number,
       default: 5,
@@ -89,10 +96,10 @@ export default Vue.extend({
   data() {
     return {
       form: {
-        email: "",
-        name: "",
+        email: this.prefillData?.email ?? "",
+        name: this.prefillData?.name ?? "",
         password: "",
-        department: "",
+        department: this.prefillData?.department ?? 1,
       },
       verify: {
         password: "",
