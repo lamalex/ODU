@@ -1,9 +1,9 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
-import Register from "@/views/Register.vue";
 import Login from "@/views/Login.vue";
 import Invite from "@/views/Invite.vue";
+import Register from "@/views/Register.vue";
 
 Vue.use(VueRouter);
 
@@ -18,12 +18,23 @@ const routes: Array<RouteConfig> = [
           route.params.prefillData,
           "base64"
         ).toString("utf-8");
-        return { prefillData: JSON.parse(jsonStr) };
+
+        const prefillData = JSON.parse(jsonStr);
+        return prefillData?.userDataToken
+          ? { prefillData }
+          : { prefillData: {} };
       } catch (e) {
         console.error(
           `failed to parse base64 ${route.params?.prefillData} ${e}`
         );
       }
+    },
+    beforeEnter(to, from, next) {
+      const loggedIn = localStorage.getItem("authData");
+      if (loggedIn) {
+        return next("/dashboard");
+      }
+      next();
     },
   },
   {
@@ -59,7 +70,7 @@ router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem("authData");
 
   if (to.matched.some((record) => record.meta?.requiresAuth) && !loggedIn) {
-    next("/");
+    return next("/");
   }
 
   next();

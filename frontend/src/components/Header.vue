@@ -10,15 +10,13 @@
         <router-link to="/invite">Faculty member</router-link>
       </b-dropdown-item>
     </b-nav-item-dropdown>
-    <b-nav-item v-else>
-      <router-link to="/login">Login</router-link>
-    </b-nav-item>
 
     <b-nav-item>
       <router-link to="/about">About</router-link>
     </b-nav-item>
-    <b-nav-item v-if="authenticated" class="ml-auto" @click="logout">
-      <router-link to="">Logout</router-link>
+    <b-nav-item class="ml-auto" @click="logout">
+      <router-link v-if="authenticated" to="">Logout</router-link>
+      <router-link v-else to="/login">Login</router-link>
     </b-nav-item>
   </b-nav>
 </template>

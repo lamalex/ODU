@@ -1,86 +1,62 @@
-<?php 
+<?php
 
 namespace CS450\Model;
 
 use CS450\Lib\Password;
 use CS450\Lib\EmailAddress;
-use CS450\Model\User\RegisterUserInfo;
+use CS450\Model\UserBuilder;
+use CS450\Service\DbService;
 
 final class User {
-    /**
-     * 
-     * @Inject
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * 
-     * @Inject
-     * @var CS450\Service\JwtService
-     */
-    private $jwt;
-
-    /**
-     * 
-     * @Inject
-     * @var CS450\Service\DbService
-     */
     private $db;
 
-    private function makeJwt($uid, $role): string {
-        $payload = array(
-            'uid' => $uid,
-            'role' => $role,
-        );
+    private $id;
+    private $name;
+    private $email;
+    private $passwordHash;
+    private $role;
+    private $department;
 
-        return $this->jwt->encode($payload);
+    public function __construct(UserBuilder $builder, DbService $db) {
+        $this->db = $db;
+
+        $this->id = $builder->id;
+        $this->name = $builder->name;
+        $this->role = $builder->role;
+        $this->department = $builder->department;
+        $this->passwordHash = $builder->password;
+        $this->email = EmailAddress::fromString($builder->email);
     }
 
-    public function login(EmailAddress $email, Password $password) {
-        $conn = $this->db->getConnection();
-
-        $selectEmailQ = "SELECT id, password, user_role FROM tbl_fact_users WHERE email=?";
-        $stmt = $conn->prepare($selectEmailQ);
-
-        if (!$stmt) {
-            $errMsg = sprintf("An error occurred preparing your query: %s, %s", $selectEmailQ, $conn->error);
-            throw new \Exception($errMsg);
-        }
-
-        $executed = $stmt->bind_param(
-            "s",
-            $email,
-        ) && $stmt->execute();
-
-        if (!$executed) {
-            throw new \Exception($conn->error);
-        }
-
-        $stmt->bind_result($uid, $storedPassword, $role);
-        $stmt->fetch();
-
-        $this->logger->debug(sprintf("verifying stored hash %s against new hash %s for user %d", $storedPassword, $password, $uid));
-
-        if (!$storedPassword) {
-            throw new \Exception("User not found", 420);
-        }
-        else if (!$password->verifyhash($storedPassword)) {
-            throw new \Exception("Incorrect password", 69);
-        }
-
-        $this->logger->info(sprintf(
-            "User (%s) has been authenticated with role %s",
-            $email,
-            $role,
-        ));
-
-        return $this->makeJwt($uid, $role);
+    public function getId(): int {
+        return $this->id;
     }
 
-    public function register(RegisterUserInfo $userInfo): string {
-        $role = 'FACULTY';
-        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department, user_role) VALUES (?, ?, ?, ?, '$role')";
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getEmail(): EmailAddress {
+        return $this->email;
+    }
+
+    public function getPasswordHash(): string {
+        return $this->passwordHash;
+    }
+
+    public function getRole() {
+        return $this->role;
+    }
+
+    public function getDepartment() {
+        return $this->department;
+    }
+
+    public function save(): Self {
+        $insertUserSql = <<<EOD
+            INSERT INTO tbl_fact_users (name, email, password, department, user_role)
+            VALUES (?, ?, ?, ?, '$this->role')
+        EOD;
 
         $conn = $this->db->getConnection();
         $stmt = $conn->prepare($insertUserSql);
@@ -92,37 +68,25 @@ final class User {
 
         $executed = $stmt->bind_param(
             "sssd",
-            $userInfo->name,
-            $userInfo->email,
-            $userInfo->password,
-            $userInfo->department,
+            $this->name,
+            $this->email,
+            $this->passwordHash,
+            $this->department,
         ) && $stmt->execute() && $stmt->close();
 
         if (!$executed) {
-            if (Self::errorIsEmailExists($conn->error_list[0]["errno"])) {
-                $this->logger->info(sprintf(
-                    "Existing user found checking password %s %s",
-                    $userInfo->email,
-                    $userInfo->password,
-                ));
-
-                // check if passwords match.
-                // -> if so log the user in
-                // else -> redirect to login with error email exists
-                return $this->login(
-                    $userInfo->email,
-                    $userInfo->password,
+            $errNo = $conn->error_list[0]["errno"];
+            if (Self::errorIsEmailExists($errNo)) {
+                throw new \Exception(
+                    "A user with that email is already registered",
+                    $errNo,
                 );
-            } else {
-                // Something went wrong at the DB level
-                throw new \Exception($conn->error);
             }
+            throw new \Exception($conn->error);
         }
 
-        $uid = $conn->insert_id;
-        $this->logger->info(sprintf("Created new user with id: %d", $uid));
-
-        return $this->makeJwt($uid, $role);
+        $this->id = $conn->insert_id;
+        return $this;
     }
 
     private static function errorIsEmailExists(int $errorcode): bool {

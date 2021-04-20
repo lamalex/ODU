@@ -4,29 +4,21 @@ use PHPUnit\Framework\TestCase;
 
 use CS450\Model\User;
 use CS450\Lib\Password;
-use CS450\Model\User\LoginUserInfo;
-use CS450\Model\User\RegisterUserInfo;
+use CS450\Lib\EmailAddress;
 
 final class UserTest extends TestCase {
-
-    private static $container;
     private static $db;
+    private static $container;
 
     public static function setUpBeforeClass(): void {
         self::$container = require __DIR__ . '/testdata/bootstrap.php';
         self::$db = self::$container->get(CS450\Service\DbService::class);
     }
 
-    protected function tearDown(): void
-    {
+    protected function setUp(): void {
         $conn = self::$db->getConnection();
-        $result = $conn->query("SET FOREIGN_KEY_CHECKS = 0;");
-        $result = $conn->query("DELETE FROM tbl_fact_users WHERE 1=1;");
-        $this->assertTrue($result != false);
-    }
-
-    public function testLoginCreatesJwtWithGoodData(): void {
-        $conn = self::$db->getConnection();
+        $result = $conn->query("SET FOREIGN_KEY_CHECKS = 0");
+        $result = $conn->query("TRUNCATE TABLE tbl_fact_users");
         $result = $conn->query(sprintf(
             "INSERT INTO tbl_fact_users (name, email, password, department) VALUES ('%s', '%s', '%s', %d)",
             "Test User",
@@ -35,100 +27,57 @@ final class UserTest extends TestCase {
             1
         ));
         $this->assertTrue($conn->error === "", $conn->error);
-
-        $loginInfo = LoginUserInfo::create("test@example.com", "TestPassword1");
-
-        $user = self::$container->get(CS450\Model\User::class);
-        $jwt = $user->login($loginInfo->email, $loginInfo->password);
-        $jwtService = self::$container->get(CS450\Service\JwtService::class);
-
-        $this->assertTrue(
-            array_key_exists(
-                'uid',
-                (array) $jwtService->decode($jwt),
-            ),
-        );
-
-        $this->assertTrue(
-            array_key_exists(
-                'role',
-                (array) $jwtService->decode($jwt),
-            ),
-        );
-    }
-    
-    public function testThrowsWhenUserDoesNotExist(): void {
-        $loginInfo = LoginUserInfo::create("test@example.com", "TestPassword1");
-
-        $user = self::$container->get(CS450\Model\User::class);
-        
-        $this->expectException(\Exception::class);
-        $jwt = $user->login($loginInfo->email, $loginInfo->password);
     }
 
-    public function testRegisterCreatesJwtWithGoodData(): void {
-        $jwtService = self::$container->get(CS450\Service\JwtService::class);
-        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
-
-        $user = self::$container->get(CS450\Model\User::class);
-        $jwt = $user->register($registerInfo);
-
-        $this->assertTrue(
-            array_key_exists(
-                'uid',
-                (array) $jwtService->decode($jwt),
-            ),
-        );
-
-        $this->assertTrue(
-            array_key_exists(
-                'role',
-                (array) $jwtService->decode($jwt),
-            ),
-        );
+    protected function tearDown(): void
+    {
+        $conn = self::$db->getConnection();
+        $result = $conn->query("SET FOREIGN_KEY_CHECKS = 0");
+        $result = $conn->query("TRUNCATE TABLE tbl_fact_users");
+        $this->assertTrue($result != false);
     }
 
-    public function testRegisterLogsInWhenRegisteringValidUser(): void {
-        $jwtService = self::$container->get(CS450\Service\JwtService::class);
-        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
+    public function testCreatesFromBuilder(): void {
+        $pwHash = password_hash("test.PASSword.secure", PASSWORD_DEFAULT);
+        $user = self::$container->get(CS450\Model\UserBuilder::class)
+            ->id(1)
+            ->name("Test")
+            ->email("test@example.com")
+            ->role("FACULTY")
+            ->password($pwHash)
+            ->department(1)
+            ->build();
 
-        // Given a user is already registered
-        $user = self::$container->get('CS450\Model\User');
-        $user->register($registerInfo);
-        
-        // When user tries to register using the same username and password
-        // that they previously registered with
-        $jwt = $user->register($registerInfo);
-
-        // Then they are logged in
-        $this->assertTrue(
-            array_key_exists(
-                'uid',
-                (array) $jwtService->decode($jwt),
-            ),
+        $this->assertEquals(1, $user->getId());
+        $this->assertEquals("Test", $user->getName());
+        $this->assertEquals(
+            EmailAddress::fromString("test@example.com"),
+            $user->getEmail()
         );
-
-        $this->assertTrue(
-            array_key_exists(
-                'role',
-                (array) $jwtService->decode($jwt),
-            ),
+        $this->assertEquals(
+            $pwHash,
+            $user->getPasswordHash()
         );
+        $this->assertEquals(1, $user->getDepartment());
     }
 
-    public function testThrowsWhenRegisteredUserReregistersWithNewPassword(): void {
-        $jwtService = self::$container->get(CS450\Service\JwtService::class);
-        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345", 1);
+    public function testWritesOnSave(): void {
+        $pwHash = password_hash("test.PASSword.secure", PASSWORD_DEFAULT);
+        $user = self::$container->get(CS450\Model\UserBuilder::class)
+            ->name("Test")
+            ->email("testWritesOnSave@example.net")
+            ->role("FACULTY")
+            ->password($pwHash)
+            ->department(1)
+            ->build()
+            ->save();
 
-        // Given a user is already registered
-        $user = self::$container->get('CS450\Model\User');
-        $user->register($registerInfo);
-        
-        // When user tries to register using the same username and password
-        // that they previously registered with
-        $registerInfo2 = RegisterUserInfo::create("test", "hi@example.com", "ANewPwd", 1);
+        $result = self::$db->getConnection()->query("SELECT * FROM tbl_fact_users WHERE email='testWritesOnSave@example.net'");
+        $data = $result->fetch_assoc();
 
-        $this->expectException(\Exception::class);
-        $jwt = $user->register($registerInfo2);
+        $this->assertEquals($user->getName(), $data["name"]);
+        $this->assertEquals($user->getEmail(), EmailAddress::fromString($data["email"]));
+        $this->assertEquals($user->getRole(), $data["user_role"]);
+        $this->assertEquals($user->getDepartment(), $data["department"]);
     }
 }

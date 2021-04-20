@@ -5,10 +5,13 @@ use Appconfig\load_db_config;
 
 use Psr\Container\ContainerInterface;
 use function DI\factory;
+use function DI\create;
 
 use Monolog\Logger;
 use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
+
+use CS450\Model\UserBuilder;
 
 use CS450\Service\DbService;
 use CS450\Service\JwtService;
@@ -36,6 +39,8 @@ return [
     "env" => empty(getenv("PIPELINE_STAGE")) ? "development" : getenv("PIPELINE_STAGE"),
     "db" => $db_config,
     "jwt" => $jwt_config,
+    UserBuilder::class => create()
+        ->constructor(DI\get(DbService::class)),
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
     JwtService::class => DI\Autowire(CS450\Service\Jwt\FirebaseJwt::class),
     EmailService::class => DI\Autowire(CS450\Service\Email\MailgunEmail::class),

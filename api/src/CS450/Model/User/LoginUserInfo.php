@@ -11,6 +11,7 @@ use CS450\Lib\EmailAddress;
 final class LoginUserInfo {
     public $email;
     public $password;
+
     public static function create(string $email, string $password): ?self {
         $email = EmailAddress::fromString($email);
         $password = Password::fromString($password);
