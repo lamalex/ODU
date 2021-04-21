@@ -4,7 +4,7 @@ namespace CS450\Model;
 
 use CS450\Lib\Password;
 use CS450\Lib\EmailAddress;
-use CS450\Model\UserBuilder;
+
 use CS450\Service\DbService;
 
 final class User {
@@ -17,15 +17,8 @@ final class User {
     private $role;
     private $department;
 
-    public function __construct(UserBuilder $builder, DbService $db) {
+    public function __construct(DbService $db) {
         $this->db = $db;
-
-        $this->id = $builder->id;
-        $this->name = $builder->name;
-        $this->role = $builder->role;
-        $this->department = $builder->department;
-        $this->passwordHash = $builder->password;
-        $this->email = EmailAddress::fromString($builder->email);
     }
 
     public function getId(): int {
@@ -52,6 +45,36 @@ final class User {
         return $this->department;
     }
 
+    function setId($id) {
+        $this->id = $id;
+        return $this;
+    }
+
+    function setName($name) {
+        $this->name = $name;
+        return $this;
+    }
+
+    function setEmail($email) {
+        $this->email = EmailAddress::fromString($email);
+        return $this;
+    }
+
+    function setRole($role) {
+        $this->role = $role;
+        return $this;
+    }
+
+    function setPasswordHash($passwordHash) {
+        $this->passwordHash = $passwordHash;
+        return $this;
+    }
+
+    function setDepartment($department) {
+        $this->department = $department;
+        return $this;
+    }
+
     public function save(): Self {
         $insertUserSql = <<<EOD
             INSERT INTO tbl_fact_users (name, email, password, department, user_role)
@@ -67,7 +90,7 @@ final class User {
         }
 
         $executed = $stmt->bind_param(
-            "sssd",
+            "sssi",
             $this->name,
             $this->email,
             $this->passwordHash,

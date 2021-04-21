@@ -2,9 +2,12 @@
 
 namespace CS450\Controller;
 
+use CS450\Model\User;
+use CS450\Model\Grant;
 use CS450\Model\UserFactory;
 use CS450\Model\User\LoginUserInfo;
 use CS450\Model\User\RegisterUserInfo;
+
 use CS450\Lib\Exception;
 use CS450\Lib\EmailAddress;
 
@@ -26,12 +29,6 @@ final class AuthController
 
     /**
      * @Inject
-     * @var CS450\Model\UserFactory
-     */
-    private $userFactory;
-
-    /**
-     * @Inject
      * @var CS450\Service\JwtService
      */
     private $jwt;
@@ -50,9 +47,9 @@ final class AuthController
 
     /**
      * @Inject
-     * @var CS450\Model\UserBuilder
+     * @var CS450\Model\UserFactory
      */
-    private $userBuilder;
+    private $userFactory;
 
     private function makeJwt($uid, $role): string {
         $payload = array(
@@ -85,13 +82,13 @@ final class AuthController
 
             return array(
                 'user' => array(
-                    "uid" => $user->getUid(),
+                    "uid" => $user->getId(),
                     "name" => $user->getName(),
                     "email" => strval($user->getEmail()),
                     "role" => $user->getRole(),
                     "department" => $user->getDepartment(),
                 ),
-                'token' => $this->makeJwt($user->getUid(), $user->getRole()),
+                'token' => $this->makeJwt($user->getId(), $user->getRole()),
             );
 
         } catch (\Exception $e) {
@@ -104,6 +101,7 @@ final class AuthController
         $registerData = $params["post"];
         $this->logger->info("Registering user with " . print_r($registerData, true));
      
+        $this->db->getConnection()->begin_transaction();
         try {
             $userInfo = RegisterUserInfo::create(
                 $registerData["name"],
@@ -119,28 +117,36 @@ final class AuthController
                 throw new \Exception("Registration email does not match invitation. Please see your administrator");
             }
 
-            $user = $this->userBuilder
-                ->name($userInfo->name)
-                ->email(strval($userInfo->email))
-                ->department($userInfo->department)
-                ->password(strval($userInfo->password))
-                ->role("FACULTY")
-                ->build()
+            
+            $user = (new User($this->db))
+                ->setName($userInfo->name)
+                ->setEmail(strval($userInfo->email))
+                ->setDepartment($userInfo->department)
+                ->setPasswordHash(strval($userInfo->password))
+                ->setRole("FACULTY")
                 ->save();
+
+            (new Grant($this->db))
+                ->startupGrant()
+                ->for($user)
+                ->setAdminId($tokenData["invitedById"])
+                ->setOriginalAmount($tokenData["startupAmount"])
+                ->save();
+
+            $this->db->getConnection()->commit();
 
             return array(
                 'user' => array(
-                    "uid" => $user->getUid(),
+                    "uid" => $user->getId(),
                     "name" => $user->getName(),
                     "email" => strval($user->getEmail()),
                     "role" => $user->getRole(),
                     "department" => $user->getDepartment(),
                 ),
-                'token' => $this->makeJwt($user->getUid(), $user->getRole()),
+                'token' => $this->makeJwt($user->getId(), $user->getRole()),
             );
-
-            // Add a startup fund using uid that needs to be returned from register.
         } catch (\Exception $e) {
+            $this->db->getConnection()->rollback();
             throw new Exception($e);
         }
         
@@ -192,7 +198,8 @@ final class AuthController
 
         $userDataToken = $this->jwt->encode(array(
             "email" => $to,
-            "startupAmount" => $startupFundAmount,
+            "invitedById" => $senderUid,
+            "startupAmount" => $startupFundAmount,            
         ));
 
         $this->email->sendFromTemplate(

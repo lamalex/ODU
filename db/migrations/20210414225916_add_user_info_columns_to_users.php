@@ -24,6 +24,6 @@ final class AddUserInfoColumnsToUsers extends AbstractMigration
 
     public function down(): void
     {
-        $this->execute("ALTER TABLE tbl_fact_users DROP COLUMN office_phone DROP COLUMN cell_phone, DROP COLUMN address");
+        $this->execute("ALTER TABLE tbl_fact_users DROP COLUMN office_phone, DROP COLUMN cell_phone, DROP COLUMN address");
     }
 }

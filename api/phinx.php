@@ -1,12 +1,12 @@
 <?php
 
-$db_config = (require __DIR__ .'/api/app/config.php')['db'];
+$db_config = (require __DIR__ .'/app/config.php')['db'];
 
 return
 [
     'paths' => [
-        'migrations' => '%%PHINX_CONFIG_DIR%%/db/migrations',
-        'seeds' => '%%PHINX_CONFIG_DIR%%/db/seeds'
+        'migrations' => '%%PHINX_CONFIG_DIR%%/../db/migrations',
+        'seeds' => '%%PHINX_CONFIG_DIR%%/../db/seeds'
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',

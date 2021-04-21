@@ -1,5 +1,6 @@
 INSERT INTO tbl_fact_granting_entity (name, type)
-VALUES 
+VALUES
+    ('ODU', 'INTERNAL'),
     ('NASA', 'EXTERNAL'),
     ('Barry Community Foundation', 'EXTERNAL'),
     ('State of Wyoming', 'EXTERNAL'),

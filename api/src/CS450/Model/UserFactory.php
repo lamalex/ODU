@@ -18,12 +18,6 @@ final class UserFactory {
      */
     private $db;
 
-    /**
-     * @Inject
-     * @var CS450\Model\UserBuilder
-     */
-    private $userBuilder;
-
     public function findByEmail(EmailAddress $email): ?User {
         $selectEmailQ = <<<EOD
             SELECT id, name, email, password, user_role, department
@@ -54,14 +48,13 @@ final class UserFactory {
         $userRow = $result->fetch_assoc();
 
         return $userRow
-            ? $this->userBuilder
-                ->id($userRow["id"])
-                ->name($userRow["name"])
-                ->email($userRow["email"])
-                ->role($userRow["user_role"])
-                ->password($userRow["password"])
-                ->department($userRow["department"])
-                ->build()
+            ? (new User($this->db))
+                ->setId($userRow["id"])
+                ->setName($userRow["name"])
+                ->setEmail($userRow["email"])
+                ->setRole($userRow["user_role"])
+                ->setPasswordHash($userRow["password"])
+                ->setDepartment($userRow["department"])
             : null;
     }
 }

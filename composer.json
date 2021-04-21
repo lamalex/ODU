@@ -46,8 +46,8 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "phinx migrate",
-            "phinx seed:run"
+            "phinx migrate -c api/phinx.php",
+            "phinx seed:run -c api/phinx.php"
         ]
     }
 }
