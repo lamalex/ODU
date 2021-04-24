@@ -21,7 +21,6 @@
           type="email"
           placeholder="Enter email"
           required
-          disabled
         ></b-form-input>
       </b-form-group>
 
