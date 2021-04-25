@@ -5,13 +5,20 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Login from "@/views/Login.vue";
 import Invite from "@/views/Invite.vue";
 import Register from "@/views/Register.vue";
+
+import Employment from "@/views/Employ.vue";
+
 import Dashboard from "@/views/Dashboard.vue";
 import { Recoverable } from "node:repl";
+
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
+
+    path: "/register/:prefillData?",
+
     path: "/",
     name: "Dashboard",
     component: Dashboard,
@@ -21,6 +28,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/register/:prefillData",
+
     name: "Register",
     component: Register,
     props: (route) => {
@@ -43,6 +51,15 @@ const routes: Array<RouteConfig> = [
     meta: {
       unauthOnly: true
     },
+  },
+  {
+    path: "/employment/:prefillData?",
+    name: "Employ",
+    component: Employment,
+    meta: {
+      requiresAuth: true,
+    },
+    
   },
   {
     path: "/login/:prefillEmail?",
