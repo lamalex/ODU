@@ -4,17 +4,28 @@ namespace CS450\Model;
 
 use CS450\Service\DbService;
 
-final class Grant {
+final class Grant implements \JsonSerializable {
     private $db;
 
     private $id;
     private $title;
     private $status;
-    private $adminId;
     private $balance;
-    private $sourceId;
-    private $grantNumber;
-    private $originalAmount;
+    private $source_id;
+    private $grant_number;
+    private $original_amt;
+    private $administrator_id;
+
+    private $_entity_id;
+    private $_entity_name;
+    private $_entity_type;
+
+    private $_admin_id;
+    private $_admin_name;
+    private $_admin_role;
+    private $_admin_email;
+    private $_admin_department;
+
     private $recipients = [];
 
     public function __construct(DbService $db) {
@@ -30,7 +41,8 @@ final class Grant {
     }
 
     public function getGrantNumber() {
-        return $this->grantNumber;
+        return $this->grant_number;
+
     }
 
     public function getStatus() {
@@ -38,11 +50,11 @@ final class Grant {
     }
 
     public function getAdminId() {
-        return $this->adminId;
+        return $this->administrator_id;
     }
 
     public function getSourceId() {
-        return $this->sourceId;
+        return $this->source_id;
     }
 
     public function getBalance() {
@@ -50,11 +62,29 @@ final class Grant {
     }
 
     public function getOriginalAmount() {
-        return $this->originalAmount;
+        return $this->original_amt;
+
     }
 
     public function getRecipients() {
         return $this->recipients;
+    }
+
+    public function getSourceEntity() {
+        return array(
+            "id" => $this->_entity_id,
+            "name" => $this->_entity_name,
+            "type" => $this->_entity_type,
+        );
+    }
+
+    public function getAdministrator() {
+        return (new User($this->db))
+            ->setId($this->_admin_id)
+            ->setName($this->_admin_name)
+            ->setEmail($this->_admin_email)
+            ->setRole($this->_admin_role)
+            ->setDepartment($this->_admin_department);
     }
 
     function startupGrant() {
@@ -65,8 +95,8 @@ final class Grant {
 
         $this->status = "APPROVED";
         $this->title = "Starup Fund";
-        $this->sourceId = $oduSourceId;
-        $this->grantNumber = "ODU-STARTUP";
+        $this->source_id = $oduSourceId;
+        $this->grant_number = "ODU-STARTUP";
 
         return $this;
     }
@@ -87,17 +117,18 @@ final class Grant {
     }
 
     function setGrantNumber($grantNumber): Self {
-        $this->grantNumber = $grantNumber;
+        $this->grant_number = $grantNumber;
         return $this;
     }
 
     function setSourceId($sourceId): Self {
-        $this->sourceId = $sourceId;
+        $this->source_id = $sourceId;
         return $this;
     }
 
     function setOriginalAmount($originalAmount): Self {
-        $this->originalAmount = $originalAmount;
+        $this->original_amt = $originalAmount;
+
         return $this;
     }
 
@@ -112,7 +143,7 @@ final class Grant {
     }
 
     function setAdminId($adminId): Self {
-        $this->adminId = $adminId;
+        $this->administrator_id = $adminId;
         return $this;
     }
 
@@ -131,13 +162,13 @@ final class Grant {
 
         $executed = $stmt->bind_param(
             "ssiddsi",
-            $this->grantNumber,
+            $this->grant_number,
             $this->title,
-            $this->sourceId,
-            $this->originalAmount,
+            $this->source_id,
+            $this->original_amt,
             $this->balance,
             $this->status,
-            $this->adminId,
+            $this->administrator_id,
         ) && $stmt->execute() && $stmt->close();
         
 
@@ -176,4 +207,18 @@ final class Grant {
         
         return $this;
     }
+
+    public function jsonSerialize() {
+        return array(
+            "id" => $this->getId(),
+            "title" => $this->getTitle(),
+            "source" => $this->getSourceEntity(),
+            "number" => $this->getGrantNumber(),
+            "originalAmount" => $this->getOriginalAmount(),
+            "balance" => $this->getBalance(),
+            "status" =>  $this->getStatus(),
+            "administrator" => $this->getAdministrator(),
+        );
+    }
+
 }

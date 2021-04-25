@@ -1,16 +1,34 @@
-import Vue from "vue";
+
+import Vue from "vue"
 import VueRouter, { RouteConfig } from "vue-router";
 
 import Login from "@/views/Login.vue";
 import Invite from "@/views/Invite.vue";
 import Register from "@/views/Register.vue";
+
 import Employment from "@/views/Employ.vue";
+
+import Dashboard from "@/views/Dashboard.vue";
+import { Recoverable } from "node:repl";
+
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
+
     path: "/register/:prefillData?",
+
+    path: "/",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/register/:prefillData",
+
     name: "Register",
     component: Register,
     props: (route) => {
@@ -30,12 +48,8 @@ const routes: Array<RouteConfig> = [
         );
       }
     },
-    beforeEnter(to, from, next) {
-      const loggedIn = localStorage.getItem("authData");
-      if (loggedIn) {
-        return next("/dashboard");
-      }
-      next();
+    meta: {
+      unauthOnly: true
     },
   },
   {
@@ -52,6 +66,9 @@ const routes: Array<RouteConfig> = [
     name: "Login",
     component: Login,
     props: true,
+    meta: {
+      unauthOnly: true
+    },
   },
   {
     path: "/about",
@@ -79,7 +96,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const loggedIn = localStorage.getItem("authData");
 
+  // If route needs auth, but they're not autenticated -> login
   if (to.matched.some((record) => record.meta?.requiresAuth) && !loggedIn) {
+    return next("/login");
+  // If route needs NO auth, but they're autenticated -> dashboard
+  } else if (to.matched.some((record) => record.meta?.unauthOnly) && loggedIn) {
     return next("/");
   }
 
