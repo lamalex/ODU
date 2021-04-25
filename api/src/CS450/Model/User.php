@@ -7,7 +7,7 @@ use CS450\Lib\EmailAddress;
 
 use CS450\Service\DbService;
 
-final class User {
+final class User implements \JsonSerializable {
     private $db;
 
     private $id;
@@ -110,6 +110,16 @@ final class User {
 
         $this->id = $conn->insert_id;
         return $this;
+    }
+
+    public function jsonSerialize() {
+        return array(
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "email" => strval($this->getEmail()),
+            "role" => $this->getRole(),
+            "department" => $this->getDepartment(),
+        );
     }
 
     private static function errorIsEmailExists(int $errorcode): bool {

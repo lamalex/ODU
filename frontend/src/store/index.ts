@@ -10,6 +10,7 @@ export default new Vuex.Store({
   state: {
     authData: { token: "" },
     errorMsg: "",
+    grants: [],
     departments: [],
   },
   getters: {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     authenticated: (state) => {
       return !!state.authData?.token;
+    },
+    grants: (state) => {
+      return state.grants;
     },
     departments: (state) => {
       return state.departments;
@@ -32,6 +36,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    setGrants(state, grants = []) {
+      state.grants = grants;
+    },
     setDepartments(state, departments = []) {
       state.departments = departments;
     },
@@ -85,6 +92,10 @@ export default new Vuex.Store({
         actionName: "register",
         credentials,
       });
+    },
+    async fetchGrants({ commit }) {
+      const { data } = await axios.get("/api/grants");
+      commit("setGrants", data);
     },
     async fetchDepartments({ commit }) {
       const { data } = await axios.get("/api/departments");
