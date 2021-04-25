@@ -79,14 +79,6 @@ export default Vue.extend({
         .then(() => {
           //this.$router.replace("/about");
         })
-        .catch((errCode: number) => {
-          this.form.password = "";
-          this.verify.password = "";
-
-          if (errCode === 69) {
-            this.$router.replace(`/login/${this.form.email}`);
-          }
-        });
     },
   },
   created() {
