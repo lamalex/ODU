@@ -136,9 +136,6 @@ export default Vue.extend({
       }
 
       this.register(this.form)
-        .then(() => {
-          //this.$router.replace("/about");
-        })
         .catch((errCode: number) => {
           this.form.password = "";
           this.verify.password = "";
