@@ -104,7 +104,6 @@ export default new Vuex.Store({
         actionName: "employ",
         credentials,
       });
-
     },
     register({ dispatch }, credentials) {
       return dispatch("authAction", {

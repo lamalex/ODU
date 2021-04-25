@@ -22,6 +22,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
             $r->addRoute("POST", "/login", [$authControllerName, "login"]);
             $r->addRoute("POST", "/register", [$authControllerName, "register"]);
             $r->addRoute("POST", "/sendinvite", [$authControllerName, "sendInvite"]);
+            $r->addRoute("POST", "/employ", [$authControllerName, "employ"]);            
         });
     });
 });
