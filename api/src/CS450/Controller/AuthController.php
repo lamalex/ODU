@@ -257,7 +257,6 @@ final class AuthController
 
         return $students;
     
-     
 
     }
 
