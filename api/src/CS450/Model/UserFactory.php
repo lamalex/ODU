@@ -129,5 +129,5 @@ final class UserFactory {
         }
 
         return $users;
-
     }
+}
