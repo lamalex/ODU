@@ -94,17 +94,10 @@ final class UserFactory {
         $this->logger->info("Running sql " . $selectGrantQ . "(=" . $grantNumber .")");
 
         $result = $stmt->get_result();
-        $userGrant = $result->fetch_assoc();
-
-        return $userGrant
-            ? (new User($this->db))
-                ->setId($userRow["id"])
-                ->setName($userRow["name"])
-                ->setEmail($userRow["email"])
-                ->setRole($userRow["user_role"])
-                ->setPasswordHash($userRow["password"])
-                ->setDepartment($userRow["department"])
-            : null;
-
+        $grantUsers =[];
+        while($userGrant = $result->fetch_assoc()){
+            $grantUsers[] = $userGrant; 
+        };
+        return $grantUsers; 
     }
 }
