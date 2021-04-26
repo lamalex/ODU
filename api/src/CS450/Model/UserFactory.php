@@ -58,8 +58,7 @@ final class UserFactory {
                 ->setDepartment($userRow["department"])
             : null;
     }
-
-    public function findGrants(Grant $grantNumber) {
+    public function findGrants(Grant $grantNumber): array {
         $selectGrantQ = <<<EOD
             SELECT a.name as faculty_name, c.grant_number, c.title, d.name as department 
             FROM tbl_fact_users a
@@ -100,9 +99,9 @@ final class UserFactory {
             $grantUsers[] = $userGrant; 
         };
         return $grantUsers; 
+    }
 
-
-    public function getFacultyInDepartmentForAdminId($id) {
+    public function getFacultyInDepartmentForAdminId(User $id) {
         $selectFacultyQ = <<<EOD
             SELECT u.id, u.name, u.user_role, d.name as department FROM tbl_fact_users u
             LEFT JOIN tbl_fact_departments d
@@ -130,6 +129,5 @@ final class UserFactory {
         }
 
         return $users;
-
     }
 }
