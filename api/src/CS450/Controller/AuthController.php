@@ -223,6 +223,43 @@ final class AuthController
         );
     }
 
+    public function employ($params){
+        $conn = $this->db->getConnection();
+        $registerData = $params["post"];
+        $student = $registerData["student"];
+        $type =$registerData["type"];
+        $faculty= 1;
+        $semester = $registerData['semester'];
+        $amount = $registerData['amount'];
+        $payment = $registerData['payment'];
+        $workload= $registerData['workload'];
+        $std = $registerData['startdate'];
+        $timestamp1 = strtotime($std);
+        $startdate= date("dmy", $timestamp1);
+        $edd = $registerData['enddate'];
+        $timestamp2 = strtotime($edd);
+        $enddate= date("dmy", $timestamp2);
+        $this->logger->info("Employing students with data " . print_r($registerData, true));
+        $sql = "INSERT into tbl_fact_employments(student_uin,type,semester,faculty_id ,amount,       
+         payment_type ,workload,start_date,end_date) VALUES ($student, '$type','$semester', $faculty,$amount, '$payment',$workload,'$startdate','$enddate');";
+
+        $conn = $this->db->getConnection();
+        $result = $conn->query($sql);
+
+        $this->logger->info(sprintf("Fetched %d rows", $result->num_rows));
+
+        if($conn->error) {
+            $this->logger->error($conn->error);
+            throw new \Exception($conn->error);
+        }
+
+        $students = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $students;
+    
+
+    }
+
     private static function hostname(){
         return sprintf(
             "%s://%s",

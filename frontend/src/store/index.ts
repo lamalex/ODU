@@ -12,6 +12,8 @@ export default new Vuex.Store({
     errorMsg: "",
     grants: [],
     departments: [],
+    students: [],
+    faculty: [],
   },
   getters: {
     errorMsg: (state) => {
@@ -26,6 +28,12 @@ export default new Vuex.Store({
     departments: (state) => {
       return state.departments;
     },
+    students: (state) => {
+      return state.students;
+    },
+    faculty: (state) => {
+      return state.faculty;
+    },
     departmentOptions: (state) => {
       return state.departments.map((dept: { id: number; name: string }) => {
         return {
@@ -34,6 +42,15 @@ export default new Vuex.Store({
         };
       });
     },
+    studentOptions: (state) => {
+      return state.students.map((student: { uin: number; name: string }) => {
+        return {
+          value: student.uin,
+          text: student.name,
+        };
+      });
+    },
+    
   },
   mutations: {
     setGrants(state, grants = []) {
@@ -41,6 +58,13 @@ export default new Vuex.Store({
     },
     setDepartments(state, departments = []) {
       state.departments = departments;
+    },
+
+    setStudents(state, students = []) {
+      state.students = students;
+    },
+    setFaculty(state, faculty = []) {
+      state.faculty = faculty
     },
     setAuthData(state, authData) {
       state.authData = authData;
@@ -87,6 +111,13 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit("clearAuthData");
     },
+
+    employment({ dispatch }, credentials){
+      return dispatch("authAction", {
+        actionName: "employ",
+        credentials,
+      });
+    },
     register({ dispatch }, credentials) {
       return dispatch("authAction", {
         actionName: "register",
@@ -100,6 +131,23 @@ export default new Vuex.Store({
     async fetchDepartments({ commit }) {
       const { data } = await axios.get("/api/departments");
       commit("setDepartments", data);
+    },
+    async fetchStudents({ commit }){
+      const { data } = await axios.get("/api/students");
+      commit("setStudents", data);
+    },
+    async fetchFaculty({ commit }) {
+      try {
+        const { data } = await axios.get("/api/admin/faculty");
+        commit("setFaculty", data);
+      } catch {
+        console.log("bang!");
+      }
+    },
+    deleteFaculty({ commit }, facultyId) {
+      return axios.delete(`/api/admin/faculty/${facultyId}`).then(() => {
+        this.dispatch("fetchFaculty");
+      })
     },
     sendInvite({ commit }, inviteData) {
       commit("clearError");

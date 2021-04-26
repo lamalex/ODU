@@ -49,7 +49,7 @@ export default Vue.extend({
     onSubmit(): void {
       this.login(this.form)
         .then(() => {
-          //this.$router.replace("/dashboard");
+          this.$router.replace("/");
         })
         .catch(() => {
           this.form.password = "";
