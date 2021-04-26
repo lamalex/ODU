@@ -16,7 +16,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
         $r->addRoute("GET", "/departments", "CS450\Controller\DepartmentController");
         $r->addRoute("GET", "/students", "CS450\Controller\StudentController");
 
-
         $r->addGroup("/auth", function (RouteCollector $r) {
             $authControllerName = "CS450\Controller\AuthController";
 
@@ -24,6 +23,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
             $r->addRoute("POST", "/register", [$authControllerName, "register"]);
             $r->addRoute("POST", "/sendinvite", [$authControllerName, "sendInvite"]);
             $r->addRoute("POST", "/employ", [$authControllerName, "employ"]);            
+        });
+
+        $r->addGroup("/admin", function (RouteCollector $r) {
+            $r->addRoute("GET", "/faculty", ["CS450\Controller\AdminController", "getFaculty"]);
+            $r->addRoute("DELETE", "/faculty/{id:\d+}", ["CS450\Controller\AdminController", "deleteFaculty"]);
         });
     });
 });

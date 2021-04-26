@@ -13,6 +13,7 @@ export default new Vuex.Store({
     grants: [],
     departments: [],
     students: [],
+    faculty: [],
   },
   getters: {
     errorMsg: (state) => {
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     students: (state) => {
       return state.students;
+    },
+    faculty: (state) => {
+      return state.faculty;
     },
     departmentOptions: (state) => {
       return state.departments.map((dept: { id: number; name: string }) => {
@@ -56,10 +60,12 @@ export default new Vuex.Store({
       state.departments = departments;
     },
 
-    setStudents(state, students = []){
+    setStudents(state, students = []) {
       state.students = students;
     },
-
+    setFaculty(state, faculty = []) {
+      state.faculty = faculty
+    },
     setAuthData(state, authData) {
       state.authData = authData;
 
@@ -129,6 +135,19 @@ export default new Vuex.Store({
     async fetchStudents({ commit }){
       const { data } = await axios.get("/api/students");
       commit("setStudents", data);
+    },
+    async fetchFaculty({ commit }) {
+      try {
+        const { data } = await axios.get("/api/admin/faculty");
+        commit("setFaculty", data);
+      } catch {
+        console.log("bang!");
+      }
+    },
+    deleteFaculty({ commit }, facultyId) {
+      return axios.delete(`/api/admin/faculty/${facultyId}`).then(() => {
+        this.dispatch("fetchFaculty");
+      })
     },
     sendInvite({ commit }, inviteData) {
       commit("clearError");

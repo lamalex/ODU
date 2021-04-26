@@ -13,8 +13,8 @@ final class User implements \JsonSerializable {
     private $id;
     private $name;
     private $email;
-    private $passwordHash;
-    private $role;
+    private $password;
+    private $user_role;
     private $department;
 
     public function __construct(DbService $db) {
@@ -29,16 +29,23 @@ final class User implements \JsonSerializable {
         return $this->name;
     }
 
-    public function getEmail(): EmailAddress {
-        return $this->email;
+    public function getEmail(): ?EmailAddress {
+        if ($this->email instanceof EmailAddress) {
+            return $this->email;
+        }
+        if ($this->email) {
+            return $this->email = EmailAddress::fromString($this->email);
+        }
+        
+        return null;
     }
 
     public function getPasswordHash(): string {
-        return $this->passwordHash;
+        return $this->password;
     }
 
     public function getRole() {
-        return $this->role;
+        return $this->user_role;
     }
 
     public function getDepartment() {
@@ -61,12 +68,12 @@ final class User implements \JsonSerializable {
     }
 
     function setRole($role) {
-        $this->role = $role;
+        $this->user_role = $role;
         return $this;
     }
 
     function setPasswordHash($passwordHash) {
-        $this->passwordHash = $passwordHash;
+        $this->password = $passwordHash;
         return $this;
     }
 
@@ -78,7 +85,7 @@ final class User implements \JsonSerializable {
     public function save(): Self {
         $insertUserSql = <<<EOD
             INSERT INTO tbl_fact_users (name, email, password, department, user_role)
-            VALUES (?, ?, ?, ?, '$this->role')
+            VALUES (?, ?, ?, ?, '$this->user_role')
         EOD;
 
         $conn = $this->db->getConnection();
@@ -93,7 +100,7 @@ final class User implements \JsonSerializable {
             "sssi",
             $this->name,
             $this->email,
-            $this->passwordHash,
+            $this->password,
             $this->department,
         ) && $stmt->execute() && $stmt->close();
 

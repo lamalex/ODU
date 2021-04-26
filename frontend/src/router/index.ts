@@ -9,16 +9,13 @@ import Register from "@/views/Register.vue";
 import Employment from "@/views/Employ.vue";
 
 import Dashboard from "@/views/Dashboard.vue";
-import { Recoverable } from "node:repl";
+import Faculty from "@/views/Faculty.vue";
 
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-
-    path: "/register/:prefillData?",
-
     path: "/",
     name: "Dashboard",
     component: Dashboard,
@@ -87,6 +84,14 @@ const routes: Array<RouteConfig> = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/faculty",
+    name: "Faculty",
+    component: Faculty,
+    meta: {
+      requiresAuth: true
+    }
+  }
 ];
 
 const router = new VueRouter({
