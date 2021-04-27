@@ -84,7 +84,7 @@ final class UserFactory {
 
         $executed = $stmt->bind_param(
             "s",
-            $grantNumber,
+            $grantNumber,q  
         ) && $stmt->execute();
 
         if (!$executed) {
@@ -101,7 +101,7 @@ final class UserFactory {
         return $grantUsers; 
     }
 
-    public function getFacultyInDepartmentForAdminId(User $id) {
+    public function getFacultyInDepartmentForAdminId(int $id) {
         $selectFacultyQ = <<<EOD
             SELECT u.id, u.name, u.user_role, d.name as department FROM tbl_fact_users u
             LEFT JOIN tbl_fact_departments d
