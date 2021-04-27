@@ -6,7 +6,7 @@
       v-if="authenticated"
       id="my-nav-dropdown"
       text="Add a new..."
-      right
+      left
       is-nav
     >
     <b-dropdown-item class="align-middle">
