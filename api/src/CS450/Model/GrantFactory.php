@@ -23,7 +23,7 @@ final class GrantFactory {
                 e.id AS _entity_id, e.name AS _entity_name, e.type AS _entity_type,
                 admin.id AS `_admin_id`, admin.email AS `_admin_email`, admin.name AS `_admin_name`, 
                 admin.user_role AS`_admin_role`, admin.department AS `_admin_department`
-            FROM tbl_fact_grants g 
+            FROM tbl_fact_grants g
             JOIN tbl_fact_granting_entity AS e
             ON g.source_id = e.id
             JOIN tbl_fact_users AS admin
@@ -57,7 +57,7 @@ final class GrantFactory {
                 e.id AS _entity_id, e.name AS _entity_name, e.type AS _entity_type,
                 admin.id AS `_admin_id`, admin.email AS `_admin_email`, admin.name AS `_admin_name`, 
                 admin.user_role AS`_admin_role`, admin.department AS `_admin_department`
-            FROM tbl_fact_grants g 
+            FROM tbl_fact_grants g
             JOIN tbl_fact_granting_entity AS e
             ON g.source_id = e.id
             JOIN tbl_fact_users AS admin

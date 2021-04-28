@@ -27,7 +27,7 @@ class GrantController
 
     public function __invoke($params)
     {
-        if (empty($params["token"]) || $params["token"]["role"] !== "ADMINISTRATOR") {
+        if (empty($params["token"])) {
             return;
         }
 
