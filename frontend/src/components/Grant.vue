@@ -17,7 +17,16 @@
         </b-card-text>
       </b-card-body>
       <b-card-footer>
-          <small class="text-muted">{{ grant.status }}</small>
+        <b-row>
+          <b-col>
+            <small class="text-muted">{{ grant.status }}</small> 
+          </b-col>
+          <b-col class="pr-0" v-if="admin">
+            <b-button v-if="grant.status !== 'APPROVED'" @click="approveGrant(grant.id)" size="sm" variant="success">Approve</b-button>
+            <b-button v-if="grant.status !== 'DENIED'" @click="denyGrant(grant.id)" class="ml-2" size="sm" variant="danger">Deny</b-button>
+            <b-button v-if="grant.status !== 'PENDING'" @click="resetGrant(grant.id)" class="ml-2" size="sm" variant="warning">Unmark</b-button>
+          </b-col>
+        </b-row>
       </b-card-footer>
     </b-card>
   </b-card-group>
@@ -25,15 +34,20 @@
 
 <script>
 import Vue from "vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default Vue.extend({
   name: "Dashboard",
+  props: {
+    admin: Boolean
+  },
   computed: {
-    ...mapGetters(["grants"]),
+    grants() {
+      return this.admin ? this.$store.getters.adminGrants: this.$store.getters.grants
+    },
   },
   methods: {
-    ...mapActions(["fetchGrants"]),
+    ...mapActions(["fetchGrants", "fetchAdminGrants", "updateGrantStatus"]),
     borderStyle(grant) {
         const styles = {
             "PENDING": "warning",
@@ -42,11 +56,29 @@ export default Vue.extend({
         };
 
         return styles[grant.status];
+    },
+    approveGrant(grantId) {
+      this.updateGrantStatus({
+        id: grantId,
+        status: "APPROVE"
+      });
+    },
+    denyGrant(grantId) {
+      this.updateGrantStatus({
+        id: grantId,
+        status: "DENY"
+      });
+    },
+    resetGrant(grantId) {
+      this.updateGrantStatus({
+        id: grantId,
+        status: "PENDING"
+      });
     }
   },
-  async created() {
-    await this.fetchGrants();
-    console.log(JSON.stringify(this.grants));
+  created() {
+    this.fetchGrants();
+    this.fetchAdminGrants();
   },
 });
 </script>

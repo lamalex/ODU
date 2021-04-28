@@ -8,9 +8,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    authData: { token: "" },
+    authData: { token: "", user: { role: null } },
     errorMsg: "",
     grants: [],
+    adminGrants: [],
     departments: [],
     students: [],
     faculty: [],
@@ -21,6 +22,12 @@ export default new Vuex.Store({
     },
     authenticated: (state) => {
       return !!state.authData?.token;
+    },
+    isAdministrator: (state) => {
+      return state.authData?.user?.role === "ADMINISTRATOR"
+    },
+    adminGrants: (state) => {
+      return state.adminGrants;
     },
     grants: (state) => {
       return state.grants;
@@ -55,6 +62,9 @@ export default new Vuex.Store({
   mutations: {
     setGrants(state, grants = []) {
       state.grants = grants;
+    },
+    setAdminGrants(state, grants = []) {
+      state.adminGrants = grants;
     },
     setDepartments(state, departments = []) {
       state.departments = departments;
@@ -128,6 +138,10 @@ export default new Vuex.Store({
       const { data } = await axios.get("/api/grants");
       commit("setGrants", data);
     },
+    async fetchAdminGrants({ commit }) {
+      const { data } = await axios.get("/api/admin/grants");
+      commit("setAdminGrants", data);
+    },
     async fetchDepartments({ commit }) {
       const { data } = await axios.get("/api/departments");
       commit("setDepartments", data);
@@ -147,7 +161,7 @@ export default new Vuex.Store({
     deleteFaculty({ commit }, facultyId) {
       return axios.delete(`/api/admin/faculty/${facultyId}`).then(() => {
         this.dispatch("fetchFaculty");
-      })
+      });
     },
     sendInvite({ commit }, inviteData) {
       commit("clearError");
@@ -157,6 +171,15 @@ export default new Vuex.Store({
 
         commit("setError", errMsg ?? "Something unexpected happened 😵");
         throw errCode;
+      });
+    },
+    updateGrantStatus({ dispatch }, { id, status }) {
+      console.log("updating grant status");
+      return axios.post(`/api/admin/grant/${id}`, {
+        status
+      }).then(() => {
+        dispatch("fetchGrants");
+        dispatch("fetchAdminGrants");
       });
     },
   },
