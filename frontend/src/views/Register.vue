@@ -21,6 +21,7 @@
           type="email"
           placeholder="Enter email"
           required
+          disabled
         ></b-form-input>
       </b-form-group>
 
@@ -61,7 +62,7 @@
       </b-form-group>
 
       <b-form-group label="Enter your department:" label-for="department">
-        <b-form-select v-model="form.department" :options="departmentOptions" />
+        <b-form-select v-model="form.department" :options="departmentOptions" disabled/>
       </b-form-group>
 
       <div class="ml-auto">
