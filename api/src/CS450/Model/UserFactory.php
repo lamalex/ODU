@@ -103,9 +103,17 @@ final class UserFactory {
 
     public function getFacultyInDepartmentForAdminId(int $id) {
         $selectFacultyQ = <<<EOD
-            SELECT u.id, u.name, u.user_role, d.name as department FROM tbl_fact_users u
+            SELECT 
+                u.id, u.name, u.user_role, 
+                d.name AS department,
+                SUM(g.original_amt) as original_total_bal, SUM(g.balance) AS remaining_total_bal
+            FROM tbl_fact_users u
             LEFT JOIN tbl_fact_departments d
             ON u.department=d.id
+            LEFT JOIN tbl_fact_map_grant_users map
+            ON u.id=map.user_id
+            LEFT JOIN tbl_fact_grants g
+            ON map.grant_id=g.id
             WHERE department = (
                 SELECT department
                 FROM tbl_fact_users
@@ -113,6 +121,8 @@ final class UserFactory {
             )
             AND u.id NOT IN ($id)
             AND u.deleted=FALSE
+            GROUP BY u.id
+            
         EOD;
 
         $result = $this->db->getConnection()->query($selectFacultyQ);
@@ -123,9 +133,8 @@ final class UserFactory {
         }
         
         $users = [];
-        while($user = $result->fetch_object("CS450\Model\User", [$this->db])) {
-            $this->logger->info(print_r($user, true));
-            $users[$user->getId()] = $user;
+        while($user = $result->fetch_array(MYSQLI_ASSOC)) {
+            $users[$user["id"]] = $user;
         }
 
         return $users;
