@@ -2,6 +2,12 @@
 <div>
     <div>
     <b-table :items="tableData" :fields="fields" striped responsive="sm">
+        <template #cell(original_total_bal)="row">
+          {{ row.item.original_total_bal | currency }}
+        </template>
+        <template #cell(remaining_total_bal)="row">
+          {{ row.item.remaining_total_bal | currency }}
+        </template>
       <template #cell(actions)="row">
         <b-button size="sm" @click="markAndDelete(row.item.id)" class="mr-2" variant="danger" block>
            <b-spinner v-if="row.item.pending" small></b-spinner>
@@ -21,7 +27,7 @@ export default Vue.extend({
     name: "Faculty",
     data() {
         return {
-            fields: ["name", "department", "actions"],
+            fields: ["name", "department", "user_role", "original_total_bal", "remaining_total_bal", "actions"],
         };
     },
     computed: {
