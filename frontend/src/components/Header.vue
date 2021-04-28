@@ -1,6 +1,7 @@
 <template>
 <div>
   <b-navbar id="nav" variant="faded" type="light">
+    <b-navbar-brand v-if="authenticated" class="branding" href="/">Home</b-navbar-brand>
     <b-navbar-nav >
       <b-nav-item-dropdown
       v-if="authenticated"
@@ -55,3 +56,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.branding {
+  color: lightcoral !important;
+}
+</style>
