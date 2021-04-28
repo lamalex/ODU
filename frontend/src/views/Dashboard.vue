@@ -1,6 +1,9 @@
 <template>
 <div>
-    <Grant />
+    <div>
+        <h2>My Grants</h2>
+        <Grant />
+    </div>
 </div>
 </template>
 <script>
