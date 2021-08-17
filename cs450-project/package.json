@@ -1,0 +1,12 @@
+{
+    "name": "cs450-group1",
+    "description": "ODU Spring 2021 CS550 group project",
+    "version": "0.0.1",
+    "scripts": {
+        "postinstall": "cd frontend && npm install",
+        "build": "npm run --prefix frontend build -- --skip-plugins eslint && cp -a frontend/dist/* api",
+        "test:migrate": "docker-compose exec -T web ../vendor/bin/phinx migrate -c phinx.php -e testing",
+        "test:migrate:dry": "npm run test:migrate -- --dry-run",
+        "test:seed": "docker-compose exec -T web ../vendor/bin/phinx seed:run -c phinx.php -e testing"
+    }
+}

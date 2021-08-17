@@ -1,0 +1,41 @@
+{
+    "name": "s2021-cs550-g1",
+    "description": "Grant management project",
+    "repository": "https://github.com/cs450-project/cs450-project",
+    "env": {
+        "PIPELINE_STAGE": {
+            "description": "current pipeline stage",
+            "value": "staging"
+        },
+        "NPM_CONFIG_PRODUCTION": "false"
+    },
+    "addons": ["cleardb:ignite"],
+    "buildpacks": [
+        {
+            "url": "heroku/nodejs"
+        },
+        {
+            "url": "heroku/php"
+        }
+    ],
+    "environments": {
+        "review": {
+            "addons":["cleardb:ignite"],
+            "buildpacks": [
+                {
+                    "url": "heroku/nodejs"
+                },
+                {
+                    "url": "heroku/php"
+                }
+            ],
+            "env": {
+                "PIPELINE_STAGE": {
+                    "description": "current pipeline stage",
+                    "value": "development"
+                },
+                "NPM_CONFIG_PRODUCTION": "false"
+            }
+        }
+    }
+}

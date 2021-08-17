@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "test": "../vendor/bin/phpunit tests --color",
+        "test:watch": "watch 'npm run --silent test'",
+        "test:docker": "docker-compose -f ../docker-compose.yml exec -T web ../vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text --bootstrap ../vendor/autoload.php --color tests",
+        "test:docker:watch": "watch 'npm run --silent test:docker'",
+        "composer": "docker-compose -f ../docker-compose.yml run composer"
+    },
+    "devDependencies": {
+        "watch": "^1.0.2"
+    }
+}

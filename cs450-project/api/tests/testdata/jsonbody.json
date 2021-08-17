@@ -1,0 +1,11 @@
+{
+    "field1": "ice cream",
+    "field2": "🤷🏻 gotta test emoji amiright",
+    "arrays": [
+        "banana sandwiches",
+        "hot dogs"
+    ],
+    "an object": {
+        "getting": "cray"
+    }
+}

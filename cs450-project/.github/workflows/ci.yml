@@ -1,0 +1,59 @@
+name: Continuous Integration Workflow
+on: [push, pull_request]
+
+jobs:
+  build_and_test_frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm run test:unit
+
+  test_phinx_migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the docker-compose stack
+        run: docker-compose up -d --build
+      - name: Sleep for 30 seconds
+        uses: kibertoad/wait-action@1.0.1
+        with:
+          time: '30s'
+      - name: Check running containers
+        run: docker ps
+      - name: Dry run migrations
+        run: npm run test:migrate:dry
+      - name: Run migrations
+        run: npm run test:migrate
+      - name: Run seeds
+        run: npm run test:seed
+
+  test_backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build the docker-compose stack
+        run: docker-compose up -d --build
+      - name: Sleep for 30 seconds
+        uses: kibertoad/wait-action@1.0.1
+        with:
+          time: '30s'
+      - name: Check running containers
+        run: docker ps
+      - name: Run test suite
+        run: npm run test:docker
